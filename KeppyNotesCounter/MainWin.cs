@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -19,6 +18,7 @@ namespace KeppyNotesCounter
             public static Process FFMPEG;
             public static Double Hertz = 1.0 / 60.0;
             public static Bitmap Preview;
+            public static UInt32 Frames = 0;
         }
 
         public class Data
@@ -27,13 +27,16 @@ namespace KeppyNotesCounter
             public static String MIDIToLoad;
             public static SYNCPROC NoteSync;
             public static Int32 StreamHandle;
-            public static Int64 TotalNotes;
-            public static Int64 PlayedNotes;
+            public static TimeSpan CurrentTime = new TimeSpan(0);
+            public static TimeSpan TotalTime = new TimeSpan(0);
+            public static String HowManyZeroes = "";
+            public static Int32 Tempo = 0;
+            public static Int64 TotalNotes = 0;
+            public static Int64 PlayedNotes = 0;
         }
 
         public class Settings
         {
-            public static Font FontConversion = new Font("Tahoma", 12);
             public static Boolean Interrupt = false;
         }
 
@@ -42,9 +45,31 @@ namespace KeppyNotesCounter
             InitializeComponent();
         }
 
+        private string ReturnText()
+        {
+           try { return String.Format(Properties.Settings.Default.CounterTemplate, ReturnOutputText(Data.CurrentTime), ReturnOutputText(Data.TotalTime), Data.Tempo, Data.PlayedNotes.ToString(Data.HowManyZeroes), Data.TotalNotes); }
+           catch { return "Unknown template. Please check it for errors."; }
+        }
+
         private void MainWin_Load(object sender, EventArgs e)
         {
             CheckPos.RunWorkerAsync();
+            GarbageCollector.RunWorkerAsync();
+            if (Properties.Settings.Default.Res == 128) XHalfHalfHalfMode.Checked = true;
+            else if (Properties.Settings.Default.Res == 256) XHalfHalfMode.Checked = true;
+            else if (Properties.Settings.Default.Res == 512) XHalfMode.Checked = true;
+            else if (Properties.Settings.Default.Res == 1024) NativeMode.Checked = true;
+            else if (Properties.Settings.Default.Res == 2048) X2Mode.Checked = true;
+            else if (Properties.Settings.Default.Res == 4096) X4Mode.Checked = true;
+            else if (Properties.Settings.Default.Res == 8192) X8Mode.Checked = true;
+            else
+            {
+                Properties.Settings.Default.Res = 1024;
+                Properties.Settings.Default.Save();
+                NativeMode.Checked = true;
+            }
+            NoTrimMillisecs.Checked = Properties.Settings.Default.NoTrimMilliseconds;
+            PushFrame(ReturnText(), true);
         }
 
         private void NoteSyncProc(int handle, int channel, int data, IntPtr user)
@@ -61,7 +86,7 @@ namespace KeppyNotesCounter
                 psi.RedirectStandardInput = true;
                 psi.UseShellExecute = false;
                 psi.CreateNoWindow = true;
-                psi.FileName = "kffmpeg.exe";
+                psi.FileName = "ffmpeg.exe";
                 psi.WorkingDirectory = Directory.GetCurrentDirectory();
                 psi.Arguments = String.Format("-y -vsync 2 -r {0} -i - -vcodec qtrle \"{1}.mov\"", 60, Path.GetFileNameWithoutExtension(str).Replace(" ", "_"));
                 FFMPEGProcess.FFMPEG = Process.Start(psi);
@@ -73,10 +98,9 @@ namespace KeppyNotesCounter
             }
         }
 
-        private void PushFrame(string text)
+        public void PushFrame(string text, bool isexample)
         {
-            Bitmap bmp = new Bitmap(1000, 1000);
-            Bitmap bmpgen = new Bitmap(1000, 1000);
+            Bitmap bmp = new Bitmap(Properties.Settings.Default.Res, Properties.Settings.Default.Res);
 
             RectangleF rectf = new RectangleF(0, 0, bmp.Width, bmp.Height);
 
@@ -98,17 +122,26 @@ namespace KeppyNotesCounter
                 LineAlignment = StringAlignment.Far,
             };
 
-            g.DrawString(text, Settings.FontConversion, brush2, rectf, format);
+            g.DrawString(text, Properties.Settings.Default.CounterFont, brush2, rectf, format);
 
             // Flush all graphics changes to the bitmap
             g.Flush();
 
-            FFMPEGProcess.Preview = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), System.Drawing.Imaging.PixelFormat.DontCare);
+            if (isexample == true)
+            {
+                PreviewBox.Image = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), System.Drawing.Imaging.PixelFormat.DontCare);
+            }
+            else
+            {
+                FFMPEGProcess.Preview = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), System.Drawing.Imaging.PixelFormat.DontCare);
+                Byte[] Bitmap = GetBytesOfImage(bmp);
+                FFMPEGProcess.FFMPEG.StandardInput.BaseStream.Write(Bitmap, 0, Bitmap.Length);
+            }
 
-            Byte[] Bitmap = GetBytesOfImage(bmp);
             bmp.Dispose();
-
-            FFMPEGProcess.FFMPEG.StandardInput.BaseStream.Write(Bitmap, 0, Bitmap.Length);
+            brush.Dispose();
+            brush2.Dispose();
+            g.Dispose();
         }
 
         private void FrameConverter_DoWork(object sender, DoWorkEventArgs e)
@@ -116,11 +149,21 @@ namespace KeppyNotesCounter
             try
             {
                 // Initialize BASS and variables
-                String ReturnToFrameWriter = "";
-                String HowManyZeros = "";
                 Bass.BASS_Init(0, 44100, BASSInit.BASS_DEVICE_NOSPEAKER, IntPtr.Zero);
                 Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_MIDI_VOICES, 0);
                 Data.StreamHandle = BassMidi.BASS_MIDI_StreamCreateFile(Data.MIDIToLoad, 0L, 0L, BASSFlag.BASS_MIDI_NOCROP | BASSFlag.BASS_STREAM_DECODE | BASSFlag.BASS_MIDI_DECAYEND, 0);
+
+                // Check if the MIDI file is valid
+                BASSError Error = Bass.BASS_ErrorGetCode();
+                if (Error == BASSError.BASS_ERROR_ILLPARAM || 
+                    Error == BASSError.BASS_ERROR_FILEOPEN || 
+                    Error == BASSError.BASS_ERROR_FILEFORM)
+                {
+                    MessageBox.Show("Invalid MIDI file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Settings.Interrupt = true;
+                    return;
+                }
+
                 Int64 StreamLength = Bass.BASS_ChannelGetLength(Data.StreamHandle);
                 Int32 ChunkLength = Convert.ToInt32(Bass.BASS_ChannelSeconds2Bytes(Data.StreamHandle, FFMPEGProcess.Hertz));
                 Byte[] Buffer;
@@ -131,26 +174,30 @@ namespace KeppyNotesCounter
 
                 // Initialize note count
                 Data.TotalNotes = BassMidi.BASS_MIDI_StreamGetEvents(Data.StreamHandle, -1, (BASSMIDIEvent)0x20000, null);
-                HowManyZeros = String.Concat(Enumerable.Repeat("0", Data.TotalNotes.ToString().Length));
+                Data.HowManyZeroes = String.Concat(Enumerable.Repeat("0", Data.TotalNotes.ToString().Length));
 
                 // Initialize conversion
                 StartConversion(Data.MIDIToLoad);
-             
-                Buffer = new Byte[ChunkLength];
-                Bass.BASS_ChannelGetData(Data.StreamHandle, Buffer, ChunkLength);
 
-                ReturnToFrameWriter = String.Format("{0}/{1}", (0).ToString(HowManyZeros), Data.TotalNotes.ToString());
-                PushFrame(ReturnToFrameWriter);
+                for (int a = 0; a <= 300; a++)
+                {
+                    // 5 seconds of nothing
+                    if (Settings.Interrupt == true) break;
+                    PushFrame(ReturnText(), false);
+                    FFMPEGProcess.Frames++;
+                }
 
                 while (Bass.BASS_ChannelIsActive(Data.StreamHandle) == BASSActive.BASS_ACTIVE_PLAYING)
                 {
                     if (Settings.Interrupt == true) break;
                     Buffer = new Byte[ChunkLength];
                     Bass.BASS_ChannelGetData(Data.StreamHandle, Buffer, ChunkLength);
-                    ReturnToFrameWriter = String.Format("{0}/{1}", (Data.PlayedNotes).ToString(HowManyZeros), Data.TotalNotes.ToString());
-                    PushFrame(ReturnToFrameWriter);
+                    PushFrame(ReturnText(), false);
+                    FFMPEGProcess.Frames++;
                 }
 
+                Data.PlayedNotes = 0;
+                FFMPEGProcess.Frames = 0;
                 FFMPEGProcess.FFMPEG.StandardInput.Close();
 
                 Bass.BASS_StreamFree(Data.StreamHandle);
@@ -159,6 +206,30 @@ namespace KeppyNotesCounter
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private static String ReturnOutputText(TimeSpan TimeToCheck)
+        {
+            String F = "f";
+            if (Properties.Settings.Default.NoTrimMilliseconds == true) { F = "fff"; }
+            if (Data.TotalTime.Hours >= 10) return TimeToCheck.ToString(String.Format(@"hh\:mm\:ss\.{0}", F));
+            else
+            {
+                if (Data.TotalTime.Hours >= 1) return TimeToCheck.ToString(String.Format(@"h\:mm\:ss\.{0}", F));
+                else
+                {
+                    if (Data.TotalTime.Minutes >= 10) return TimeToCheck.ToString(String.Format(@"mm\:ss\.{0}", F));
+                    else
+                    {
+                        if (Data.TotalTime.Minutes >= 1) return TimeToCheck.ToString(String.Format(@"m\:ss\.{0}", F));
+                        else
+                        {
+                            if (Data.TotalTime.Seconds >= 10) return TimeToCheck.ToString(String.Format(@"ss\.{0}", F));
+                            else return TimeToCheck.ToString(String.Format(@"s\.{0}", F));
+                        }
+                    }
+                }
             }
         }
 
@@ -172,6 +243,12 @@ namespace KeppyNotesCounter
                     Int64 MIDICurrentPosRAW = Bass.BASS_ChannelGetPosition(Data.StreamHandle);
                     Single RAWTotal = ((float)MIDILengthRAW) / 1048576f;
                     Single RAWConverted = ((float)MIDICurrentPosRAW) / 1048576f;
+                    Double LenRAWToDouble = Bass.BASS_ChannelBytes2Seconds(Data.StreamHandle, MIDILengthRAW);
+                    Double CurRAWToDouble = Bass.BASS_ChannelBytes2Seconds(Data.StreamHandle, MIDICurrentPosRAW);
+                    Data.TotalTime = TimeSpan.FromSeconds(LenRAWToDouble);
+                    Data.CurrentTime = TimeSpan.FromSeconds(CurRAWToDouble);
+                    Int32 Tempo = 60000000 / BassMidi.BASS_MIDI_StreamGetEvent(Data.StreamHandle, 0, BASSMIDIEvent.MIDI_EVENT_TEMPO);
+                    Data.Tempo = Tempo.LimitToRange(0, 9999);
 
                     float percentage = RAWConverted / RAWTotal;
                     float percentagefinal;
@@ -202,7 +279,8 @@ namespace KeppyNotesCounter
                 else
                 {
                     Data.MIDIToLoad = OpenMIDI.FileName;
-                    label1.Text = Data.MIDIToLoad;
+                    CurrentMIDILoaded.Text = Path.GetFileName(Data.MIDIToLoad);
+                    MIDIName.SetToolTip(CurrentMIDILoaded, String.Format("Selected MIDI:\n{0}", Data.MIDIToLoad));
                 }
             }
         }
@@ -210,7 +288,14 @@ namespace KeppyNotesCounter
         private void StartConvThread_Click(object sender, EventArgs e)
         {
             Settings.Interrupt = false;
-            FrameConverter.RunWorkerAsync();
+            if (File.Exists(Data.MIDIToLoad))
+            {
+                FrameConverter.RunWorkerAsync();
+            }
+            else
+            {
+                MessageBox.Show("Invalid MIDI file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void StopConvThread_Click(object sender, EventArgs e)
@@ -231,8 +316,11 @@ namespace KeppyNotesCounter
                 SelectMIDIDialog.Enabled = false;
                 StartConvThread.Enabled = false;
                 ChangeFontTypeface.Enabled = false;
+                NoTrimMillisecs.Enabled = false;
+                CCT.Enabled = false;
+                menuItem3.Enabled = false;
 
-                CurrentStatus.Text = String.Format("{0} of the MIDI done", Data.PercentageProgress);
+                CurrentStatus.Text = String.Format("{0} ({1} frames done)", Data.PercentageProgress, FFMPEGProcess.Frames);
 
                 if (PreviewBox.Image != null) PreviewBox.Image.Dispose();
                 try
@@ -248,6 +336,9 @@ namespace KeppyNotesCounter
                 SelectMIDIDialog.Enabled = true;
                 StartConvThread.Enabled = true;
                 ChangeFontTypeface.Enabled = true;
+                NoTrimMillisecs.Enabled = true;
+                CCT.Enabled = true;
+                menuItem3.Enabled = true;
 
                 CurrentStatus.Text = "Idle";
             }
@@ -258,11 +349,14 @@ namespace KeppyNotesCounter
             Redo:
             try
             {
+                FontTypeface.Font = Properties.Settings.Default.CounterFont;
                 if (FontTypeface.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        Settings.FontConversion = FontTypeface.Font;
+                        Properties.Settings.Default.CounterFont = FontTypeface.Font;
+                        Properties.Settings.Default.Save();
+                        PushFrame(ReturnText(), true);
                     }
                     catch
                     {
@@ -289,6 +383,7 @@ namespace KeppyNotesCounter
                     try
                     {
                         PreviewBox.BackColor = BackgroundColor.Color;
+                        PushFrame(ReturnText(), true);
                     }
                     catch
                     {
@@ -304,6 +399,12 @@ namespace KeppyNotesCounter
             }
         }
 
+        private void CCT_Click(object sender, EventArgs e)
+        {
+            new CounterTemplate().ShowDialog();
+            PushFrame(ReturnText(), true);
+        }
+
         private void menuItem5_Click(object sender, EventArgs e)
         {
             Close();
@@ -312,6 +413,139 @@ namespace KeppyNotesCounter
         private void menuItem29_Click(object sender, EventArgs e)
         {
             new Info().ShowDialog();
+        }
+
+        private void XHalfHalfHalfMode_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Res = 128;
+            Properties.Settings.Default.Save();
+            XHalfHalfHalfMode.Checked = true;
+            XHalfHalfMode.Checked = false;
+            XHalfMode.Checked = false;
+            NativeMode.Checked = false;
+            X2Mode.Checked = false;
+            X4Mode.Checked = false;
+            X8Mode.Checked = false;
+            PushFrame(ReturnText(), true);
+        }
+
+        private void XHalfHalfMode_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Res = 256;
+            Properties.Settings.Default.Save();
+            XHalfHalfHalfMode.Checked = false;
+            XHalfHalfMode.Checked = true;
+            XHalfMode.Checked = false;
+            NativeMode.Checked = false;
+            X2Mode.Checked = false;
+            X4Mode.Checked = false;
+            X8Mode.Checked = false;
+            PushFrame(ReturnText(), true);
+        }
+
+        private void XHalfMode_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Res = 512;
+            Properties.Settings.Default.Save();
+            XHalfHalfHalfMode.Checked = false;
+            XHalfHalfMode.Checked = false;
+            XHalfMode.Checked = true;
+            NativeMode.Checked = false;
+            X2Mode.Checked = false;
+            X4Mode.Checked = false;
+            X8Mode.Checked = false;
+            PushFrame(ReturnText(), true);
+        }
+
+        private void NativeMode_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Res = 1024;
+            Properties.Settings.Default.Save();
+            XHalfHalfHalfMode.Checked = false;
+            XHalfHalfMode.Checked = false;
+            XHalfMode.Checked = false;
+            NativeMode.Checked = true;
+            X2Mode.Checked = false;
+            X4Mode.Checked = false;
+            X8Mode.Checked = false;
+            PushFrame(ReturnText(), true);
+        }
+
+        private void X2Mode_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Res = 2048;
+            Properties.Settings.Default.Save();
+            XHalfHalfHalfMode.Checked = false;
+            XHalfHalfMode.Checked = false;
+            XHalfMode.Checked = false;
+            NativeMode.Checked = false;
+            X2Mode.Checked = true;
+            X4Mode.Checked = false;
+            X8Mode.Checked = false;
+            PushFrame(ReturnText(), true);
+        }
+
+        private void X4Mode_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Res = 4096;
+            Properties.Settings.Default.Save();
+            XHalfHalfHalfMode.Checked = false;
+            XHalfHalfMode.Checked = false;
+            XHalfMode.Checked = false;
+            NativeMode.Checked = false;
+            X2Mode.Checked = false;
+            X4Mode.Checked = true;
+            X8Mode.Checked = false;
+            PushFrame(ReturnText(), true);
+        }
+
+        private void X8Mode_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Res = 8192;
+            Properties.Settings.Default.Save();
+            XHalfHalfHalfMode.Checked = false;
+            XHalfHalfMode.Checked = false;
+            XHalfMode.Checked = false;
+            NativeMode.Checked = false;
+            X2Mode.Checked = false;
+            X4Mode.Checked = false;
+            X8Mode.Checked = true;
+            PushFrame(ReturnText(), true);
+        }
+
+        private void NoTrimMillisecs_Click(object sender, EventArgs e)
+        {
+            if (NoTrimMillisecs.Checked != true)
+            {
+                NoTrimMillisecs.Checked = true;
+                Properties.Settings.Default.NoTrimMilliseconds = true;
+            }
+            else
+            {
+                NoTrimMillisecs.Checked = false;
+                Properties.Settings.Default.NoTrimMilliseconds = false;
+            }
+        }
+
+        private void GarbageCollector_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                System.Threading.Thread.Sleep(100);
+            }
+        }
+    }
+
+    public static class InputExtensions
+    {
+        public static int LimitToRange(
+            this int value, int inclusiveMinimum, int inclusiveMaximum)
+        {
+            if (value < inclusiveMinimum) { return inclusiveMinimum; }
+            if (value > inclusiveMaximum) { return inclusiveMaximum; }
+            return value;
         }
     }
 }
