@@ -13,11 +13,11 @@ What you can't do:
 - Clone the source code of the simulator, and change its name to "(Your name)'s Notes Counter". I mean, why would you do that?
 - Create ports of the simulator in different programming languages, but with Windows support. There's already a Windows version, which is this one.
 
-## System requirements
-- 1GHz CPU (Single-core)
-- 2GB of RAM
-- Windows XP SP3+ (SP2 for x64)
-- QuickTime 7 installed
+## Minimum system requirements for 1x rendering
+- 1GHz CPU (Dual-core or single-core with HT/SMT)
+- 1GB of RAM
+- Windows Vista SP1 **(64-bit OSes ONLY)**
+- QuickTime 7 Base Components installed *(The player is not mandatory)*
 
 ## Request from the creator of the app
 If you're going to use my counter in your YouTube videos, please add one of these pre-made credits templates, or create yours.
