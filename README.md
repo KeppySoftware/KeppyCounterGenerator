@@ -26,7 +26,7 @@ Remember to point out to at least the page of the project, to increase its user 
 1 (Tiny):
 ```
 The counter has been created with Keppy's Note Counter.
-Download it from here: https://github.com/KaleidonKep99/KeppyCounterGenerator/releases
+Download it from here: https://github.com/KaleidonKep99/KeppyNotesCounter/releases
 ```
 
 2 (Big):
@@ -35,7 +35,7 @@ The counter hasn't been recorded through MIDITrail, but converted through Keppy'
 Keppy's Counter Generator is an app by KaleidonKep99.
 Copyright KaleidonKep99(C) 2016, All Rights Reserved.
 
-Page to the app: https://github.com/KaleidonKep99/KeppyCounterGenerator
+Page to the app: https://github.com/KaleidonKep99/KeppyNotesCounter
 GitHub: https://github.com/KaleidonKep99/
 YouTube: https://www.youtube.com/channel/UCJeqODojIv4TdeHcBfHJRn
 ```
