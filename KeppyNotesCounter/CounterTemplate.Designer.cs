@@ -33,6 +33,11 @@
             this.ConfirmBtn = new System.Windows.Forms.Button();
             this.CancelBtn = new System.Windows.Forms.Button();
             this.TemplateEditor = new System.Windows.Forms.RichTextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.TemplatesLabel = new System.Windows.Forms.Label();
+            this.TemplatesBox = new System.Windows.Forms.ComboBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -49,23 +54,23 @@
             // 
             // label2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.label2.Location = new System.Drawing.Point(275, 9);
+            this.label2.BackColor = System.Drawing.SystemColors.Control;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label2.Location = new System.Drawing.Point(3, 16);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(92, 81);
+            this.label2.Size = new System.Drawing.Size(169, 70);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Legend\r\nPassed time: {0}\r\nTotal time: {1}\r\nTempo: {2}\r\nPlayed notes: {3}\r\nTotal n" +
-    "otes: {4}";
+            this.label2.Text = "Passed time: {0}\r\nTotal time: {1}\r\nTempo: {2}\r\nPlayed notes: {3}\r\nTotal notes: {4" +
+    "}";
             // 
             // ConfirmBtn
             // 
             this.ConfirmBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConfirmBtn.Location = new System.Drawing.Point(292, 182);
+            this.ConfirmBtn.Location = new System.Drawing.Point(300, 282);
             this.ConfirmBtn.Name = "ConfirmBtn";
-            this.ConfirmBtn.Size = new System.Drawing.Size(75, 23);
+            this.ConfirmBtn.Size = new System.Drawing.Size(63, 23);
             this.ConfirmBtn.TabIndex = 3;
             this.ConfirmBtn.Text = "Confirm";
             this.ConfirmBtn.UseVisualStyleBackColor = true;
@@ -74,9 +79,9 @@
             // CancelBtn
             // 
             this.CancelBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelBtn.Location = new System.Drawing.Point(211, 182);
+            this.CancelBtn.Location = new System.Drawing.Point(235, 282);
             this.CancelBtn.Name = "CancelBtn";
-            this.CancelBtn.Size = new System.Drawing.Size(75, 23);
+            this.CancelBtn.Size = new System.Drawing.Size(63, 23);
             this.CancelBtn.TabIndex = 4;
             this.CancelBtn.Text = "Cancel";
             this.CancelBtn.UseVisualStyleBackColor = true;
@@ -86,20 +91,70 @@
             // 
             this.TemplateEditor.Location = new System.Drawing.Point(12, 93);
             this.TemplateEditor.Name = "TemplateEditor";
-            this.TemplateEditor.Size = new System.Drawing.Size(355, 83);
+            this.TemplateEditor.Size = new System.Drawing.Size(351, 83);
             this.TemplateEditor.TabIndex = 5;
             this.TemplateEditor.Text = "";
+            // 
+            // label3
+            // 
+            this.label3.BackColor = System.Drawing.SystemColors.Control;
+            this.label3.Dock = System.Windows.Forms.DockStyle.Right;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label3.Location = new System.Drawing.Point(175, 16);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(173, 70);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Time signature: {5}\r\nPPQN value: {6}\r\nCurrent tick: {7} / Total ticks: {8}\r\nCurre" +
+    "nt bar: {9} / Total bars: {10}";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Location = new System.Drawing.Point(12, 182);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(351, 89);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Legend";
+            // 
+            // TemplatesLabel
+            // 
+            this.TemplatesLabel.AutoSize = true;
+            this.TemplatesLabel.Location = new System.Drawing.Point(11, 286);
+            this.TemplatesLabel.Name = "TemplatesLabel";
+            this.TemplatesLabel.Size = new System.Drawing.Size(59, 13);
+            this.TemplatesLabel.TabIndex = 8;
+            this.TemplatesLabel.Text = "Templates:";
+            // 
+            // TemplatesBox
+            // 
+            this.TemplatesBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.TemplatesBox.FormattingEnabled = true;
+            this.TemplatesBox.Items.AddRange(new object[] {
+            "Custom",
+            "MIDITrail Standard",
+            "MIDITrail Vertical",
+            "Essential"});
+            this.TemplatesBox.Location = new System.Drawing.Point(71, 283);
+            this.TemplatesBox.Name = "TemplatesBox";
+            this.TemplatesBox.Size = new System.Drawing.Size(134, 21);
+            this.TemplatesBox.TabIndex = 9;
+            this.TemplatesBox.SelectedIndexChanged += new System.EventHandler(this.TemplatesBox_SelectedIndexChanged);
             // 
             // CounterTemplate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(379, 217);
+            this.ClientSize = new System.Drawing.Size(375, 317);
             this.ControlBox = false;
+            this.Controls.Add(this.TemplatesBox);
+            this.Controls.Add(this.TemplatesLabel);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.TemplateEditor);
             this.Controls.Add(this.CancelBtn);
             this.Controls.Add(this.ConfirmBtn);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "CounterTemplate";
@@ -108,7 +163,9 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Counter template editor";
             this.Load += new System.EventHandler(this.CounterTemplate_Load);
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -119,5 +176,9 @@
         private System.Windows.Forms.Button ConfirmBtn;
         private System.Windows.Forms.Button CancelBtn;
         private System.Windows.Forms.RichTextBox TemplateEditor;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label TemplatesLabel;
+        private System.Windows.Forms.ComboBox TemplatesBox;
     }
 }

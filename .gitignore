@@ -45,6 +45,9 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-KeppyNotesCounter/obj/
 *.rar
 *.mov
+
+packages/
+KeppyNotesCounter/obj/
+KeppyNotesCounter/bin/

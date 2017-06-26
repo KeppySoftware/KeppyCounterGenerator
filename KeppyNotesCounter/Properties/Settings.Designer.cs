@@ -26,12 +26,12 @@ namespace KeppyNotesCounter.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("{3}/{4}")]
-        public string CounterTemplate {
+        public string CustomCounterTemplate {
             get {
-                return ((string)(this["CounterTemplate"]));
+                return ((string)(this["CustomCounterTemplate"]));
             }
             set {
-                this["CounterTemplate"] = value;
+                this["CustomCounterTemplate"] = value;
             }
         }
         
@@ -68,6 +68,41 @@ namespace KeppyNotesCounter.Properties {
             }
             set {
                 this["NoTrimMilliseconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>TIME:{0}/{1} BPM:{2} BEAT:{5} BAR:{9}/{10} NOTES:{3}/{4}</string>
+  <string>TIME:{0}/{1}\nBPM:{2}\nBEAT:{5}\nBAR:{9}/{10}\nNOTES:{3}/{4}</string>
+  <string>Time:{0}/{1} Tempo:{2}BPM Notes:{3}/{4}</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection TemplatesCounter {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["TemplatesCounter"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int TemplatesCounterIndex {
+            get {
+                return ((int)(this["TemplatesCounterIndex"]));
+            }
+            set {
+                this["TemplatesCounterIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsUnstableRelease {
+            get {
+                return ((bool)(this["IsUnstableRelease"]));
             }
         }
     }

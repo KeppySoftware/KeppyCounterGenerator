@@ -19,7 +19,7 @@ namespace KeppyNotesCounter
 
         private void CounterTemplate_Load(object sender, EventArgs e)
         {
-            TemplateEditor.Text = Properties.Settings.Default.CounterTemplate;
+            TemplatesBox.SelectedIndex = Properties.Settings.Default.TemplatesCounterIndex;
         }
 
         private void CancelBtn_Click(object sender, EventArgs e)
@@ -29,9 +29,28 @@ namespace KeppyNotesCounter
 
         private void ConfirmBtn_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.CounterTemplate = TemplateEditor.Text;
-            Properties.Settings.Default.Save();
+            if (TemplatesBox.SelectedIndex == 0)
+            {
+                Properties.Settings.Default.CustomCounterTemplate = TemplateEditor.Text;
+                Properties.Settings.Default.Save();
+            }
             Close();
+        }
+
+        private void TemplatesBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (TemplatesBox.SelectedIndex > 0)
+            {
+                TemplateEditor.ReadOnly = true;
+                TemplateEditor.Text = Properties.Settings.Default.TemplatesCounter[TemplatesBox.SelectedIndex - 1];               
+            }
+            else
+            {
+                TemplateEditor.ReadOnly = false;
+                TemplateEditor.Text = Properties.Settings.Default.CustomCounterTemplate;
+            }
+            Properties.Settings.Default.TemplatesCounterIndex = TemplatesBox.SelectedIndex;
+            Properties.Settings.Default.Save();
         }
     }
 }

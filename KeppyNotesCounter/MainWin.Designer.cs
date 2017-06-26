@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWin));
             this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.menuItem29 = new System.Windows.Forms.MenuItem();
             this.BackgroundColor = new System.Windows.Forms.ColorDialog();
@@ -49,12 +50,16 @@
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.XHalfHalfHalfMode = new System.Windows.Forms.MenuItem();
+            this.XHalfHalfMode = new System.Windows.Forms.MenuItem();
+            this.XHalfMode = new System.Windows.Forms.MenuItem();
             this.NativeMode = new System.Windows.Forms.MenuItem();
             this.X2Mode = new System.Windows.Forms.MenuItem();
             this.X4Mode = new System.Windows.Forms.MenuItem();
             this.X8Mode = new System.Windows.Forms.MenuItem();
             this.menuItem13 = new System.Windows.Forms.MenuItem();
             this.menuItem14 = new System.Windows.Forms.MenuItem();
+            this.NoTrimMillisecs = new System.Windows.Forms.MenuItem();
             this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.ChangeFontTypeface = new System.Windows.Forms.MenuItem();
             this.ChangeBackgroundColor = new System.Windows.Forms.MenuItem();
@@ -63,12 +68,8 @@
             this.OpenMIDI = new System.Windows.Forms.OpenFileDialog();
             this.FrameConverter = new System.ComponentModel.BackgroundWorker();
             this.CheckPos = new System.ComponentModel.BackgroundWorker();
-            this.NoTrimMillisecs = new System.Windows.Forms.MenuItem();
             this.MIDIName = new System.Windows.Forms.ToolTip(this.components);
             this.GarbageCollector = new System.ComponentModel.BackgroundWorker();
-            this.XHalfMode = new System.Windows.Forms.MenuItem();
-            this.XHalfHalfMode = new System.Windows.Forms.MenuItem();
-            this.XHalfHalfHalfMode = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.PreviewBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -218,6 +219,24 @@
             this.menuItem14});
             this.menuItem3.Text = "Resolution";
             // 
+            // XHalfHalfHalfMode
+            // 
+            this.XHalfHalfHalfMode.Index = 0;
+            this.XHalfHalfHalfMode.Text = "0.125x";
+            this.XHalfHalfHalfMode.Click += new System.EventHandler(this.XHalfHalfHalfMode_Click);
+            // 
+            // XHalfHalfMode
+            // 
+            this.XHalfHalfMode.Index = 1;
+            this.XHalfHalfMode.Text = "0.25x";
+            this.XHalfHalfMode.Click += new System.EventHandler(this.XHalfHalfMode_Click);
+            // 
+            // XHalfMode
+            // 
+            this.XHalfMode.Index = 2;
+            this.XHalfMode.Text = "0.5x";
+            this.XHalfMode.Click += new System.EventHandler(this.XHalfMode_Click);
+            // 
             // NativeMode
             // 
             this.NativeMode.Index = 3;
@@ -252,6 +271,12 @@
             this.menuItem14.Enabled = false;
             this.menuItem14.Index = 8;
             this.menuItem14.Text = "Native is 1024x1024";
+            // 
+            // NoTrimMillisecs
+            // 
+            this.NoTrimMillisecs.Index = 1;
+            this.NoTrimMillisecs.Text = "Do not trim milliseconds";
+            this.NoTrimMillisecs.Click += new System.EventHandler(this.NoTrimMillisecs_Click);
             // 
             // menuItem7
             // 
@@ -293,33 +318,9 @@
             // 
             this.CheckPos.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckPos_DoWork);
             // 
-            // NoTrimMillisecs
-            // 
-            this.NoTrimMillisecs.Index = 1;
-            this.NoTrimMillisecs.Text = "Do not trim milliseconds";
-            this.NoTrimMillisecs.Click += new System.EventHandler(this.NoTrimMillisecs_Click);
-            // 
             // GarbageCollector
             // 
             this.GarbageCollector.DoWork += new System.ComponentModel.DoWorkEventHandler(this.GarbageCollector_DoWork);
-            // 
-            // XHalfMode
-            // 
-            this.XHalfMode.Index = 2;
-            this.XHalfMode.Text = "0.5x";
-            this.XHalfMode.Click += new System.EventHandler(this.XHalfMode_Click);
-            // 
-            // XHalfHalfMode
-            // 
-            this.XHalfHalfMode.Index = 1;
-            this.XHalfHalfMode.Text = "0.25x";
-            this.XHalfHalfMode.Click += new System.EventHandler(this.XHalfHalfMode_Click);
-            // 
-            // XHalfHalfHalfMode
-            // 
-            this.XHalfHalfHalfMode.Index = 0;
-            this.XHalfHalfHalfMode.Text = "0.125x";
-            this.XHalfHalfHalfMode.Click += new System.EventHandler(this.XHalfHalfHalfMode_Click);
             // 
             // MainWin
             // 
@@ -330,6 +331,7 @@
             this.Controls.Add(this.DoNotUse);
             this.Controls.Add(this.CurrentMIDILoaded);
             this.Controls.Add(this.PreviewBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.MenuBar;
             this.Name = "MainWin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

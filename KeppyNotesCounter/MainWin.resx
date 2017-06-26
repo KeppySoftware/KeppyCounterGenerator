@@ -127,24 +127,42 @@
     <value>268, 17</value>
   </metadata>
   <metadata name="LivePreview.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>635, 17</value>
+    <value>782, 17</value>
   </metadata>
   <metadata name="MenuBar.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>750, 17</value>
+    <value>897, 17</value>
   </metadata>
   <metadata name="OpenMIDI.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>851, 17</value>
+    <value>998, 17</value>
   </metadata>
   <metadata name="FrameConverter.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>392, 17</value>
   </metadata>
   <metadata name="CheckPos.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>531, 17</value>
+    <value>678, 17</value>
   </metadata>
   <metadata name="MIDIName.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>959, 17</value>
+    <value>1106, 17</value>
   </metadata>
   <metadata name="GarbageCollector.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1069, 17</value>
+    <value>531, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAICAQAAEABADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAACAAACAAAAAgIAAgAAAAIAAgACAgAAAwMDAAICAgAAAAP8AAP8AAAD//wD/AAAA/wD/AP//
+        AAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIiAiICIgIiAiICIgIiAAACIgIiAiI
+        CIgIiAiICIiAAAj/f/9//3//f/9//3//iAAAj/f/9//3//f/9//3//iAAAj/iI+Ij4iPf4iPiI//gAAA
+        jwCIAIgAiPcAiACI//AAAAjwCIAIgAiPcAiACI/wAAAAiACIAIgAiIgAiACIgAAAAAAACAAIAAgAAAgA
+        CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAAAAAAAAAAAAAERAAAAAAAAAAAAAAAAAAAAEQA
+        AAAAAAAAAAAAAAAAD//0///////wAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAP//T/RE/0RPAAAAAAAAAA
+        AAAEAARAAEQAAAAEQAAAAA//9P//T//08AAABEQAAAAAAAAAAEAABAAAAABEAAAAAAAAAABAAAQAAA//
+        9P//////8AAAQAAEAAAAAAQAAAAAAAAAAERERAAAD//0/0RP9ETwAABEREQAAAAABAAEQABEAAAAAAAA
+        AAAP//T//0//9PAAAAAAAAAAAAAAAABAAAQAAAAAAAAAAAAAAAAAQAAEAAAAAAAAAAAAAAAAAEAABAAA
+        AAAAAAAAAAAAAABEREQAAAAAAAAAAAAAAAAAREREAAAAAAAAAAD/////AAAADwAAAAcAAAADgAAAAcAA
+        AADgAAAA8AAAAPgAAAD8AAAB/4iOI////////n////4////wAAP/8AAD//AAA//wAAP/8AAD5/AAA+Pw
+        AAMAAD3vAAA97wAAPA8AADwPAAA//wAAP/8AAD///97////e////wP///8D//w==
+</value>
+  </data>
 </root>

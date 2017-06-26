@@ -28,21 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            this.InfoApp = new System.Windows.Forms.Label();
             this.OKBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // label1
+            // InfoApp
             // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(275, 90);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Keppy\'s Notes Counter 0.2a\r\nCopyright(C) KaleidonKep99 2017\r\nAll rights reserved." +
-    "";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.InfoApp.Dock = System.Windows.Forms.DockStyle.Top;
+            this.InfoApp.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InfoApp.Location = new System.Drawing.Point(0, 0);
+            this.InfoApp.Name = "InfoApp";
+            this.InfoApp.Size = new System.Drawing.Size(271, 90);
+            this.InfoApp.TabIndex = 0;
+            this.InfoApp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // OKBtn
             // 
@@ -58,23 +56,24 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(275, 124);
+            this.ClientSize = new System.Drawing.Size(271, 120);
             this.ControlBox = false;
             this.Controls.Add(this.OKBtn);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.InfoApp);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Info";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Info";
+            this.Load += new System.EventHandler(this.Info_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label InfoApp;
         private System.Windows.Forms.Button OKBtn;
     }
 }

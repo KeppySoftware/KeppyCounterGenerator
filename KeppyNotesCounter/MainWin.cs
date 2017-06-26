@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Midi;
@@ -23,15 +24,23 @@ namespace KeppyNotesCounter
 
         public class Data
         {
+            public static BASS_MIDI_MARK Mark = new BASS_MIDI_MARK();
             public static String PercentageProgress = "0%";
             public static String MIDIToLoad;
+            public static String TextTemplate = "";
             public static SYNCPROC NoteSync;
             public static Int32 StreamHandle;
+            public static Single PPQN = 0.0f; 
             public static TimeSpan CurrentTime = new TimeSpan(0);
             public static TimeSpan TotalTime = new TimeSpan(0);
-            public static String HowManyZeroes = "";
+            public static String HowManyZeroesNotes = "";
+            public static String HowManyZeroesBars = "";
             public static Int32 Tempo = 0;
+            public static Int64 TotalBars = 0;
+            public static Int64 Bar = 0;
             public static Int64 TotalNotes = 0;
+            public static Int64 TotalTicks = 0;
+            public static Int64 Tick = 0;
             public static Int64 PlayedNotes = 0;
         }
 
@@ -47,8 +56,23 @@ namespace KeppyNotesCounter
 
         private string ReturnText()
         {
-           try { return String.Format(Properties.Settings.Default.CounterTemplate, ReturnOutputText(Data.CurrentTime), ReturnOutputText(Data.TotalTime), Data.Tempo, Data.PlayedNotes.ToString(Data.HowManyZeroes), Data.TotalNotes); }
-           catch { return "Unknown template. Please check it for errors."; }
+            try
+            {
+                return String.Format(Data.TextTemplate,
+                    ReturnOutputText(Data.CurrentTime),
+                    ReturnOutputText(Data.TotalTime),
+                    Data.Tempo.ToString("000"),
+                    Data.PlayedNotes.ToString(Data.HowManyZeroesNotes),
+                    Data.TotalNotes,
+                    Regex.Match(Data.Mark.text, "^[^ ]+").Value,
+                    Data.PPQN,
+                    Data.Tick,
+                    Data.TotalTicks,
+                    ((Data.Bar / 2) + 1).ToString(Data.HowManyZeroesBars),
+                    ((Data.TotalBars / 2) + 1).ToString()
+                    );
+            }
+            catch { return "Unknown template. Please check it for errors."; }
         }
 
         private void MainWin_Load(object sender, EventArgs e)
@@ -69,6 +93,8 @@ namespace KeppyNotesCounter
                 NativeMode.Checked = true;
             }
             NoTrimMillisecs.Checked = Properties.Settings.Default.NoTrimMilliseconds;
+            if (Properties.Settings.Default.TemplatesCounterIndex == 0) Data.TextTemplate = Properties.Settings.Default.CustomCounterTemplate;
+            else Data.TextTemplate = Properties.Settings.Default.TemplatesCounter[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
             PushFrame(ReturnText(), true);
         }
 
@@ -174,7 +200,7 @@ namespace KeppyNotesCounter
 
                 // Initialize note count
                 Data.TotalNotes = BassMidi.BASS_MIDI_StreamGetEvents(Data.StreamHandle, -1, (BASSMIDIEvent)0x20000, null);
-                Data.HowManyZeroes = String.Concat(Enumerable.Repeat("0", Data.TotalNotes.ToString().Length));
+                Data.HowManyZeroesNotes = String.Concat(Enumerable.Repeat("0", Data.TotalNotes.ToString().Length));
 
                 // Initialize conversion
                 StartConversion(Data.MIDIToLoad);
@@ -196,7 +222,19 @@ namespace KeppyNotesCounter
                     FFMPEGProcess.Frames++;
                 }
 
+                Buffer = new Byte[ChunkLength];
+                Bass.BASS_ChannelGetData(Data.StreamHandle, Buffer, ChunkLength);
+
+                for (int a = 0; a <= 300; a++)
+                {
+                    // 5 seconds of nothing
+                    if (Settings.Interrupt == true) break;
+                    PushFrame(ReturnText(), false);
+                    FFMPEGProcess.Frames++;
+                }
+
                 Data.PlayedNotes = 0;
+                Data.Mark = new BASS_MIDI_MARK();
                 FFMPEGProcess.Frames = 0;
                 FFMPEGProcess.FFMPEG.StandardInput.Close();
 
@@ -247,8 +285,25 @@ namespace KeppyNotesCounter
                     Double CurRAWToDouble = Bass.BASS_ChannelBytes2Seconds(Data.StreamHandle, MIDICurrentPosRAW);
                     Data.TotalTime = TimeSpan.FromSeconds(LenRAWToDouble);
                     Data.CurrentTime = TimeSpan.FromSeconds(CurRAWToDouble);
+                    BassMidi.BASS_MIDI_StreamGetMark(Data.StreamHandle, BASSMIDIMarker.BASS_MIDI_MARK_TIMESIG, 0, Data.Mark);
+                    Bass.BASS_ChannelGetAttribute(Data.StreamHandle, BASSAttribute.BASS_ATTRIB_MIDI_PPQN, ref Data.PPQN);
+                    Data.TotalTicks = Bass.BASS_ChannelGetLength(Data.StreamHandle, BASSMode.BASS_POS_MIDI_TICK);
+                    Data.Tick = Bass.BASS_ChannelGetPosition(Data.StreamHandle, BASSMode.BASS_POS_MIDI_TICK);
                     Int32 Tempo = 60000000 / BassMidi.BASS_MIDI_StreamGetEvent(Data.StreamHandle, 0, BASSMIDIEvent.MIDI_EVENT_TEMPO);
-                    Data.Tempo = Tempo.LimitToRange(0, 9999);
+                    Data.Tempo = Tempo.LimitToRange(0, 999);
+
+                    try
+                    {
+                        Int32[] DAT = (from Match m in Regex.Matches(Data.Mark.text, @"\d+") select int.Parse(m.Value)).ToArray();
+                        Data.Bar = (Int64)(Data.Tick / (Data.PPQN / (8 / DAT[1]) * DAT[0]));
+                        Data.TotalBars = (Int64)(Data.TotalTicks / (Data.PPQN / (8 / DAT[1]) * DAT[0]));
+                        Data.HowManyZeroesBars = String.Concat(Enumerable.Repeat("0", Data.TotalBars.ToString().Length));
+                    }
+                    catch
+                    {
+                        Data.Bar = 0;
+                        Data.TotalBars = 0;
+                    }
 
                     float percentage = RAWConverted / RAWTotal;
                     float percentagefinal;
@@ -402,6 +457,8 @@ namespace KeppyNotesCounter
         private void CCT_Click(object sender, EventArgs e)
         {
             new CounterTemplate().ShowDialog();
+            if (Properties.Settings.Default.TemplatesCounterIndex == 0) Data.TextTemplate = Properties.Settings.Default.CustomCounterTemplate;
+            else Data.TextTemplate = Properties.Settings.Default.TemplatesCounter[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
             PushFrame(ReturnText(), true);
         }
 

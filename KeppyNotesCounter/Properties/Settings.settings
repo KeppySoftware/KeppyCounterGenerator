@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="KeppyNotesCounter.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="CounterTemplate" Type="System.String" Scope="User">
+    <Setting Name="CustomCounterTemplate" Type="System.String" Scope="User">
       <Value Profile="(Default)">{3}/{4}</Value>
     </Setting>
     <Setting Name="CounterFont" Type="System.Drawing.Font" Scope="User">
@@ -13,6 +13,20 @@
     </Setting>
     <Setting Name="NoTrimMilliseconds" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TemplatesCounter" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;TIME:{0}/{1} BPM:{2} BEAT:{5} BAR:{9}/{10} NOTES:{3}/{4}&lt;/string&gt;
+  &lt;string&gt;TIME:{0}/{1}\nBPM:{2}\nBEAT:{5}\nBAR:{9}/{10}\nNOTES:{3}/{4}&lt;/string&gt;
+  &lt;string&gt;Time:{0}/{1} Tempo:{2}BPM Notes:{3}/{4}&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="TemplatesCounterIndex" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="IsUnstableRelease" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>
