@@ -106,7 +106,7 @@
             this.label3.Size = new System.Drawing.Size(173, 70);
             this.label3.TabIndex = 6;
             this.label3.Text = "Time signature: {5}\r\nPPQN value: {6}\r\nCurrent tick: {7} / Total ticks: {8}\r\nCurre" +
-    "nt bar: {9} / Total bars: {10}";
+    "nt bar: {9} / Total bars: {10}\r\nAverage notes per second: {11}";
             // 
             // groupBox1
             // 
@@ -147,7 +147,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(375, 317);
+            this.ClientSize = new System.Drawing.Size(371, 313);
             this.ControlBox = false;
             this.Controls.Add(this.TemplatesBox);
             this.Controls.Add(this.TemplatesLabel);

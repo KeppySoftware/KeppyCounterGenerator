@@ -51,3 +51,4 @@ Temporary Items
 packages/
 KeppyNotesCounter/obj/
 KeppyNotesCounter/bin/
+KeppyNotesCounter/bin/x64/Release/KeppyNotesCounter.exe

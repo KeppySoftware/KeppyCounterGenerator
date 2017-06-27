@@ -20,6 +20,7 @@ namespace KeppyNotesCounter
             public static Double Hertz = 1.0 / 60.0;
             public static Bitmap Preview;
             public static UInt32 Frames = 0;
+            public static UInt32 FramesAvg = 0;
         }
 
         public class Data
@@ -28,6 +29,7 @@ namespace KeppyNotesCounter
             public static String PercentageProgress = "0%";
             public static String MIDIToLoad;
             public static String TextTemplate = "";
+            public static String AverageNotesPerSecond = "0";
             public static SYNCPROC NoteSync;
             public static Int32 StreamHandle;
             public static Single PPQN = 0.0f; 
@@ -42,6 +44,7 @@ namespace KeppyNotesCounter
             public static Int64 TotalTicks = 0;
             public static Int64 Tick = 0;
             public static Int64 PlayedNotes = 0;
+            public static Int64 PlayedNotesAvg = 0;
         }
 
         public class Settings
@@ -69,7 +72,8 @@ namespace KeppyNotesCounter
                     Data.Tick,
                     Data.TotalTicks,
                     ((Data.Bar / 2) + 1).ToString(Data.HowManyZeroesBars),
-                    ((Data.TotalBars / 2) + 1).ToString()
+                    ((Data.TotalBars / 2) + 1).ToString(),
+                    Data.AverageNotesPerSecond
                     );
             }
             catch { return "Unknown template. Please check it for errors."; }
@@ -100,7 +104,11 @@ namespace KeppyNotesCounter
 
         private void NoteSyncProc(int handle, int channel, int data, IntPtr user)
         {
-            if ((data & 0xff00) != 0) Data.PlayedNotes++;
+            if ((data & 0xff00) != 0)
+            {
+                Data.PlayedNotes++;
+                Data.PlayedNotesAvg++;
+            }
         }
 
         private void StartConversion(string str)
@@ -209,6 +217,7 @@ namespace KeppyNotesCounter
                 {
                     // 5 seconds of nothing
                     if (Settings.Interrupt == true) break;
+                    Data.AverageNotesPerSecond = "0";
                     PushFrame(ReturnText(), false);
                     FFMPEGProcess.Frames++;
                 }
@@ -218,6 +227,11 @@ namespace KeppyNotesCounter
                     if (Settings.Interrupt == true) break;
                     Buffer = new Byte[ChunkLength];
                     Bass.BASS_ChannelGetData(Data.StreamHandle, Buffer, ChunkLength);
+                    if (FFMPEGProcess.Frames % 60 == 0)
+                    {
+                        Data.AverageNotesPerSecond = Data.PlayedNotesAvg.ToString();
+                        Data.PlayedNotesAvg = 0;
+                    }
                     PushFrame(ReturnText(), false);
                     FFMPEGProcess.Frames++;
                 }
@@ -229,6 +243,7 @@ namespace KeppyNotesCounter
                 {
                     // 5 seconds of nothing
                     if (Settings.Interrupt == true) break;
+                    Data.AverageNotesPerSecond = "0";
                     PushFrame(ReturnText(), false);
                     FFMPEGProcess.Frames++;
                 }
