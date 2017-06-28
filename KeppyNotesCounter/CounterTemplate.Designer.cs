@@ -44,13 +44,13 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(6, 7);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(355, 81);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Edit the following text, to edit the final \r\noutput of the note counter generator" +
-    ".\r\n\r\nExample:\r\nInput: Time {0}/{1} - Tempo {2}BPM\r\nOutput: Time 0:26.232/1:00.00" +
-    "0 - Tempo: 140BPM";
+            this.label1.Text = "Edit the following text, to edit the final output of the note counter generator.\r" +
+    "\n\r\nExample:\r\nInput: Time {0}/{1} - Tempo {2}BPM\r\nOutput: Time 0:26.232/1:00.000 " +
+    "- Tempo: 140BPM";
             // 
             // label2
             // 
@@ -62,13 +62,13 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(169, 70);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Passed time: {0}\r\nTotal time: {1}\r\nTempo: {2}\r\nPlayed notes: {3}\r\nTotal notes: {4" +
-    "}";
+            this.label2.Text = "Passed/Total time: {0}/{1}\r\nTempo: {2}\r\nPlayed/Total notes: {3}/{4}\r\nTime signatu" +
+    "re: {5}\r\nPPQN value: {6}";
             // 
             // ConfirmBtn
             // 
             this.ConfirmBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConfirmBtn.Location = new System.Drawing.Point(300, 282);
+            this.ConfirmBtn.Location = new System.Drawing.Point(296, 278);
             this.ConfirmBtn.Name = "ConfirmBtn";
             this.ConfirmBtn.Size = new System.Drawing.Size(63, 23);
             this.ConfirmBtn.TabIndex = 3;
@@ -79,7 +79,7 @@
             // CancelBtn
             // 
             this.CancelBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelBtn.Location = new System.Drawing.Point(235, 282);
+            this.CancelBtn.Location = new System.Drawing.Point(231, 278);
             this.CancelBtn.Name = "CancelBtn";
             this.CancelBtn.Size = new System.Drawing.Size(63, 23);
             this.CancelBtn.TabIndex = 4;
@@ -89,7 +89,7 @@
             // 
             // TemplateEditor
             // 
-            this.TemplateEditor.Location = new System.Drawing.Point(12, 93);
+            this.TemplateEditor.Location = new System.Drawing.Point(9, 93);
             this.TemplateEditor.Name = "TemplateEditor";
             this.TemplateEditor.Size = new System.Drawing.Size(351, 83);
             this.TemplateEditor.TabIndex = 5;
@@ -105,14 +105,14 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(173, 70);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Time signature: {5}\r\nPPQN value: {6}\r\nCurrent tick: {7} / Total ticks: {8}\r\nCurre" +
-    "nt bar: {9} / Total bars: {10}\r\nAverage notes per second: {11}";
+            this.label3.Text = "Current/Total ticks: {7}/{8}\r\nCurrent/Total bars: {9}/{10}\r\nAverage notes per sec" +
+    "ond: {11}";
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(12, 182);
+            this.groupBox1.Location = new System.Drawing.Point(8, 182);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(351, 89);
             this.groupBox1.TabIndex = 7;
@@ -122,7 +122,7 @@
             // TemplatesLabel
             // 
             this.TemplatesLabel.AutoSize = true;
-            this.TemplatesLabel.Location = new System.Drawing.Point(11, 286);
+            this.TemplatesLabel.Location = new System.Drawing.Point(7, 282);
             this.TemplatesLabel.Name = "TemplatesLabel";
             this.TemplatesLabel.Size = new System.Drawing.Size(59, 13);
             this.TemplatesLabel.TabIndex = 8;
@@ -137,7 +137,7 @@
             "MIDITrail Standard",
             "MIDITrail Vertical",
             "Essential"});
-            this.TemplatesBox.Location = new System.Drawing.Point(71, 283);
+            this.TemplatesBox.Location = new System.Drawing.Point(67, 279);
             this.TemplatesBox.Name = "TemplatesBox";
             this.TemplatesBox.Size = new System.Drawing.Size(134, 21);
             this.TemplatesBox.TabIndex = 9;
@@ -147,7 +147,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(371, 313);
+            this.ClientSize = new System.Drawing.Size(367, 309);
             this.ControlBox = false;
             this.Controls.Add(this.TemplatesBox);
             this.Controls.Add(this.TemplatesLabel);

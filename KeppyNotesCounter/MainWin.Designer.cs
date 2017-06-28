@@ -53,7 +53,9 @@
             this.XHalfHalfHalfMode = new System.Windows.Forms.MenuItem();
             this.XHalfHalfMode = new System.Windows.Forms.MenuItem();
             this.XHalfMode = new System.Windows.Forms.MenuItem();
+            this.XLessQuarterMode = new System.Windows.Forms.MenuItem();
             this.NativeMode = new System.Windows.Forms.MenuItem();
+            this.XQuarterMode = new System.Windows.Forms.MenuItem();
             this.X2Mode = new System.Windows.Forms.MenuItem();
             this.X4Mode = new System.Windows.Forms.MenuItem();
             this.X8Mode = new System.Windows.Forms.MenuItem();
@@ -90,9 +92,9 @@
             // 
             this.CurrentStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CurrentStatus.Location = new System.Drawing.Point(46, 443);
+            this.CurrentStatus.Location = new System.Drawing.Point(46, 497);
             this.CurrentStatus.Name = "CurrentStatus";
-            this.CurrentStatus.Size = new System.Drawing.Size(171, 13);
+            this.CurrentStatus.Size = new System.Drawing.Size(375, 13);
             this.CurrentStatus.TabIndex = 6;
             this.CurrentStatus.Text = "Idle";
             // 
@@ -100,7 +102,7 @@
             // 
             this.DoNotUse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.DoNotUse.AutoSize = true;
-            this.DoNotUse.Location = new System.Drawing.Point(9, 443);
+            this.DoNotUse.Location = new System.Drawing.Point(9, 497);
             this.DoNotUse.Name = "DoNotUse";
             this.DoNotUse.Size = new System.Drawing.Size(40, 13);
             this.DoNotUse.TabIndex = 5;
@@ -110,9 +112,9 @@
             // 
             this.CurrentMIDILoaded.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CurrentMIDILoaded.Location = new System.Drawing.Point(225, 443);
+            this.CurrentMIDILoaded.Location = new System.Drawing.Point(439, 497);
             this.CurrentMIDILoaded.Name = "CurrentMIDILoaded";
-            this.CurrentMIDILoaded.Size = new System.Drawing.Size(215, 13);
+            this.CurrentMIDILoaded.Size = new System.Drawing.Size(428, 13);
             this.CurrentMIDILoaded.TabIndex = 7;
             this.CurrentMIDILoaded.Text = "No MIDI loaded";
             this.CurrentMIDILoaded.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -133,7 +135,7 @@
             this.PreviewBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PreviewBox.Location = new System.Drawing.Point(12, 12);
             this.PreviewBox.Name = "PreviewBox";
-            this.PreviewBox.Size = new System.Drawing.Size(426, 426);
+            this.PreviewBox.Size = new System.Drawing.Size(853, 480);
             this.PreviewBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.PreviewBox.TabIndex = 4;
             this.PreviewBox.TabStop = false;
@@ -211,7 +213,9 @@
             this.XHalfHalfHalfMode,
             this.XHalfHalfMode,
             this.XHalfMode,
+            this.XLessQuarterMode,
             this.NativeMode,
+            this.XQuarterMode,
             this.X2Mode,
             this.X4Mode,
             this.X8Mode,
@@ -237,40 +241,52 @@
             this.XHalfMode.Text = "0.5x";
             this.XHalfMode.Click += new System.EventHandler(this.XHalfMode_Click);
             // 
+            // XLessQuarterMode
+            // 
+            this.XLessQuarterMode.Index = 3;
+            this.XLessQuarterMode.Text = "0.75x";
+            this.XLessQuarterMode.Click += new System.EventHandler(this.XLessQuarterMode_Click);
+            // 
             // NativeMode
             // 
-            this.NativeMode.Index = 3;
+            this.NativeMode.Index = 4;
             this.NativeMode.Text = "1x (Native)";
             this.NativeMode.Click += new System.EventHandler(this.NativeMode_Click);
             // 
+            // XQuarterMode
+            // 
+            this.XQuarterMode.Index = 5;
+            this.XQuarterMode.Text = "1.5x";
+            this.XQuarterMode.Click += new System.EventHandler(this.XQuarterMode_Click);
+            // 
             // X2Mode
             // 
-            this.X2Mode.Index = 4;
+            this.X2Mode.Index = 6;
             this.X2Mode.Text = "2x";
             this.X2Mode.Click += new System.EventHandler(this.X2Mode_Click);
             // 
             // X4Mode
             // 
-            this.X4Mode.Index = 5;
+            this.X4Mode.Index = 7;
             this.X4Mode.Text = "4x";
             this.X4Mode.Click += new System.EventHandler(this.X4Mode_Click);
             // 
             // X8Mode
             // 
-            this.X8Mode.Index = 6;
+            this.X8Mode.Index = 8;
             this.X8Mode.Text = "8x";
             this.X8Mode.Click += new System.EventHandler(this.X8Mode_Click);
             // 
             // menuItem13
             // 
-            this.menuItem13.Index = 7;
+            this.menuItem13.Index = 9;
             this.menuItem13.Text = "-";
             // 
             // menuItem14
             // 
             this.menuItem14.Enabled = false;
-            this.menuItem14.Index = 8;
-            this.menuItem14.Text = "Native is 1024x1024";
+            this.menuItem14.Index = 10;
+            this.menuItem14.Text = "Native is 1920x1080";
             // 
             // NoTrimMillisecs
             // 
@@ -326,7 +342,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(450, 465);
+            this.ClientSize = new System.Drawing.Size(877, 519);
             this.Controls.Add(this.CurrentStatus);
             this.Controls.Add(this.DoNotUse);
             this.Controls.Add(this.CurrentMIDILoaded);
@@ -384,6 +400,8 @@
         private System.Windows.Forms.MenuItem XHalfHalfHalfMode;
         private System.Windows.Forms.MenuItem XHalfHalfMode;
         private System.Windows.Forms.MenuItem XHalfMode;
+        private System.Windows.Forms.MenuItem XLessQuarterMode;
+        private System.Windows.Forms.MenuItem XQuarterMode;
     }
 }
 

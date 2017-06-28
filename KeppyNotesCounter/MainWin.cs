@@ -31,10 +31,11 @@ namespace KeppyNotesCounter
             public static String TextTemplate = "";
             public static String AverageNotesPerSecond = "0";
             public static SYNCPROC NoteSync;
+            public static SYNCPROC TimeSigSync;
             public static Int32 StreamHandle;
             public static Single PPQN = 0.0f; 
-            public static TimeSpan CurrentTime = new TimeSpan(0);
-            public static TimeSpan TotalTime = new TimeSpan(0);
+            public static TimeSpan CurrentTime = TimeSpan.Zero;
+            public static TimeSpan TotalTime = TimeSpan.Zero;
             public static String HowManyZeroesNotes = "";
             public static String HowManyZeroesBars = "";
             public static Int32 Tempo = 0;
@@ -61,18 +62,20 @@ namespace KeppyNotesCounter
         {
             try
             {
+                String Beat = Regex.Match(Data.Mark.text, "^[^ ]+").Value;
+
                 return String.Format(Data.TextTemplate,
                     ReturnOutputText(Data.CurrentTime),
                     ReturnOutputText(Data.TotalTime),
                     Data.Tempo.ToString("000"),
                     Data.PlayedNotes.ToString(Data.HowManyZeroesNotes),
                     Data.TotalNotes,
-                    Regex.Match(Data.Mark.text, "^[^ ]+").Value,
+                    String.IsNullOrEmpty(Beat) ? "0/0" : Beat,
                     Data.PPQN,
                     Data.Tick,
                     Data.TotalTicks,
                     ((Data.Bar / 2) + 1).ToString(Data.HowManyZeroesBars),
-                    ((Data.TotalBars / 2) + 1).ToString(),
+                    ((Data.TotalBars / 2) + 1).ToString(Data.HowManyZeroesBars),
                     Data.AverageNotesPerSecond
                     );
             }
@@ -83,16 +86,18 @@ namespace KeppyNotesCounter
         {
             CheckPos.RunWorkerAsync();
             GarbageCollector.RunWorkerAsync();
-            if (Properties.Settings.Default.Res == 128) XHalfHalfHalfMode.Checked = true;
-            else if (Properties.Settings.Default.Res == 256) XHalfHalfMode.Checked = true;
-            else if (Properties.Settings.Default.Res == 512) XHalfMode.Checked = true;
-            else if (Properties.Settings.Default.Res == 1024) NativeMode.Checked = true;
-            else if (Properties.Settings.Default.Res == 2048) X2Mode.Checked = true;
-            else if (Properties.Settings.Default.Res == 4096) X4Mode.Checked = true;
-            else if (Properties.Settings.Default.Res == 8192) X8Mode.Checked = true;
+            if (Properties.Settings.Default.ResMulti == 8.0f) XHalfHalfHalfMode.Checked = true;
+            else if (Properties.Settings.Default.ResMulti == 4.0f) XHalfHalfMode.Checked = true;
+            else if (Properties.Settings.Default.ResMulti == 2.0f) XHalfMode.Checked = true;
+            else if (Properties.Settings.Default.ResMulti == 1.5f) XLessQuarterMode.Checked = true;
+            else if (Properties.Settings.Default.ResMulti == 1.0f) NativeMode.Checked = true;
+            else if (Properties.Settings.Default.ResMulti == 0.75f) XQuarterMode.Checked = true;
+            else if (Properties.Settings.Default.ResMulti == 0.5f) X2Mode.Checked = true;
+            else if (Properties.Settings.Default.ResMulti == 0.25f) X4Mode.Checked = true;
+            else if (Properties.Settings.Default.ResMulti == 0.125f) X8Mode.Checked = true;
             else
             {
-                Properties.Settings.Default.Res = 1024;
+                Properties.Settings.Default.ResMulti = 1.0f;
                 Properties.Settings.Default.Save();
                 NativeMode.Checked = true;
             }
@@ -109,6 +114,11 @@ namespace KeppyNotesCounter
                 Data.PlayedNotes++;
                 Data.PlayedNotesAvg++;
             }
+        }
+
+        private void TimeSigSyncProc(int handle, int channel, int data, IntPtr user)
+        {
+            BassMidi.BASS_MIDI_StreamGetMark(Data.StreamHandle, BASSMIDIMarker.BASS_MIDI_MARK_TIMESIG, data, Data.Mark);
         }
 
         private void StartConversion(string str)
@@ -134,7 +144,10 @@ namespace KeppyNotesCounter
 
         public void PushFrame(string text, bool isexample)
         {
-            Bitmap bmp = new Bitmap(Properties.Settings.Default.Res, Properties.Settings.Default.Res);
+            Bitmap bmp = new Bitmap(
+                (Int32)(Properties.Settings.Default.WRes / Properties.Settings.Default.ResMulti),
+                (Int32)(Properties.Settings.Default.HRes / Properties.Settings.Default.ResMulti)
+                );
 
             RectangleF rectf = new RectangleF(0, 0, bmp.Width, bmp.Height);
 
@@ -206,6 +219,11 @@ namespace KeppyNotesCounter
                 Data.NoteSync = new SYNCPROC(NoteSyncProc);
                 Bass.BASS_ChannelSetSync(Data.StreamHandle, BASSSync.BASS_SYNC_MIDI_EVENT, (long)BASSMIDIEvent.MIDI_EVENT_NOTE, Data.NoteSync, IntPtr.Zero);
 
+                // Initialize time signature sync
+                BassMidi.BASS_MIDI_StreamGetMark(Data.StreamHandle, BASSMIDIMarker.BASS_MIDI_MARK_TIMESIG, 0, Data.Mark);
+                Data.TimeSigSync = new SYNCPROC(TimeSigSyncProc);
+                Bass.BASS_ChannelSetSync(Data.StreamHandle, BASSSync.BASS_SYNC_MIDI_TIMESIG, (long)BASSMIDIMarker.BASS_MIDI_MARK_TIMESIG, Data.TimeSigSync, IntPtr.Zero);
+
                 // Initialize note count
                 Data.TotalNotes = BassMidi.BASS_MIDI_StreamGetEvents(Data.StreamHandle, -1, (BASSMIDIEvent)0x20000, null);
                 Data.HowManyZeroesNotes = String.Concat(Enumerable.Repeat("0", Data.TotalNotes.ToString().Length));
@@ -273,15 +291,7 @@ namespace KeppyNotesCounter
                 else
                 {
                     if (Data.TotalTime.Minutes >= 10) return TimeToCheck.ToString(String.Format(@"mm\:ss\.{0}", F));
-                    else
-                    {
-                        if (Data.TotalTime.Minutes >= 1) return TimeToCheck.ToString(String.Format(@"m\:ss\.{0}", F));
-                        else
-                        {
-                            if (Data.TotalTime.Seconds >= 10) return TimeToCheck.ToString(String.Format(@"ss\.{0}", F));
-                            else return TimeToCheck.ToString(String.Format(@"s\.{0}", F));
-                        }
-                    }
+                    else return TimeToCheck.ToString(String.Format(@"m\:ss\.{0}", F));
                 }
             }
         }
@@ -300,18 +310,16 @@ namespace KeppyNotesCounter
                     Double CurRAWToDouble = Bass.BASS_ChannelBytes2Seconds(Data.StreamHandle, MIDICurrentPosRAW);
                     Data.TotalTime = TimeSpan.FromSeconds(LenRAWToDouble);
                     Data.CurrentTime = TimeSpan.FromSeconds(CurRAWToDouble);
-                    BassMidi.BASS_MIDI_StreamGetMark(Data.StreamHandle, BASSMIDIMarker.BASS_MIDI_MARK_TIMESIG, 0, Data.Mark);
                     Bass.BASS_ChannelGetAttribute(Data.StreamHandle, BASSAttribute.BASS_ATTRIB_MIDI_PPQN, ref Data.PPQN);
                     Data.TotalTicks = Bass.BASS_ChannelGetLength(Data.StreamHandle, BASSMode.BASS_POS_MIDI_TICK);
                     Data.Tick = Bass.BASS_ChannelGetPosition(Data.StreamHandle, BASSMode.BASS_POS_MIDI_TICK);
                     Int32 Tempo = 60000000 / BassMidi.BASS_MIDI_StreamGetEvent(Data.StreamHandle, 0, BASSMIDIEvent.MIDI_EVENT_TEMPO);
-                    Data.Tempo = Tempo.LimitToRange(0, 999);
+                    Data.Tempo = Tempo.LimitIntegerToRange(0, 999);
 
                     try
                     {
-                        Int32[] DAT = (from Match m in Regex.Matches(Data.Mark.text, @"\d+") select int.Parse(m.Value)).ToArray();
-                        Data.Bar = (Int64)(Data.Tick / (Data.PPQN / (8 / DAT[1]) * DAT[0]));
-                        Data.TotalBars = (Int64)(Data.TotalTicks / (Data.PPQN / (8 / DAT[1]) * DAT[0]));
+                        Data.Bar = ((Int64)(Data.Tick / (Data.PPQN / (8 / 4) * 4))).LimitLongToRange(0, 9223372036854775807);
+                        Data.TotalBars = ((Int64)(Data.TotalTicks / (Data.PPQN / (8 / 4) * 4))).LimitLongToRange(0, 9223372036854775807);
                         Data.HowManyZeroesBars = String.Concat(Enumerable.Repeat("0", Data.TotalBars.ToString().Length));
                     }
                     catch
@@ -489,12 +497,14 @@ namespace KeppyNotesCounter
 
         private void XHalfHalfHalfMode_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Res = 128;
+            Properties.Settings.Default.ResMulti = 8.0f;
             Properties.Settings.Default.Save();
             XHalfHalfHalfMode.Checked = true;
             XHalfHalfMode.Checked = false;
             XHalfMode.Checked = false;
+            XLessQuarterMode.Checked = false;
             NativeMode.Checked = false;
+            XQuarterMode.Checked = false;
             X2Mode.Checked = false;
             X4Mode.Checked = false;
             X8Mode.Checked = false;
@@ -503,12 +513,14 @@ namespace KeppyNotesCounter
 
         private void XHalfHalfMode_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Res = 256;
+            Properties.Settings.Default.ResMulti = 4.0f;
             Properties.Settings.Default.Save();
             XHalfHalfHalfMode.Checked = false;
             XHalfHalfMode.Checked = true;
             XHalfMode.Checked = false;
+            XLessQuarterMode.Checked = false;
             NativeMode.Checked = false;
+            XQuarterMode.Checked = false;
             X2Mode.Checked = false;
             X4Mode.Checked = false;
             X8Mode.Checked = false;
@@ -517,12 +529,30 @@ namespace KeppyNotesCounter
 
         private void XHalfMode_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Res = 512;
+            Properties.Settings.Default.ResMulti = 2.0f;
             Properties.Settings.Default.Save();
             XHalfHalfHalfMode.Checked = false;
             XHalfHalfMode.Checked = false;
             XHalfMode.Checked = true;
+            XLessQuarterMode.Checked = false;
             NativeMode.Checked = false;
+            XQuarterMode.Checked = false;
+            X2Mode.Checked = false;
+            X4Mode.Checked = false;
+            X8Mode.Checked = false;
+            PushFrame(ReturnText(), true);
+        }
+
+        private void XLessQuarterMode_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ResMulti = 1.5f;
+            Properties.Settings.Default.Save();
+            XHalfHalfHalfMode.Checked = false;
+            XHalfHalfMode.Checked = false;
+            XHalfMode.Checked = false;
+            XLessQuarterMode.Checked = true;
+            NativeMode.Checked = false;
+            XQuarterMode.Checked = false;
             X2Mode.Checked = false;
             X4Mode.Checked = false;
             X8Mode.Checked = false;
@@ -531,12 +561,30 @@ namespace KeppyNotesCounter
 
         private void NativeMode_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Res = 1024;
+            Properties.Settings.Default.ResMulti = 1.0f;
             Properties.Settings.Default.Save();
             XHalfHalfHalfMode.Checked = false;
             XHalfHalfMode.Checked = false;
             XHalfMode.Checked = false;
+            XLessQuarterMode.Checked = false;
             NativeMode.Checked = true;
+            XQuarterMode.Checked = false;
+            X2Mode.Checked = false;
+            X4Mode.Checked = false;
+            X8Mode.Checked = false;
+            PushFrame(ReturnText(), true);
+        }
+
+        private void XQuarterMode_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ResMulti = 0.75f;
+            Properties.Settings.Default.Save();
+            XHalfHalfHalfMode.Checked = false;
+            XHalfHalfMode.Checked = false;
+            XHalfMode.Checked = false;
+            XLessQuarterMode.Checked = false;
+            NativeMode.Checked = false;
+            XQuarterMode.Checked = true;
             X2Mode.Checked = false;
             X4Mode.Checked = false;
             X8Mode.Checked = false;
@@ -545,12 +593,14 @@ namespace KeppyNotesCounter
 
         private void X2Mode_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Res = 2048;
+            Properties.Settings.Default.ResMulti = 0.5f;
             Properties.Settings.Default.Save();
             XHalfHalfHalfMode.Checked = false;
             XHalfHalfMode.Checked = false;
             XHalfMode.Checked = false;
+            XLessQuarterMode.Checked = false;
             NativeMode.Checked = false;
+            XQuarterMode.Checked = false;
             X2Mode.Checked = true;
             X4Mode.Checked = false;
             X8Mode.Checked = false;
@@ -559,12 +609,14 @@ namespace KeppyNotesCounter
 
         private void X4Mode_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Res = 4096;
+            Properties.Settings.Default.ResMulti = 0.25f;
             Properties.Settings.Default.Save();
             XHalfHalfHalfMode.Checked = false;
             XHalfHalfMode.Checked = false;
             XHalfMode.Checked = false;
+            XLessQuarterMode.Checked = false;
             NativeMode.Checked = false;
+            XQuarterMode.Checked = false;
             X2Mode.Checked = false;
             X4Mode.Checked = true;
             X8Mode.Checked = false;
@@ -573,12 +625,14 @@ namespace KeppyNotesCounter
 
         private void X8Mode_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Res = 8192;
+            Properties.Settings.Default.ResMulti = 0.125f;
             Properties.Settings.Default.Save();
             XHalfHalfHalfMode.Checked = false;
             XHalfHalfMode.Checked = false;
             XHalfMode.Checked = false;
+            XLessQuarterMode.Checked = false;
             NativeMode.Checked = false;
+            XQuarterMode.Checked = false;
             X2Mode.Checked = false;
             X4Mode.Checked = false;
             X8Mode.Checked = true;
@@ -597,6 +651,7 @@ namespace KeppyNotesCounter
                 NoTrimMillisecs.Checked = false;
                 Properties.Settings.Default.NoTrimMilliseconds = false;
             }
+            PushFrame(ReturnText(), true);
         }
 
         private void GarbageCollector_DoWork(object sender, DoWorkEventArgs e)
@@ -612,8 +667,14 @@ namespace KeppyNotesCounter
 
     public static class InputExtensions
     {
-        public static int LimitToRange(
-            this int value, int inclusiveMinimum, int inclusiveMaximum)
+        public static int LimitIntegerToRange(this int value, int inclusiveMinimum, int inclusiveMaximum)
+        {
+            if (value < inclusiveMinimum) { return inclusiveMinimum; }
+            if (value > inclusiveMaximum) { return inclusiveMaximum; }
+            return value;
+        }
+
+        public static long LimitLongToRange(this long value, long inclusiveMinimum, long inclusiveMaximum)
         {
             if (value < inclusiveMinimum) { return inclusiveMinimum; }
             if (value > inclusiveMaximum) { return inclusiveMaximum; }

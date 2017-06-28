@@ -25,7 +25,7 @@ namespace KeppyNotesCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{3}/{4}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string CustomCounterTemplate {
             get {
                 return ((string)(this["CustomCounterTemplate"]));
@@ -49,13 +49,13 @@ namespace KeppyNotesCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int Res {
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public float ResMulti {
             get {
-                return ((int)(this["Res"]));
+                return ((float)(this["ResMulti"]));
             }
             set {
-                this["Res"] = value;
+                this["ResMulti"] = value;
             }
         }
         
@@ -103,6 +103,24 @@ namespace KeppyNotesCounter.Properties {
         public bool IsUnstableRelease {
             get {
                 return ((bool)(this["IsUnstableRelease"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1920")]
+        public int WRes {
+            get {
+                return ((int)(this["WRes"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1080")]
+        public int HRes {
+            get {
+                return ((int)(this["HRes"]));
             }
         }
     }
