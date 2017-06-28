@@ -42,3 +42,8 @@ YouTube: https://www.youtube.com/channel/UCJeqODojIv4TdeHcBfHJRn
 
 Thank you for using my program!!
 ~ Keppy
+
+## Credits
+FFMPEG for their awesome A/V codec library: https://ffmpeg.org (Compiled executable from: http://ffmpeg.zeranoe.com/builds/)
+Un4seen for their incredible BASS libraries: https://www.un4seen.com
+Radio42 for his incredible BASS.NET library for C#: http://www.bass.radio42.com
