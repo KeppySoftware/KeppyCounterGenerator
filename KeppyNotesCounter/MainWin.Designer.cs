@@ -90,8 +90,7 @@
             // 
             // CurrentStatus
             // 
-            this.CurrentStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CurrentStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.CurrentStatus.Location = new System.Drawing.Point(46, 497);
             this.CurrentStatus.Name = "CurrentStatus";
             this.CurrentStatus.Size = new System.Drawing.Size(375, 13);
@@ -104,14 +103,13 @@
             this.DoNotUse.AutoSize = true;
             this.DoNotUse.Location = new System.Drawing.Point(9, 497);
             this.DoNotUse.Name = "DoNotUse";
-            this.DoNotUse.Size = new System.Drawing.Size(40, 13);
+            this.DoNotUse.Size = new System.Drawing.Size(42, 13);
             this.DoNotUse.TabIndex = 5;
             this.DoNotUse.Text = "Status:";
             // 
             // CurrentMIDILoaded
             // 
-            this.CurrentMIDILoaded.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CurrentMIDILoaded.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CurrentMIDILoaded.Location = new System.Drawing.Point(439, 497);
             this.CurrentMIDILoaded.Name = "CurrentMIDILoaded";
             this.CurrentMIDILoaded.Size = new System.Drawing.Size(428, 13);
@@ -340,13 +338,14 @@
             // 
             // MainWin
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(877, 519);
             this.Controls.Add(this.CurrentStatus);
             this.Controls.Add(this.DoNotUse);
             this.Controls.Add(this.CurrentMIDILoaded);
             this.Controls.Add(this.PreviewBox);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.MenuBar;
             this.Name = "MainWin";
