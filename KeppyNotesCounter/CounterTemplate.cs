@@ -42,7 +42,7 @@ namespace KeppyNotesCounter
             if (TemplatesBox.SelectedIndex > 0)
             {
                 TemplateEditor.ReadOnly = true;
-                TemplateEditor.Text = Properties.Settings.Default.TemplatesCounter[TemplatesBox.SelectedIndex - 1];               
+                TemplateEditor.Text = Properties.Settings.Default.TemplatesCounter[TemplatesBox.SelectedIndex - 1].Replace("\\n", "\n");               
             }
             else
             {

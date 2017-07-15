@@ -123,5 +123,17 @@ namespace KeppyNotesCounter.Properties {
                 return ((int)(this["HRes"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseAllThreads {
+            get {
+                return ((bool)(this["UseAllThreads"]));
+            }
+            set {
+                this["UseAllThreads"] = value;
+            }
+        }
     }
 }

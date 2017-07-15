@@ -34,5 +34,8 @@
     <Setting Name="HRes" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1080</Value>
     </Setting>
+    <Setting Name="UseAllThreads" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -61,6 +61,7 @@
             this.X8Mode = new System.Windows.Forms.MenuItem();
             this.menuItem13 = new System.Windows.Forms.MenuItem();
             this.menuItem14 = new System.Windows.Forms.MenuItem();
+            this.UseAllThreads = new System.Windows.Forms.MenuItem();
             this.NoTrimMillisecs = new System.Windows.Forms.MenuItem();
             this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.ChangeFontTypeface = new System.Windows.Forms.MenuItem();
@@ -196,6 +197,7 @@
             this.menuItem6.Index = 1;
             this.menuItem6.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem3,
+            this.UseAllThreads,
             this.NoTrimMillisecs,
             this.menuItem7,
             this.ChangeFontTypeface,
@@ -286,37 +288,43 @@
             this.menuItem14.Index = 10;
             this.menuItem14.Text = "Native is 1920x1080";
             // 
+            // UseAllThreads
+            // 
+            this.UseAllThreads.Index = 1;
+            this.UseAllThreads.Text = "Use all cores/threads for the conversion";
+            this.UseAllThreads.Click += new System.EventHandler(this.UseAllThreads_Click);
+            // 
             // NoTrimMillisecs
             // 
-            this.NoTrimMillisecs.Index = 1;
+            this.NoTrimMillisecs.Index = 2;
             this.NoTrimMillisecs.Text = "Do not trim milliseconds";
             this.NoTrimMillisecs.Click += new System.EventHandler(this.NoTrimMillisecs_Click);
             // 
             // menuItem7
             // 
-            this.menuItem7.Index = 2;
+            this.menuItem7.Index = 3;
             this.menuItem7.Text = "-";
             // 
             // ChangeFontTypeface
             // 
-            this.ChangeFontTypeface.Index = 3;
+            this.ChangeFontTypeface.Index = 4;
             this.ChangeFontTypeface.Text = "Change font (Final output)";
             this.ChangeFontTypeface.Click += new System.EventHandler(this.ChangeFontTypeface_Click);
             // 
             // ChangeBackgroundColor
             // 
-            this.ChangeBackgroundColor.Index = 4;
+            this.ChangeBackgroundColor.Index = 5;
             this.ChangeBackgroundColor.Text = "Change background color (Preview)";
             this.ChangeBackgroundColor.Click += new System.EventHandler(this.ChangeBackgroundColor_Click);
             // 
             // menuItem2
             // 
-            this.menuItem2.Index = 5;
+            this.menuItem2.Index = 6;
             this.menuItem2.Text = "-";
             // 
             // CCT
             // 
-            this.CCT.Index = 6;
+            this.CCT.Index = 7;
             this.CCT.Text = "Change counter template";
             this.CCT.Click += new System.EventHandler(this.CCT_Click);
             // 
@@ -401,6 +409,7 @@
         private System.Windows.Forms.MenuItem XHalfMode;
         private System.Windows.Forms.MenuItem XLessQuarterMode;
         private System.Windows.Forms.MenuItem XQuarterMode;
+        private System.Windows.Forms.MenuItem UseAllThreads;
     }
 }
 

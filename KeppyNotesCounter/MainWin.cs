@@ -132,7 +132,10 @@ namespace KeppyNotesCounter
                 psi.CreateNoWindow = true;
                 psi.FileName = "ffmpeg.exe";
                 psi.WorkingDirectory = Directory.GetCurrentDirectory();
-                psi.Arguments = String.Format("-y -vsync 2 -r {0} -i - -vcodec qtrle \"{1}.mov\"", 60, Path.GetFileNameWithoutExtension(str).Replace(" ", "_"));
+                psi.Arguments = String.Format("-y -vsync 2 {0} -r {1} -i - -vcodec qtrle \"{2}.mov\"",
+                    Properties.Settings.Default.UseAllThreads ? String.Format("-threads {0}", Environment.ProcessorCount) : "", // Use all threads or not?
+                    60, // Framerate
+                    Path.GetFileNameWithoutExtension(str).Replace(" ", "_")); // File output
                 FFMPEGProcess.FFMPEG = Process.Start(psi);
             }
             catch (Exception err)
@@ -338,7 +341,7 @@ namespace KeppyNotesCounter
                         percentagefinal = percentage;
                     Data.PercentageProgress = percentagefinal.ToString("0.0%");
 
-                    System.Threading.Thread.Sleep(10);
+                    System.Threading.Thread.Sleep(1);
                 }
                 catch { }
             }
@@ -651,7 +654,23 @@ namespace KeppyNotesCounter
                 NoTrimMillisecs.Checked = false;
                 Properties.Settings.Default.NoTrimMilliseconds = false;
             }
+            Properties.Settings.Default.Save();
             PushFrame(ReturnText(), true);
+        }
+
+        private void UseAllThreads_Click(object sender, EventArgs e)
+        {
+            if (UseAllThreads.Checked != true)
+            {
+                UseAllThreads.Checked = true;
+                Properties.Settings.Default.UseAllThreads = true;
+            }
+            else
+            {
+                UseAllThreads.Checked = false;
+                Properties.Settings.Default.UseAllThreads = false;
+            }
+            Properties.Settings.Default.Save();
         }
 
         private void GarbageCollector_DoWork(object sender, DoWorkEventArgs e)

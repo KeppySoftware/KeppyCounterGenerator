@@ -35,10 +35,10 @@
             // InfoApp
             // 
             this.InfoApp.Dock = System.Windows.Forms.DockStyle.Top;
-            this.InfoApp.Font = new System.Drawing.Font("MingLiU-ExtB", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InfoApp.Font = new System.Drawing.Font("MS Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.InfoApp.Location = new System.Drawing.Point(0, 0);
             this.InfoApp.Name = "InfoApp";
-            this.InfoApp.Size = new System.Drawing.Size(267, 90);
+            this.InfoApp.Size = new System.Drawing.Size(263, 90);
             this.InfoApp.TabIndex = 0;
             this.InfoApp.Text = "0123456789";
             this.InfoApp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -56,9 +56,9 @@
             // 
             // Info
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(267, 116);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(263, 112);
             this.ControlBox = false;
             this.Controls.Add(this.OKBtn);
             this.Controls.Add(this.InfoApp);
