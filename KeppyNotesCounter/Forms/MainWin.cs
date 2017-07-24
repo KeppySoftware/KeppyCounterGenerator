@@ -28,7 +28,13 @@ namespace KeppyNotesCounter
             public static BASS_MIDI_MARK Mark = new BASS_MIDI_MARK();
             public static String PercentageProgress = "0%";
             public static String MIDIToLoad;
-            public static String TextTemplate = "";
+            public static String MovieOutput;
+            public static String TextTemplateBL = "";
+            public static String TextTemplateBC = "";
+            public static String TextTemplateBR = "";
+            public static String TextTemplateTL = "";
+            public static String TextTemplateTC = "";
+            public static String TextTemplateTR = "";
             public static String AverageNotesPerSecond = "0";
             public static SYNCPROC NoteSync;
             public static SYNCPROC TimeSigSync;
@@ -58,13 +64,13 @@ namespace KeppyNotesCounter
             InitializeComponent();
         }
 
-        private string ReturnText()
+        private string ReturnText(string template)
         {
             try
             {
                 String Beat = Regex.Match(Data.Mark.text, "^[^ ]+").Value;
 
-                return String.Format(Data.TextTemplate,
+                return String.Format(template,
                     ReturnOutputText(Data.CurrentTime),
                     ReturnOutputText(Data.TotalTime),
                     Data.Tempo.ToString("000"),
@@ -101,10 +107,30 @@ namespace KeppyNotesCounter
                 Properties.Settings.Default.Save();
                 NativeMode.Checked = true;
             }
+
             NoTrimMillisecs.Checked = Properties.Settings.Default.NoTrimMilliseconds;
-            if (Properties.Settings.Default.TemplatesCounterIndex == 0) Data.TextTemplate = Properties.Settings.Default.CustomCounterTemplate;
-            else Data.TextTemplate = Properties.Settings.Default.TemplatesCounter[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
-            PushFrame(ReturnText(), true);
+            HideMilliseconds.Checked = Properties.Settings.Default.RemoveMilliseconds;
+
+            if (Properties.Settings.Default.TemplatesCounterIndex == 0)
+            {
+                Data.TextTemplateBL = Properties.Settings.Default.CustomCounterTemplateBL;
+                Data.TextTemplateBC = Properties.Settings.Default.CustomCounterTemplateBC;
+                Data.TextTemplateBR = Properties.Settings.Default.CustomCounterTemplateBR;
+                Data.TextTemplateTL = Properties.Settings.Default.CustomCounterTemplateTL;
+                Data.TextTemplateTC = Properties.Settings.Default.CustomCounterTemplateTC;
+                Data.TextTemplateTR = Properties.Settings.Default.CustomCounterTemplateTR;
+            }
+            else
+            {
+                Data.TextTemplateBL = Properties.Settings.Default.TemplatesCounterBL[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateBC = Properties.Settings.Default.TemplatesCounterBC[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateBR = Properties.Settings.Default.TemplatesCounterBR[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateTL = Properties.Settings.Default.TemplatesCounterTL[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateTC = Properties.Settings.Default.TemplatesCounterTC[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateTR = Properties.Settings.Default.TemplatesCounterTR[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+            }
+
+            PushFrame(true);
         }
 
         private void NoteSyncProc(int handle, int channel, int data, IntPtr user)
@@ -132,10 +158,10 @@ namespace KeppyNotesCounter
                 psi.CreateNoWindow = true;
                 psi.FileName = "ffmpeg.exe";
                 psi.WorkingDirectory = Directory.GetCurrentDirectory();
-                psi.Arguments = String.Format("-y -vsync 2 {0} -r {1} -i - -vcodec qtrle \"{2}.mov\"",
+                psi.Arguments = String.Format("-y -vsync 2 {0} -r {1} -i - -vcodec qtrle \"{2}\"",
                     Properties.Settings.Default.UseAllThreads ? String.Format("-threads {0}", Environment.ProcessorCount) : "", // Use all threads or not?
                     60, // Framerate
-                    Path.GetFileNameWithoutExtension(str).Replace(" ", "_")); // File output
+                    Data.MovieOutput); // File output
                 FFMPEGProcess.FFMPEG = Process.Start(psi);
             }
             catch (Exception err)
@@ -145,7 +171,38 @@ namespace KeppyNotesCounter
             }
         }
 
-        public void PushFrame(string text, bool isexample)
+
+        public void AddTextToFrame(string text, Brush textcolor, RectangleF rectf, StringAlignment X, StringAlignment Y, Graphics g)
+        {
+            StringFormat format = new StringFormat()
+            {
+                Alignment = X,
+                LineAlignment = Y,
+            };
+
+            g.DrawString(text, Properties.Settings.Default.CounterFont, textcolor, rectf, format);
+        }
+
+        public void AddWatermarkToFrame(RectangleF rectf, Graphics g)
+        {
+            Brush textcolorp = new SolidBrush(Color.Red);
+            Font preview = new Font(Properties.Settings.Default.CounterFont.FontFamily, (48.0f / Properties.Settings.Default.ResMulti), FontStyle.Regular);
+
+            StringFormat format = new StringFormat()
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center,
+            };
+
+            g.DrawString(String.Format("This is a preview in {0}x{1}\nThis text will not appear in the final render",
+                    (Int32)(Properties.Settings.Default.WRes / Properties.Settings.Default.ResMulti),
+                    (Int32)(Properties.Settings.Default.HRes / Properties.Settings.Default.ResMulti)),
+                    preview, textcolorp, rectf, format);
+
+            textcolorp.Dispose();
+        }
+
+        public void PushFrame(bool isexample)
         {
             Bitmap bmp = new Bitmap(
                 (Int32)(Properties.Settings.Default.WRes / Properties.Settings.Default.ResMulti),
@@ -154,25 +211,28 @@ namespace KeppyNotesCounter
 
             RectangleF rectf = new RectangleF(0, 0, bmp.Width, bmp.Height);
 
-            Brush brush = new SolidBrush(Color.Transparent);
-            Brush brush2 = new SolidBrush(Color.White);
+            Brush background = new SolidBrush(Color.Transparent);
+            Brush textcolor = new SolidBrush(Color.White);
 
             Graphics g = Graphics.FromImage(bmp);
 
-            g.FillRectangle(brush, rectf);
-
+            g.FillRectangle(background, rectf);
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
-            StringFormat format = new StringFormat()
-            {
-                Alignment = StringAlignment.Near,
-                LineAlignment = StringAlignment.Far,
-            };
+            AddTextToFrame(ReturnText(Data.TextTemplateBL), textcolor, rectf, StringAlignment.Near, StringAlignment.Far, g);
+            AddTextToFrame(ReturnText(Data.TextTemplateBC), textcolor, rectf, StringAlignment.Center, StringAlignment.Far, g);
+            AddTextToFrame(ReturnText(Data.TextTemplateBR), textcolor, rectf, StringAlignment.Far, StringAlignment.Far, g);
+            AddTextToFrame(ReturnText(Data.TextTemplateTL), textcolor, rectf, StringAlignment.Near, StringAlignment.Near, g);
+            AddTextToFrame(ReturnText(Data.TextTemplateTC), textcolor, rectf, StringAlignment.Center, StringAlignment.Near, g);
+            AddTextToFrame(ReturnText(Data.TextTemplateTR), textcolor, rectf, StringAlignment.Far, StringAlignment.Near, g);
 
-            g.DrawString(text, Properties.Settings.Default.CounterFont, brush2, rectf, format);
+            if (isexample == true)
+            {
+                AddWatermarkToFrame(rectf, g);
+            }
 
             // Flush all graphics changes to the bitmap
             g.Flush();
@@ -189,8 +249,8 @@ namespace KeppyNotesCounter
             }
 
             bmp.Dispose();
-            brush.Dispose();
-            brush2.Dispose();
+            background.Dispose();
+            textcolor.Dispose();
             g.Dispose();
         }
 
@@ -239,7 +299,7 @@ namespace KeppyNotesCounter
                     // 5 seconds of nothing
                     if (Settings.Interrupt == true) break;
                     Data.AverageNotesPerSecond = "0";
-                    PushFrame(ReturnText(), false);
+                    PushFrame(false);
                     FFMPEGProcess.Frames++;
                 }
 
@@ -253,7 +313,7 @@ namespace KeppyNotesCounter
                         Data.AverageNotesPerSecond = Data.PlayedNotesAvg.ToString();
                         Data.PlayedNotesAvg = 0;
                     }
-                    PushFrame(ReturnText(), false);
+                    PushFrame(false);
                     FFMPEGProcess.Frames++;
                 }
 
@@ -265,7 +325,7 @@ namespace KeppyNotesCounter
                     // 5 seconds of nothing
                     if (Settings.Interrupt == true) break;
                     Data.AverageNotesPerSecond = "0";
-                    PushFrame(ReturnText(), false);
+                    PushFrame(false);
                     FFMPEGProcess.Frames++;
                 }
 
@@ -285,16 +345,31 @@ namespace KeppyNotesCounter
 
         private static String ReturnOutputText(TimeSpan TimeToCheck)
         {
-            String F = "f";
-            if (Properties.Settings.Default.NoTrimMilliseconds == true) { F = "fff"; }
-            if (Data.TotalTime.Hours >= 10) return TimeToCheck.ToString(String.Format(@"hh\:mm\:ss\.{0}", F));
-            else
+            String F;
+            if (Properties.Settings.Default.RemoveMilliseconds == false)
             {
-                if (Data.TotalTime.Hours >= 1) return TimeToCheck.ToString(String.Format(@"h\:mm\:ss\.{0}", F));
+                if (Properties.Settings.Default.NoTrimMilliseconds == true)
+                {
+                    F = @"\.fff";
+                }
                 else
                 {
-                    if (Data.TotalTime.Minutes >= 10) return TimeToCheck.ToString(String.Format(@"mm\:ss\.{0}", F));
-                    else return TimeToCheck.ToString(String.Format(@"m\:ss\.{0}", F));
+                    F = @"\.f";
+                }
+            }
+            else
+            {
+                F = null;
+            }
+
+            if (Data.TotalTime.Hours >= 10) return TimeToCheck.ToString(String.Format(@"hh\:mm\:ss{0}", F));
+            else
+            {
+                if (Data.TotalTime.Hours >= 1) return TimeToCheck.ToString(String.Format(@"h\:mm\:ss{0}", F));
+                else
+                {
+                    if (Data.TotalTime.Minutes >= 10) return TimeToCheck.ToString(String.Format(@"mm\:ss{0}", F));
+                    else return TimeToCheck.ToString(String.Format(@"m\:ss{0}", F));
                 }
             }
         }
@@ -350,9 +425,10 @@ namespace KeppyNotesCounter
         private void SelectMIDIDialog_Click(object sender, EventArgs e)
         {
             Init:
-            if (this.OpenMIDI.ShowDialog() == DialogResult.OK)
+            OpenMIDI.InitialDirectory = Properties.Settings.Default.LastMIDIFolder;
+            if (OpenMIDI.ShowDialog() == DialogResult.OK)
             {
-                if (System.IO.Path.GetExtension(OpenMIDI.FileName).ToLower() != ".mid")
+                if (Path.GetExtension(OpenMIDI.FileName).ToLower() != ".mid")
                 {
                     MessageBox.Show("Select a MIDI!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     goto Init;
@@ -361,6 +437,8 @@ namespace KeppyNotesCounter
                 {
                     Data.MIDIToLoad = OpenMIDI.FileName;
                     CurrentMIDILoaded.Text = Path.GetFileName(Data.MIDIToLoad);
+                    Properties.Settings.Default.LastMIDIFolder = Path.GetDirectoryName(OpenMIDI.FileName);
+                    Properties.Settings.Default.Save();
                     MIDIName.SetToolTip(CurrentMIDILoaded, String.Format("Selected MIDI:\n{0}", Data.MIDIToLoad));
                 }
             }
@@ -371,7 +449,15 @@ namespace KeppyNotesCounter
             Settings.Interrupt = false;
             if (File.Exists(Data.MIDIToLoad))
             {
-                FrameConverter.RunWorkerAsync();
+                SaveMovieTo.InitialDirectory = Properties.Settings.Default.LastExportFolder;
+                SaveMovieTo.FileName = String.Format("{0}.mov", Path.GetFileNameWithoutExtension(Data.MIDIToLoad));
+                if (SaveMovieTo.ShowDialog() == DialogResult.OK)
+                {
+                    Data.MovieOutput = SaveMovieTo.FileName;
+                    Properties.Settings.Default.LastExportFolder = Path.GetDirectoryName(SaveMovieTo.FileName);
+                    Properties.Settings.Default.Save();
+                    FrameConverter.RunWorkerAsync();
+                }
             }
             else
             {
@@ -398,8 +484,9 @@ namespace KeppyNotesCounter
                 StartConvThread.Enabled = false;
                 ChangeFontTypeface.Enabled = false;
                 NoTrimMillisecs.Enabled = false;
+                HideMilliseconds.Enabled = false;
                 CCT.Enabled = false;
-                menuItem3.Enabled = false;
+                ResItems.Enabled = false;
 
                 CurrentStatus.Text = String.Format("{0} ({1} frames done)", Data.PercentageProgress, FFMPEGProcess.Frames);
 
@@ -418,8 +505,9 @@ namespace KeppyNotesCounter
                 StartConvThread.Enabled = true;
                 ChangeFontTypeface.Enabled = true;
                 NoTrimMillisecs.Enabled = true;
+                HideMilliseconds.Enabled = true;
                 CCT.Enabled = true;
-                menuItem3.Enabled = true;
+                ResItems.Enabled = true;
 
                 CurrentStatus.Text = "Idle";
             }
@@ -437,7 +525,7 @@ namespace KeppyNotesCounter
                     {
                         Properties.Settings.Default.CounterFont = FontTypeface.Font;
                         Properties.Settings.Default.Save();
-                        PushFrame(ReturnText(), true);
+                        PushFrame(true);
                     }
                     catch
                     {
@@ -464,7 +552,7 @@ namespace KeppyNotesCounter
                     try
                     {
                         PreviewBox.BackColor = BackgroundColor.Color;
-                        PushFrame(ReturnText(), true);
+                        PushFrame(true);
                     }
                     catch
                     {
@@ -480,12 +568,50 @@ namespace KeppyNotesCounter
             }
         }
 
+        private void ChangeBackgroundImg_Click(object sender, EventArgs e)
+        {
+            Init:
+            ImportBackground.InitialDirectory = Properties.Settings.Default.LastBackgroundFolder;
+            if (ImportBackground.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    PreviewBox.BackgroundImage = Image.FromFile(ImportBackground.FileName);
+                    Properties.Settings.Default.LastBackgroundFolder = Path.GetDirectoryName(ImportBackground.FileName);
+                    Properties.Settings.Default.Save();
+                }
+                catch
+                {
+                    MessageBox.Show("Error.");
+                    goto Init;
+                }
+            }
+        }
+
         private void CCT_Click(object sender, EventArgs e)
         {
             new CounterTemplate().ShowDialog();
-            if (Properties.Settings.Default.TemplatesCounterIndex == 0) Data.TextTemplate = Properties.Settings.Default.CustomCounterTemplate;
-            else Data.TextTemplate = Properties.Settings.Default.TemplatesCounter[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
-            PushFrame(ReturnText(), true);
+
+            if (Properties.Settings.Default.TemplatesCounterIndex == 0)
+            {
+                Data.TextTemplateBL = Properties.Settings.Default.CustomCounterTemplateBL;
+                Data.TextTemplateBC = Properties.Settings.Default.CustomCounterTemplateBC;
+                Data.TextTemplateBR = Properties.Settings.Default.CustomCounterTemplateBR;
+                Data.TextTemplateTL = Properties.Settings.Default.CustomCounterTemplateTL;
+                Data.TextTemplateTC = Properties.Settings.Default.CustomCounterTemplateTC;
+                Data.TextTemplateTR = Properties.Settings.Default.CustomCounterTemplateTR;
+            }
+            else
+            {
+                Data.TextTemplateBL = Properties.Settings.Default.TemplatesCounterBL[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateBC = Properties.Settings.Default.TemplatesCounterBC[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateBR = Properties.Settings.Default.TemplatesCounterBR[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateTL = Properties.Settings.Default.TemplatesCounterTL[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateTC = Properties.Settings.Default.TemplatesCounterTC[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateTR = Properties.Settings.Default.TemplatesCounterTR[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+            }
+
+            PushFrame(true);
         }
 
         private void menuItem5_Click(object sender, EventArgs e)
@@ -511,7 +637,7 @@ namespace KeppyNotesCounter
             X2Mode.Checked = false;
             X4Mode.Checked = false;
             X8Mode.Checked = false;
-            PushFrame(ReturnText(), true);
+            PushFrame(true);
         }
 
         private void XHalfHalfMode_Click(object sender, EventArgs e)
@@ -527,7 +653,7 @@ namespace KeppyNotesCounter
             X2Mode.Checked = false;
             X4Mode.Checked = false;
             X8Mode.Checked = false;
-            PushFrame(ReturnText(), true);
+            PushFrame(true);
         }
 
         private void XHalfMode_Click(object sender, EventArgs e)
@@ -543,7 +669,7 @@ namespace KeppyNotesCounter
             X2Mode.Checked = false;
             X4Mode.Checked = false;
             X8Mode.Checked = false;
-            PushFrame(ReturnText(), true);
+            PushFrame(true);
         }
 
         private void XLessQuarterMode_Click(object sender, EventArgs e)
@@ -559,7 +685,7 @@ namespace KeppyNotesCounter
             X2Mode.Checked = false;
             X4Mode.Checked = false;
             X8Mode.Checked = false;
-            PushFrame(ReturnText(), true);
+            PushFrame(true);
         }
 
         private void NativeMode_Click(object sender, EventArgs e)
@@ -575,7 +701,7 @@ namespace KeppyNotesCounter
             X2Mode.Checked = false;
             X4Mode.Checked = false;
             X8Mode.Checked = false;
-            PushFrame(ReturnText(), true);
+            PushFrame(true);
         }
 
         private void XQuarterMode_Click(object sender, EventArgs e)
@@ -591,7 +717,7 @@ namespace KeppyNotesCounter
             X2Mode.Checked = false;
             X4Mode.Checked = false;
             X8Mode.Checked = false;
-            PushFrame(ReturnText(), true);
+            PushFrame(true);
         }
 
         private void X2Mode_Click(object sender, EventArgs e)
@@ -607,7 +733,7 @@ namespace KeppyNotesCounter
             X2Mode.Checked = true;
             X4Mode.Checked = false;
             X8Mode.Checked = false;
-            PushFrame(ReturnText(), true);
+            PushFrame(true);
         }
 
         private void X4Mode_Click(object sender, EventArgs e)
@@ -623,7 +749,7 @@ namespace KeppyNotesCounter
             X2Mode.Checked = false;
             X4Mode.Checked = true;
             X8Mode.Checked = false;
-            PushFrame(ReturnText(), true);
+            PushFrame(true);
         }
 
         private void X8Mode_Click(object sender, EventArgs e)
@@ -639,7 +765,7 @@ namespace KeppyNotesCounter
             X2Mode.Checked = false;
             X4Mode.Checked = false;
             X8Mode.Checked = true;
-            PushFrame(ReturnText(), true);
+            PushFrame(true);
         }
 
         private void NoTrimMillisecs_Click(object sender, EventArgs e)
@@ -655,7 +781,23 @@ namespace KeppyNotesCounter
                 Properties.Settings.Default.NoTrimMilliseconds = false;
             }
             Properties.Settings.Default.Save();
-            PushFrame(ReturnText(), true);
+            PushFrame(true);
+        }
+
+        private void HideMillseconds_Click(object sender, EventArgs e)
+        {
+            if (HideMilliseconds.Checked != true)
+            {
+                HideMilliseconds.Checked = true;
+                Properties.Settings.Default.RemoveMilliseconds = true;
+            }
+            else
+            {
+                HideMilliseconds.Checked = false;
+                Properties.Settings.Default.RemoveMilliseconds = false;
+            }
+            Properties.Settings.Default.Save();
+            PushFrame(true);
         }
 
         private void UseAllThreads_Click(object sender, EventArgs e)

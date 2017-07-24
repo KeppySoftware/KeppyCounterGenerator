@@ -49,7 +49,7 @@
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.ResItems = new System.Windows.Forms.MenuItem();
             this.XHalfHalfHalfMode = new System.Windows.Forms.MenuItem();
             this.XHalfHalfMode = new System.Windows.Forms.MenuItem();
             this.XHalfMode = new System.Windows.Forms.MenuItem();
@@ -61,8 +61,11 @@
             this.X8Mode = new System.Windows.Forms.MenuItem();
             this.menuItem13 = new System.Windows.Forms.MenuItem();
             this.menuItem14 = new System.Windows.Forms.MenuItem();
-            this.UseAllThreads = new System.Windows.Forms.MenuItem();
+            this.menuItem8 = new System.Windows.Forms.MenuItem();
+            this.HideMilliseconds = new System.Windows.Forms.MenuItem();
+            this.menuItem10 = new System.Windows.Forms.MenuItem();
             this.NoTrimMillisecs = new System.Windows.Forms.MenuItem();
+            this.UseAllThreads = new System.Windows.Forms.MenuItem();
             this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.ChangeFontTypeface = new System.Windows.Forms.MenuItem();
             this.ChangeBackgroundColor = new System.Windows.Forms.MenuItem();
@@ -73,6 +76,9 @@
             this.CheckPos = new System.ComponentModel.BackgroundWorker();
             this.MIDIName = new System.Windows.Forms.ToolTip(this.components);
             this.GarbageCollector = new System.ComponentModel.BackgroundWorker();
+            this.SaveMovieTo = new System.Windows.Forms.SaveFileDialog();
+            this.ChangeBackgroundImg = new System.Windows.Forms.MenuItem();
+            this.ImportBackground = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.PreviewBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -130,7 +136,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PreviewBox.BackColor = System.Drawing.Color.Black;
-            this.PreviewBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.PreviewBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PreviewBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PreviewBox.Location = new System.Drawing.Point(12, 12);
             this.PreviewBox.Name = "PreviewBox";
@@ -196,20 +202,21 @@
             // 
             this.menuItem6.Index = 1;
             this.menuItem6.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem3,
+            this.ResItems,
+            this.menuItem8,
             this.UseAllThreads,
-            this.NoTrimMillisecs,
             this.menuItem7,
             this.ChangeFontTypeface,
             this.ChangeBackgroundColor,
+            this.ChangeBackgroundImg,
             this.menuItem2,
             this.CCT});
             this.menuItem6.Text = "Settings";
             // 
-            // menuItem3
+            // ResItems
             // 
-            this.menuItem3.Index = 0;
-            this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.ResItems.Index = 0;
+            this.ResItems.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.XHalfHalfHalfMode,
             this.XHalfHalfMode,
             this.XHalfMode,
@@ -221,7 +228,7 @@
             this.X8Mode,
             this.menuItem13,
             this.menuItem14});
-            this.menuItem3.Text = "Resolution";
+            this.ResItems.Text = "Resolution";
             // 
             // XHalfHalfHalfMode
             // 
@@ -288,17 +295,37 @@
             this.menuItem14.Index = 10;
             this.menuItem14.Text = "Native is 1920x1080";
             // 
-            // UseAllThreads
+            // menuItem8
             // 
-            this.UseAllThreads.Index = 1;
-            this.UseAllThreads.Text = "Use all cores/threads for the conversion";
-            this.UseAllThreads.Click += new System.EventHandler(this.UseAllThreads_Click);
+            this.menuItem8.Index = 1;
+            this.menuItem8.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.HideMilliseconds,
+            this.menuItem10,
+            this.NoTrimMillisecs});
+            this.menuItem8.Text = "Milliseconds";
+            // 
+            // HideMilliseconds
+            // 
+            this.HideMilliseconds.Index = 0;
+            this.HideMilliseconds.Text = "Hide milliseconds";
+            this.HideMilliseconds.Click += new System.EventHandler(this.HideMillseconds_Click);
+            // 
+            // menuItem10
+            // 
+            this.menuItem10.Index = 1;
+            this.menuItem10.Text = "-";
             // 
             // NoTrimMillisecs
             // 
             this.NoTrimMillisecs.Index = 2;
             this.NoTrimMillisecs.Text = "Do not trim milliseconds";
             this.NoTrimMillisecs.Click += new System.EventHandler(this.NoTrimMillisecs_Click);
+            // 
+            // UseAllThreads
+            // 
+            this.UseAllThreads.Index = 2;
+            this.UseAllThreads.Text = "Use all cores/threads for the conversion";
+            this.UseAllThreads.Click += new System.EventHandler(this.UseAllThreads_Click);
             // 
             // menuItem7
             // 
@@ -319,12 +346,12 @@
             // 
             // menuItem2
             // 
-            this.menuItem2.Index = 6;
+            this.menuItem2.Index = 7;
             this.menuItem2.Text = "-";
             // 
             // CCT
             // 
-            this.CCT.Index = 7;
+            this.CCT.Index = 8;
             this.CCT.Text = "Change counter template";
             this.CCT.Click += new System.EventHandler(this.CCT_Click);
             // 
@@ -343,6 +370,21 @@
             // GarbageCollector
             // 
             this.GarbageCollector.DoWork += new System.ComponentModel.DoWorkEventHandler(this.GarbageCollector_DoWork);
+            // 
+            // SaveMovieTo
+            // 
+            this.SaveMovieTo.Filter = "QuickTime movie (*.mov)|*.mov";
+            // 
+            // ChangeBackgroundImg
+            // 
+            this.ChangeBackgroundImg.Index = 6;
+            this.ChangeBackgroundImg.Text = "Change background image (Preview)";
+            this.ChangeBackgroundImg.Click += new System.EventHandler(this.ChangeBackgroundImg_Click);
+            // 
+            // ImportBackground
+            // 
+            this.ImportBackground.FileName = "ImportBackground";
+            this.ImportBackground.Filter = "Image files (*.jpg, *.png, *.bmp)|*.jpg;*.png;*.bmp";
             // 
             // MainWin
             // 
@@ -393,7 +435,7 @@
         private System.ComponentModel.BackgroundWorker CheckPos;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem CCT;
-        private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.MenuItem ResItems;
         private System.Windows.Forms.MenuItem NativeMode;
         private System.Windows.Forms.MenuItem X2Mode;
         private System.Windows.Forms.MenuItem X4Mode;
@@ -410,6 +452,12 @@
         private System.Windows.Forms.MenuItem XLessQuarterMode;
         private System.Windows.Forms.MenuItem XQuarterMode;
         private System.Windows.Forms.MenuItem UseAllThreads;
+        private System.Windows.Forms.MenuItem menuItem8;
+        private System.Windows.Forms.MenuItem HideMilliseconds;
+        private System.Windows.Forms.MenuItem menuItem10;
+        private System.Windows.Forms.SaveFileDialog SaveMovieTo;
+        private System.Windows.Forms.MenuItem ChangeBackgroundImg;
+        private System.Windows.Forms.OpenFileDialog ImportBackground;
     }
 }
 

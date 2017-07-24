@@ -56,7 +56,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>keyboard_musical_midi.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\keyboard_musical_midi.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Bass.Net">
@@ -79,33 +79,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CounterTemplate.cs">
+    <Compile Include="Forms\CounterTemplate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CounterTemplate.Designer.cs">
+    <Compile Include="Forms\CounterTemplate.Designer.cs">
       <DependentUpon>CounterTemplate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Info.cs">
+    <Compile Include="Forms\Info.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Info.Designer.cs">
+    <Compile Include="Forms\Info.Designer.cs">
       <DependentUpon>Info.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainWin.cs">
+    <Compile Include="Forms\MainWin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainWin.Designer.cs">
+    <Compile Include="Forms\MainWin.Designer.cs">
       <DependentUpon>MainWin.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="CounterTemplate.resx">
+    <EmbeddedResource Include="Forms\CounterTemplate.resx">
       <DependentUpon>CounterTemplate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Info.resx">
+    <EmbeddedResource Include="Forms\Info.resx">
       <DependentUpon>Info.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWin.resx">
+    <EmbeddedResource Include="Forms\MainWin.resx">
       <DependentUpon>MainWin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -135,7 +135,7 @@
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="keyboard_musical_midi.ico" />
+    <Content Include="Resources\keyboard_musical_midi.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.2.0.0\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.2.0.0\build\dotnet\Fody.targets')" />

@@ -26,12 +26,12 @@ namespace KeppyNotesCounter.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string CustomCounterTemplate {
+        public string CustomCounterTemplateBL {
             get {
-                return ((string)(this["CustomCounterTemplate"]));
+                return ((string)(this["CustomCounterTemplateBL"]));
             }
             set {
-                this["CustomCounterTemplate"] = value;
+                this["CustomCounterTemplateBL"] = value;
             }
         }
         
@@ -78,10 +78,11 @@ namespace KeppyNotesCounter.Properties {
   <string>TIME:{0}/{1} BPM:{2} BEAT:{5} BAR:{9}/{10} NOTES:{3}/{4}</string>
   <string>TIME:{0}/{1}\nBPM:{2}\nBEAT:{5}\nBAR:{9}/{10}\nNOTES:{3}/{4}</string>
   <string>Time:{0}/{1} Tempo:{2}BPM Notes:{3}/{4}</string>
+  <string> </string>
 </ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection TemplatesCounter {
+        public global::System.Collections.Specialized.StringCollection TemplatesCounterBL {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["TemplatesCounter"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["TemplatesCounterBL"]));
             }
         }
         
@@ -133,6 +134,181 @@ namespace KeppyNotesCounter.Properties {
             }
             set {
                 this["UseAllThreads"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CustomCounterTemplateBR {
+            get {
+                return ((string)(this["CustomCounterTemplateBR"]));
+            }
+            set {
+                this["CustomCounterTemplateBR"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CustomCounterTemplateTL {
+            get {
+                return ((string)(this["CustomCounterTemplateTL"]));
+            }
+            set {
+                this["CustomCounterTemplateTL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CustomCounterTemplateTR {
+            get {
+                return ((string)(this["CustomCounterTemplateTR"]));
+            }
+            set {
+                this["CustomCounterTemplateTR"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CustomCounterTemplateBC {
+            get {
+                return ((string)(this["CustomCounterTemplateBC"]));
+            }
+            set {
+                this["CustomCounterTemplateBC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CustomCounterTemplateTC {
+            get {
+                return ((string)(this["CustomCounterTemplateTC"]));
+            }
+            set {
+                this["CustomCounterTemplateTC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring />\r\n  <string />\r\n  <string />\r\n  <string />\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection TemplatesCounterBC {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["TemplatesCounterBC"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring />\r\n  <string />\r\n  <string />\r\n  <string />\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection TemplatesCounterBR {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["TemplatesCounterBR"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring />\r\n  <string />\r\n  <string />\r\n  <string>{1}</string>\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection TemplatesCounterTR {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["TemplatesCounterTR"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring />\r\n  <string />\r\n  <string />\r\n  <string />\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection TemplatesCounterTC {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["TemplatesCounterTC"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring />\r\n  <string />\r\n  <string />\r\n  <string>{0}</string>\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection TemplatesCounterTL {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["TemplatesCounterTL"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastExportFolder {
+            get {
+                return ((string)(this["LastExportFolder"]));
+            }
+            set {
+                this["LastExportFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastMIDIFolder {
+            get {
+                return ((string)(this["LastMIDIFolder"]));
+            }
+            set {
+                this["LastMIDIFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UpgradeRequired {
+            get {
+                return ((bool)(this["UpgradeRequired"]));
+            }
+            set {
+                this["UpgradeRequired"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RemoveMilliseconds {
+            get {
+                return ((bool)(this["RemoveMilliseconds"]));
+            }
+            set {
+                this["RemoveMilliseconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastBackgroundFolder {
+            get {
+                return ((string)(this["LastBackgroundFolder"]));
+            }
+            set {
+                this["LastBackgroundFolder"] = value;
             }
         }
     }

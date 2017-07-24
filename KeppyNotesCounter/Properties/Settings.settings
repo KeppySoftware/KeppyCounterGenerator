@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="KeppyNotesCounter.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="CustomCounterTemplate" Type="System.String" Scope="User">
+    <Setting Name="CustomCounterTemplateBL" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="CounterFont" Type="System.Drawing.Font" Scope="User">
@@ -14,12 +14,13 @@
     <Setting Name="NoTrimMilliseconds" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="TemplatesCounter" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+    <Setting Name="TemplatesCounterBL" Type="System.Collections.Specialized.StringCollection" Scope="Application">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;string&gt;TIME:{0}/{1} BPM:{2} BEAT:{5} BAR:{9}/{10} NOTES:{3}/{4}&lt;/string&gt;
   &lt;string&gt;TIME:{0}/{1}\nBPM:{2}\nBEAT:{5}\nBAR:{9}/{10}\nNOTES:{3}/{4}&lt;/string&gt;
   &lt;string&gt;Time:{0}/{1} Tempo:{2}BPM Notes:{3}/{4}&lt;/string&gt;
+  &lt;string&gt; &lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="TemplatesCounterIndex" Type="System.Int32" Scope="User">
@@ -36,6 +37,81 @@
     </Setting>
     <Setting Name="UseAllThreads" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CustomCounterTemplateBR" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CustomCounterTemplateTL" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CustomCounterTemplateTR" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CustomCounterTemplateBC" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CustomCounterTemplateTC" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="TemplatesCounterBC" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="TemplatesCounterBR" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="TemplatesCounterTR" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+  &lt;string&gt;{1}&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="TemplatesCounterTC" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="TemplatesCounterTL" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+  &lt;string /&gt;
+  &lt;string&gt;{0}&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="LastExportFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LastMIDIFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RemoveMilliseconds" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LastBackgroundFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>
