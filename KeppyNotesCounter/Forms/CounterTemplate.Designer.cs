@@ -71,15 +71,15 @@
             this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label2.Location = new System.Drawing.Point(3, 17);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(169, 79);
+            this.label2.Size = new System.Drawing.Size(275, 82);
             this.label2.TabIndex = 2;
             this.label2.Text = "Passed/Total time: {0}/{1}\r\nTempo: {2}\r\nPlayed/Total notes: {3}/{4}\r\nTime signatu" +
-    "re: {5}\r\nPPQN value: {6}";
+    "re: {5}\r\nPPQN value: {6}\r\nCurrent/Total ticks: {7}/{8}";
             // 
             // ConfirmBtn
             // 
             this.ConfirmBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConfirmBtn.Location = new System.Drawing.Point(774, 424);
+            this.ConfirmBtn.Location = new System.Drawing.Point(766, 423);
             this.ConfirmBtn.Name = "ConfirmBtn";
             this.ConfirmBtn.Size = new System.Drawing.Size(63, 23);
             this.ConfirmBtn.TabIndex = 3;
@@ -90,7 +90,7 @@
             // CancelBtn
             // 
             this.CancelBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelBtn.Location = new System.Drawing.Point(709, 424);
+            this.CancelBtn.Location = new System.Drawing.Point(701, 423);
             this.CancelBtn.Name = "CancelBtn";
             this.CancelBtn.Size = new System.Drawing.Size(63, 23);
             this.CancelBtn.TabIndex = 4;
@@ -100,7 +100,6 @@
             // 
             // TemplateEditorBL
             // 
-            this.TemplateEditorBL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TemplateEditorBL.Location = new System.Drawing.Point(12, 214);
             this.TemplateEditorBL.Name = "TemplateEditorBL";
             this.TemplateEditorBL.Size = new System.Drawing.Size(271, 92);
@@ -113,22 +112,22 @@
             this.label3.Dock = System.Windows.Forms.DockStyle.Right;
             this.label3.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label3.Location = new System.Drawing.Point(649, 17);
+            this.label3.Location = new System.Drawing.Point(547, 17);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(173, 79);
+            this.label3.Size = new System.Drawing.Size(275, 82);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Current/Total ticks: {7}/{8}\r\nCurrent/Total bars: {9}/{10}\r\nAverage notes per sec" +
-    "ond: {11}";
+            this.label3.Text = "Current/Total bars: {9}/{10}\r\nAverage notes per second: {11}\r\n\r\n\r\n\r\n[[CVn]]: Play" +
+    "ed notes on channel (n = Channel number)";
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(12, 319);
+            this.groupBox1.Location = new System.Drawing.Point(12, 312);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(825, 99);
+            this.groupBox1.Size = new System.Drawing.Size(825, 102);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Legend";
@@ -137,7 +136,7 @@
             // 
             this.TemplatesLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TemplatesLabel.AutoSize = true;
-            this.TemplatesLabel.Location = new System.Drawing.Point(12, 429);
+            this.TemplatesLabel.Location = new System.Drawing.Point(12, 428);
             this.TemplatesLabel.Name = "TemplatesLabel";
             this.TemplatesLabel.Size = new System.Drawing.Size(60, 13);
             this.TemplatesLabel.TabIndex = 8;
@@ -154,7 +153,7 @@
             "MIDITrail Vertical",
             "Essential",
             "WeimTime Template"});
-            this.TemplatesBox.Location = new System.Drawing.Point(72, 426);
+            this.TemplatesBox.Location = new System.Drawing.Point(76, 425);
             this.TemplatesBox.Name = "TemplatesBox";
             this.TemplatesBox.Size = new System.Drawing.Size(211, 21);
             this.TemplatesBox.TabIndex = 9;
@@ -162,7 +161,6 @@
             // 
             // label5
             // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(12, 198);
             this.label5.Name = "label5";
@@ -172,7 +170,6 @@
             // 
             // label6
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(565, 198);
             this.label6.Name = "label6";
@@ -182,7 +179,6 @@
             // 
             // TemplateEditorBR
             // 
-            this.TemplateEditorBR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.TemplateEditorBR.Location = new System.Drawing.Point(566, 214);
             this.TemplateEditorBR.Name = "TemplateEditorBR";
             this.TemplateEditorBR.Size = new System.Drawing.Size(271, 92);
@@ -191,7 +187,6 @@
             // 
             // label7
             // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(565, 87);
             this.label7.Name = "label7";
@@ -201,7 +196,6 @@
             // 
             // TemplateEditorTR
             // 
-            this.TemplateEditorTR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.TemplateEditorTR.Location = new System.Drawing.Point(566, 103);
             this.TemplateEditorTR.Name = "TemplateEditorTR";
             this.TemplateEditorTR.Size = new System.Drawing.Size(271, 92);
@@ -210,7 +204,6 @@
             // 
             // label8
             // 
-            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(12, 87);
             this.label8.Name = "label8";
@@ -220,7 +213,6 @@
             // 
             // TemplateEditorTL
             // 
-            this.TemplateEditorTL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TemplateEditorTL.Location = new System.Drawing.Point(12, 103);
             this.TemplateEditorTL.Name = "TemplateEditorTL";
             this.TemplateEditorTL.Size = new System.Drawing.Size(271, 92);
@@ -229,7 +221,6 @@
             // 
             // label4
             // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(288, 87);
             this.label4.Name = "label4";
@@ -239,7 +230,6 @@
             // 
             // TemplateEditorTC
             // 
-            this.TemplateEditorTC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TemplateEditorTC.Location = new System.Drawing.Point(289, 103);
             this.TemplateEditorTC.Name = "TemplateEditorTC";
             this.TemplateEditorTC.Size = new System.Drawing.Size(271, 92);
@@ -248,7 +238,6 @@
             // 
             // label9
             // 
-            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(288, 198);
             this.label9.Name = "label9";
@@ -258,7 +247,6 @@
             // 
             // TemplateEditorBC
             // 
-            this.TemplateEditorBC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TemplateEditorBC.Location = new System.Drawing.Point(289, 214);
             this.TemplateEditorBC.Name = "TemplateEditorBC";
             this.TemplateEditorBC.Size = new System.Drawing.Size(271, 92);
@@ -269,7 +257,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(845, 455);
+            this.ClientSize = new System.Drawing.Size(841, 458);
             this.ControlBox = false;
             this.Controls.Add(this.label4);
             this.Controls.Add(this.TemplateEditorTC);
@@ -290,7 +278,7 @@
             this.Controls.Add(this.ConfirmBtn);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "CounterTemplate";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

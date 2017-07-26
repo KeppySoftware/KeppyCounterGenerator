@@ -69,6 +69,7 @@
             this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.ChangeFontTypeface = new System.Windows.Forms.MenuItem();
             this.ChangeBackgroundColor = new System.Windows.Forms.MenuItem();
+            this.ChangeBackgroundImg = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.CCT = new System.Windows.Forms.MenuItem();
             this.OpenMIDI = new System.Windows.Forms.OpenFileDialog();
@@ -77,7 +78,6 @@
             this.MIDIName = new System.Windows.Forms.ToolTip(this.components);
             this.GarbageCollector = new System.ComponentModel.BackgroundWorker();
             this.SaveMovieTo = new System.Windows.Forms.SaveFileDialog();
-            this.ChangeBackgroundImg = new System.Windows.Forms.MenuItem();
             this.ImportBackground = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.PreviewBox)).BeginInit();
             this.SuspendLayout();
@@ -136,7 +136,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PreviewBox.BackColor = System.Drawing.Color.Black;
-            this.PreviewBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.PreviewBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.PreviewBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PreviewBox.Location = new System.Drawing.Point(12, 12);
             this.PreviewBox.Name = "PreviewBox";
@@ -324,7 +324,7 @@
             // UseAllThreads
             // 
             this.UseAllThreads.Index = 2;
-            this.UseAllThreads.Text = "Use all cores/threads for the conversion";
+            this.UseAllThreads.Text = "Allow FFMpeg to use all cores/threads";
             this.UseAllThreads.Click += new System.EventHandler(this.UseAllThreads_Click);
             // 
             // menuItem7
@@ -343,6 +343,12 @@
             this.ChangeBackgroundColor.Index = 5;
             this.ChangeBackgroundColor.Text = "Change background color (Preview)";
             this.ChangeBackgroundColor.Click += new System.EventHandler(this.ChangeBackgroundColor_Click);
+            // 
+            // ChangeBackgroundImg
+            // 
+            this.ChangeBackgroundImg.Index = 6;
+            this.ChangeBackgroundImg.Text = "Change background image (Preview)";
+            this.ChangeBackgroundImg.Click += new System.EventHandler(this.ChangeBackgroundImg_Click);
             // 
             // menuItem2
             // 
@@ -374,12 +380,6 @@
             // SaveMovieTo
             // 
             this.SaveMovieTo.Filter = "QuickTime movie (*.mov)|*.mov";
-            // 
-            // ChangeBackgroundImg
-            // 
-            this.ChangeBackgroundImg.Index = 6;
-            this.ChangeBackgroundImg.Text = "Change background image (Preview)";
-            this.ChangeBackgroundImg.Click += new System.EventHandler(this.ChangeBackgroundImg_Click);
             // 
             // ImportBackground
             // 

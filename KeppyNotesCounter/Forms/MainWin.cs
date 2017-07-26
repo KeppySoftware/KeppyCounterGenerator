@@ -50,7 +50,7 @@ namespace KeppyNotesCounter
             public static Int64 TotalNotes = 0;
             public static Int64 TotalTicks = 0;
             public static Int64 Tick = 0;
-            public static Int64 PlayedNotes = 0;
+            public static Int64[] PlayedNotesChan = new Int64[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             public static Int64 PlayedNotesAvg = 0;
         }
 
@@ -69,12 +69,15 @@ namespace KeppyNotesCounter
             try
             {
                 String Beat = Regex.Match(Data.Mark.text, "^[^ ]+").Value;
+                Int64 PlayedNotes = 0;
 
-                return String.Format(template,
-                    ReturnOutputText(Data.CurrentTime),
+                for (int i = 0; i < Data.PlayedNotesChan.Length; i++) PlayedNotes += Data.PlayedNotesChan[i];
+
+                String ToReturn = String.Format(template,
+                    ReturnOutputText(Data.CurrentTime),                                 // Current time
                     ReturnOutputText(Data.TotalTime),
                     Data.Tempo.ToString("000"),
-                    Data.PlayedNotes.ToString(Data.HowManyZeroesNotes),
+                    PlayedNotes.ToString(Data.HowManyZeroesNotes),
                     Data.TotalNotes,
                     String.IsNullOrEmpty(Beat) ? "0/0" : Beat,
                     Data.PPQN,
@@ -84,8 +87,36 @@ namespace KeppyNotesCounter
                     ((Data.TotalBars / 2) + 1).ToString(Data.HowManyZeroesBars),
                     Data.AverageNotesPerSecond
                     );
+
+                try
+                {
+                    ToReturn = ToReturn
+                    .Replace("[[CV1]]", Data.PlayedNotesChan[0].ToString())
+                    .Replace("[[CV2]]", Data.PlayedNotesChan[1].ToString())
+                    .Replace("[[CV3]]", Data.PlayedNotesChan[2].ToString())
+                    .Replace("[[CV4]]", Data.PlayedNotesChan[3].ToString())
+                    .Replace("[[CV5]]", Data.PlayedNotesChan[4].ToString())
+                    .Replace("[[CV6]]", Data.PlayedNotesChan[5].ToString())
+                    .Replace("[[CV7]]", Data.PlayedNotesChan[6].ToString())
+                    .Replace("[[CV8]]", Data.PlayedNotesChan[7].ToString())
+                    .Replace("[[CV9]]", Data.PlayedNotesChan[8].ToString())
+                    .Replace("[[CV10]]", Data.PlayedNotesChan[9].ToString())
+                    .Replace("[[CV11]]", Data.PlayedNotesChan[10].ToString())
+                    .Replace("[[CV12]]", Data.PlayedNotesChan[11].ToString())
+                    .Replace("[[CV13]]", Data.PlayedNotesChan[12].ToString())
+                    .Replace("[[CV14]]", Data.PlayedNotesChan[13].ToString())
+                    .Replace("[[CV15]]", Data.PlayedNotesChan[14].ToString())
+                    .Replace("[[CV16]]", Data.PlayedNotesChan[15].ToString());
+                }
+                catch { }
+
+                return ToReturn;
             }
-            catch { return "Unknown template. Please check it for errors."; }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return "Unknown template. Please check it for errors.";
+            }
         }
 
         private void MainWin_Load(object sender, EventArgs e)
@@ -135,9 +166,10 @@ namespace KeppyNotesCounter
 
         private void NoteSyncProc(int handle, int channel, int data, IntPtr user)
         {
+            int midichan = data >> 16; // MIDI channel
             if ((data & 0xff00) != 0)
             {
-                Data.PlayedNotes++;
+                Data.PlayedNotesChan[midichan]++;
                 Data.PlayedNotesAvg++;
             }
         }
@@ -329,7 +361,8 @@ namespace KeppyNotesCounter
                     FFMPEGProcess.Frames++;
                 }
 
-                Data.PlayedNotes = 0;
+                for (int i = 0; i < Data.PlayedNotesChan.Length; i++) Data.PlayedNotesChan[i] = 0;
+
                 Data.Mark = new BASS_MIDI_MARK();
                 FFMPEGProcess.Frames = 0;
                 FFMPEGProcess.FFMPEG.StandardInput.Close();
