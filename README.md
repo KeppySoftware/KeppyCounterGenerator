@@ -19,6 +19,14 @@ What you can't do:
 - Windows Vista SP1 **(64-bit OSes ONLY)**
 - QuickTime 7 Base Components installed *(The player is not mandatory)*
 
+## How to install the QuickTime Components only
+1. Download the QuickTime installer for Windows from here: https://support.apple.com/kb/DL837
+2. Run it, click Next, then in this tab, click "Custom":
+![lel1](https://i0.wp.com/www.pro-tools-pc.com/wp-content/uploads/2016/04/Quicktime-Install-1.png)
+3. Only select QuickTime Essentials, uncheck all the other junkware:
+![lel2](https://i0.wp.com/www.pro-tools-pc.com/wp-content/uploads/2016/04/Quicktime-Install-2.png)
+4. You're set!
+
 ## Request from the creator of the app
 If you're going to use my counter in your YouTube videos, please add one of these pre-made credits templates, or create yours.
 Remember to point out to at least the page of the project, to increase its user base.
