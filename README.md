@@ -21,9 +21,9 @@ What you can't do:
 
 ## How to install the QuickTime Components only
 1. Download the QuickTime installer for Windows from here: https://support.apple.com/kb/DL837
-2. Run it, click Next, then in this tab, click "Custom":
+2. Run it, click Next, then in this tab, click "Custom":<br />
 ![lel1](https://i0.wp.com/www.pro-tools-pc.com/wp-content/uploads/2016/04/Quicktime-Install-1.png)
-3. Only select QuickTime Essentials, uncheck all the other junkware:
+3. Only select QuickTime Essentials, uncheck all the other junkware:<br />
 ![lel2](https://i0.wp.com/www.pro-tools-pc.com/wp-content/uploads/2016/04/Quicktime-Install-2.png)
 4. You're set!
 
