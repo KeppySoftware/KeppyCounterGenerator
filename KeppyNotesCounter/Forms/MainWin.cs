@@ -54,6 +54,13 @@ namespace KeppyNotesCounter
             public static Int64 PlayedNotesAvg = 0;
         }
 
+        public class Framerate
+        {
+            public static DateTime _lastTime; // marks the beginning the measurement began
+            public static int _framesRendered; // an increasing count
+            public static int _fps;
+        }
+
         public class Settings
         {
             public static Boolean Interrupt = false;
@@ -62,6 +69,7 @@ namespace KeppyNotesCounter
         public MainWin()
         {
             InitializeComponent();
+            StatusStrip.Padding = new Padding(StatusStrip.Padding.Left, StatusStrip.Padding.Top, StatusStrip.Padding.Left, StatusStrip.Padding.Bottom);
         }
 
         private string ReturnText(string template)
@@ -123,21 +131,6 @@ namespace KeppyNotesCounter
         {
             CheckPos.RunWorkerAsync();
             GarbageCollector.RunWorkerAsync();
-            if (Properties.Settings.Default.ResMulti == 8.0f) XHalfHalfHalfMode.Checked = true;
-            else if (Properties.Settings.Default.ResMulti == 4.0f) XHalfHalfMode.Checked = true;
-            else if (Properties.Settings.Default.ResMulti == 2.0f) XHalfMode.Checked = true;
-            else if (Properties.Settings.Default.ResMulti == 1.5f) XLessQuarterMode.Checked = true;
-            else if (Properties.Settings.Default.ResMulti == 1.0f) NativeMode.Checked = true;
-            else if (Properties.Settings.Default.ResMulti == 0.75f) XQuarterMode.Checked = true;
-            else if (Properties.Settings.Default.ResMulti == 0.5f) X2Mode.Checked = true;
-            else if (Properties.Settings.Default.ResMulti == 0.25f) X4Mode.Checked = true;
-            else if (Properties.Settings.Default.ResMulti == 0.125f) X8Mode.Checked = true;
-            else
-            {
-                Properties.Settings.Default.ResMulti = 1.0f;
-                Properties.Settings.Default.Save();
-                NativeMode.Checked = true;
-            }
 
             NoTrimMillisecs.Checked = Properties.Settings.Default.NoTrimMilliseconds;
             HideMilliseconds.Checked = Properties.Settings.Default.RemoveMilliseconds;
@@ -179,6 +172,20 @@ namespace KeppyNotesCounter
             BassMidi.BASS_MIDI_StreamGetMark(Data.StreamHandle, BASSMIDIMarker.BASS_MIDI_MARK_TIMESIG, data, Data.Mark);
         }
 
+        private void FPSUpdate()
+        {
+            Framerate._framesRendered++;
+
+            if ((DateTime.Now - Framerate._lastTime).TotalSeconds >= 1)
+            {
+                // one second has elapsed 
+
+                Framerate._fps = Framerate._framesRendered;
+                Framerate._framesRendered = 0;
+                Framerate._lastTime = DateTime.Now;
+            }   
+        }
+
         private void StartConversion(string str)
         {
             try
@@ -218,7 +225,7 @@ namespace KeppyNotesCounter
         public void AddWatermarkToFrame(RectangleF rectf, Graphics g)
         {
             Brush textcolorp = new SolidBrush(Color.Red);
-            Font preview = new Font(Properties.Settings.Default.CounterFont.FontFamily, (48.0f / Properties.Settings.Default.ResMulti), FontStyle.Regular);
+            Font preview = new Font(Properties.Settings.Default.CounterFont.FontFamily, (18.0f / (float)(PreviewBox.Width / Properties.Settings.Default.WRes)), FontStyle.Regular);
 
             StringFormat format = new StringFormat()
             {
@@ -227,8 +234,8 @@ namespace KeppyNotesCounter
             };
 
             g.DrawString(String.Format("This is a preview in {0}x{1}\nThis text will not appear in the final render",
-                    (Int32)(Properties.Settings.Default.WRes / Properties.Settings.Default.ResMulti),
-                    (Int32)(Properties.Settings.Default.HRes / Properties.Settings.Default.ResMulti)),
+                    (Int32)(Properties.Settings.Default.WRes),
+                    (Int32)(Properties.Settings.Default.HRes)),
                     preview, textcolorp, rectf, format);
 
             textcolorp.Dispose();
@@ -237,8 +244,8 @@ namespace KeppyNotesCounter
         public void PushFrame(bool isexample)
         {
             Bitmap bmp = new Bitmap(
-                (Int32)(Properties.Settings.Default.WRes / Properties.Settings.Default.ResMulti),
-                (Int32)(Properties.Settings.Default.HRes / Properties.Settings.Default.ResMulti)
+                (Int32)(Properties.Settings.Default.WRes),
+                (Int32)(Properties.Settings.Default.HRes)
                 );
 
             RectangleF rectf = new RectangleF(0, 0, bmp.Width, bmp.Height);
@@ -325,6 +332,7 @@ namespace KeppyNotesCounter
 
                 // Initialize conversion
                 StartConversion(Data.MIDIToLoad);
+                FPSUpdate();
 
                 for (int a = 0; a <= 300; a++)
                 {
@@ -333,6 +341,7 @@ namespace KeppyNotesCounter
                     Data.AverageNotesPerSecond = "0";
                     PushFrame(false);
                     FFMPEGProcess.Frames++;
+                    FPSUpdate();
                 }
 
                 while (Bass.BASS_ChannelIsActive(Data.StreamHandle) == BASSActive.BASS_ACTIVE_PLAYING)
@@ -347,6 +356,7 @@ namespace KeppyNotesCounter
                     }
                     PushFrame(false);
                     FFMPEGProcess.Frames++;
+                    FPSUpdate();
                 }
 
                 Buffer = new Byte[ChunkLength];
@@ -359,6 +369,7 @@ namespace KeppyNotesCounter
                     Data.AverageNotesPerSecond = "0";
                     PushFrame(false);
                     FFMPEGProcess.Frames++;
+                    FPSUpdate();
                 }
 
                 for (int i = 0; i < Data.PlayedNotesChan.Length; i++) Data.PlayedNotesChan[i] = 0;
@@ -469,10 +480,15 @@ namespace KeppyNotesCounter
                 else
                 {
                     Data.MIDIToLoad = OpenMIDI.FileName;
-                    CurrentMIDILoaded.Text = Path.GetFileName(Data.MIDIToLoad);
+
+                    String MIDIFileName = Path.GetFileName(Data.MIDIToLoad);
+                    if (MIDIFileName.Length > 55) CurrentMIDILoaded.Text = Path.GetFileName(Data.MIDIToLoad).Truncate(55) + "...";
+                    else CurrentMIDILoaded.Text = Path.GetFileName(Data.MIDIToLoad);
+
                     Properties.Settings.Default.LastMIDIFolder = Path.GetDirectoryName(OpenMIDI.FileName);
                     Properties.Settings.Default.Save();
-                    MIDIName.SetToolTip(CurrentMIDILoaded, String.Format("Selected MIDI:\n{0}", Data.MIDIToLoad));
+
+                    CurrentMIDILoaded.ToolTipText = String.Format("Selected MIDI:\n{0}", Data.MIDIToLoad);
                 }
             }
         }
@@ -521,7 +537,7 @@ namespace KeppyNotesCounter
                 CCT.Enabled = false;
                 ResItems.Enabled = false;
 
-                CurrentStatus.Text = String.Format("{0} ({1} frames done)", Data.PercentageProgress, FFMPEGProcess.Frames);
+                CurrentStatus.Text = String.Format("{0} ({1} frames done, {2}FPS)", Data.PercentageProgress, FFMPEGProcess.Frames, Framerate._fps);
 
                 if (PreviewBox.Image != null) PreviewBox.Image.Dispose();
                 try
@@ -657,147 +673,9 @@ namespace KeppyNotesCounter
             new Info().ShowDialog();
         }
 
-        private void XHalfHalfHalfMode_Click(object sender, EventArgs e)
+        private void ResItems_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.ResMulti = 8.0f;
-            Properties.Settings.Default.Save();
-            XHalfHalfHalfMode.Checked = true;
-            XHalfHalfMode.Checked = false;
-            XHalfMode.Checked = false;
-            XLessQuarterMode.Checked = false;
-            NativeMode.Checked = false;
-            XQuarterMode.Checked = false;
-            X2Mode.Checked = false;
-            X4Mode.Checked = false;
-            X8Mode.Checked = false;
-            PushFrame(true);
-        }
-
-        private void XHalfHalfMode_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.ResMulti = 4.0f;
-            Properties.Settings.Default.Save();
-            XHalfHalfHalfMode.Checked = false;
-            XHalfHalfMode.Checked = true;
-            XHalfMode.Checked = false;
-            XLessQuarterMode.Checked = false;
-            NativeMode.Checked = false;
-            XQuarterMode.Checked = false;
-            X2Mode.Checked = false;
-            X4Mode.Checked = false;
-            X8Mode.Checked = false;
-            PushFrame(true);
-        }
-
-        private void XHalfMode_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.ResMulti = 2.0f;
-            Properties.Settings.Default.Save();
-            XHalfHalfHalfMode.Checked = false;
-            XHalfHalfMode.Checked = false;
-            XHalfMode.Checked = true;
-            XLessQuarterMode.Checked = false;
-            NativeMode.Checked = false;
-            XQuarterMode.Checked = false;
-            X2Mode.Checked = false;
-            X4Mode.Checked = false;
-            X8Mode.Checked = false;
-            PushFrame(true);
-        }
-
-        private void XLessQuarterMode_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.ResMulti = 1.5f;
-            Properties.Settings.Default.Save();
-            XHalfHalfHalfMode.Checked = false;
-            XHalfHalfMode.Checked = false;
-            XHalfMode.Checked = false;
-            XLessQuarterMode.Checked = true;
-            NativeMode.Checked = false;
-            XQuarterMode.Checked = false;
-            X2Mode.Checked = false;
-            X4Mode.Checked = false;
-            X8Mode.Checked = false;
-            PushFrame(true);
-        }
-
-        private void NativeMode_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.ResMulti = 1.0f;
-            Properties.Settings.Default.Save();
-            XHalfHalfHalfMode.Checked = false;
-            XHalfHalfMode.Checked = false;
-            XHalfMode.Checked = false;
-            XLessQuarterMode.Checked = false;
-            NativeMode.Checked = true;
-            XQuarterMode.Checked = false;
-            X2Mode.Checked = false;
-            X4Mode.Checked = false;
-            X8Mode.Checked = false;
-            PushFrame(true);
-        }
-
-        private void XQuarterMode_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.ResMulti = 0.75f;
-            Properties.Settings.Default.Save();
-            XHalfHalfHalfMode.Checked = false;
-            XHalfHalfMode.Checked = false;
-            XHalfMode.Checked = false;
-            XLessQuarterMode.Checked = false;
-            NativeMode.Checked = false;
-            XQuarterMode.Checked = true;
-            X2Mode.Checked = false;
-            X4Mode.Checked = false;
-            X8Mode.Checked = false;
-            PushFrame(true);
-        }
-
-        private void X2Mode_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.ResMulti = 0.5f;
-            Properties.Settings.Default.Save();
-            XHalfHalfHalfMode.Checked = false;
-            XHalfHalfMode.Checked = false;
-            XHalfMode.Checked = false;
-            XLessQuarterMode.Checked = false;
-            NativeMode.Checked = false;
-            XQuarterMode.Checked = false;
-            X2Mode.Checked = true;
-            X4Mode.Checked = false;
-            X8Mode.Checked = false;
-            PushFrame(true);
-        }
-
-        private void X4Mode_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.ResMulti = 0.25f;
-            Properties.Settings.Default.Save();
-            XHalfHalfHalfMode.Checked = false;
-            XHalfHalfMode.Checked = false;
-            XHalfMode.Checked = false;
-            XLessQuarterMode.Checked = false;
-            NativeMode.Checked = false;
-            XQuarterMode.Checked = false;
-            X2Mode.Checked = false;
-            X4Mode.Checked = true;
-            X8Mode.Checked = false;
-            PushFrame(true);
-        }
-
-        private void X8Mode_Click(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.ResMulti = 0.125f;
-            Properties.Settings.Default.Save();
-            XHalfHalfHalfMode.Checked = false;
-            XHalfHalfMode.Checked = false;
-            XHalfMode.Checked = false;
-            XLessQuarterMode.Checked = false;
-            NativeMode.Checked = false;
-            XQuarterMode.Checked = false;
-            X2Mode.Checked = false;
-            X4Mode.Checked = false;
-            X8Mode.Checked = true;
+            new OutputRes().ShowDialog();
             PushFrame(true);
         }
 
@@ -873,6 +751,15 @@ namespace KeppyNotesCounter
             if (value < inclusiveMinimum) { return inclusiveMinimum; }
             if (value > inclusiveMaximum) { return inclusiveMaximum; }
             return value;
+        }
+    }
+
+    public static class StringExt
+    {
+        public static string Truncate(this string value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            return value.Length <= maxLength ? value : value.Substring(0, maxLength);
         }
     }
 }

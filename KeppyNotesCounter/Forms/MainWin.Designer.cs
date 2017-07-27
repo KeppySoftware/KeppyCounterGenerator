@@ -35,9 +35,6 @@
             this.BackgroundColor = new System.Windows.Forms.ColorDialog();
             this.FontColor = new System.Windows.Forms.ColorDialog();
             this.FontTypeface = new System.Windows.Forms.FontDialog();
-            this.CurrentStatus = new System.Windows.Forms.Label();
-            this.DoNotUse = new System.Windows.Forms.Label();
-            this.CurrentMIDILoaded = new System.Windows.Forms.Label();
             this.LivePreview = new System.Windows.Forms.Timer(this.components);
             this.PreviewBox = new System.Windows.Forms.PictureBox();
             this.MenuBar = new System.Windows.Forms.MainMenu(this.components);
@@ -50,17 +47,6 @@
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.ResItems = new System.Windows.Forms.MenuItem();
-            this.XHalfHalfHalfMode = new System.Windows.Forms.MenuItem();
-            this.XHalfHalfMode = new System.Windows.Forms.MenuItem();
-            this.XHalfMode = new System.Windows.Forms.MenuItem();
-            this.XLessQuarterMode = new System.Windows.Forms.MenuItem();
-            this.NativeMode = new System.Windows.Forms.MenuItem();
-            this.XQuarterMode = new System.Windows.Forms.MenuItem();
-            this.X2Mode = new System.Windows.Forms.MenuItem();
-            this.X4Mode = new System.Windows.Forms.MenuItem();
-            this.X8Mode = new System.Windows.Forms.MenuItem();
-            this.menuItem13 = new System.Windows.Forms.MenuItem();
-            this.menuItem14 = new System.Windows.Forms.MenuItem();
             this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.HideMilliseconds = new System.Windows.Forms.MenuItem();
             this.menuItem10 = new System.Windows.Forms.MenuItem();
@@ -79,7 +65,12 @@
             this.GarbageCollector = new System.ComponentModel.BackgroundWorker();
             this.SaveMovieTo = new System.Windows.Forms.SaveFileDialog();
             this.ImportBackground = new System.Windows.Forms.OpenFileDialog();
+            this.StatusStrip = new System.Windows.Forms.StatusStrip();
+            this.DoNotUse = new System.Windows.Forms.ToolStripStatusLabel();
+            this.CurrentStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.CurrentMIDILoaded = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.PreviewBox)).BeginInit();
+            this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuItem12
@@ -94,35 +85,6 @@
             this.menuItem29.Index = 0;
             this.menuItem29.Text = "About the software";
             this.menuItem29.Click += new System.EventHandler(this.menuItem29_Click);
-            // 
-            // CurrentStatus
-            // 
-            this.CurrentStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.CurrentStatus.Location = new System.Drawing.Point(46, 497);
-            this.CurrentStatus.Name = "CurrentStatus";
-            this.CurrentStatus.Size = new System.Drawing.Size(375, 13);
-            this.CurrentStatus.TabIndex = 6;
-            this.CurrentStatus.Text = "Idle";
-            // 
-            // DoNotUse
-            // 
-            this.DoNotUse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DoNotUse.AutoSize = true;
-            this.DoNotUse.Location = new System.Drawing.Point(9, 497);
-            this.DoNotUse.Name = "DoNotUse";
-            this.DoNotUse.Size = new System.Drawing.Size(42, 13);
-            this.DoNotUse.TabIndex = 5;
-            this.DoNotUse.Text = "Status:";
-            // 
-            // CurrentMIDILoaded
-            // 
-            this.CurrentMIDILoaded.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CurrentMIDILoaded.Location = new System.Drawing.Point(439, 497);
-            this.CurrentMIDILoaded.Name = "CurrentMIDILoaded";
-            this.CurrentMIDILoaded.Size = new System.Drawing.Size(428, 13);
-            this.CurrentMIDILoaded.TabIndex = 7;
-            this.CurrentMIDILoaded.Text = "No MIDI loaded";
-            this.CurrentMIDILoaded.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LivePreview
             // 
@@ -216,84 +178,8 @@
             // ResItems
             // 
             this.ResItems.Index = 0;
-            this.ResItems.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.XHalfHalfHalfMode,
-            this.XHalfHalfMode,
-            this.XHalfMode,
-            this.XLessQuarterMode,
-            this.NativeMode,
-            this.XQuarterMode,
-            this.X2Mode,
-            this.X4Mode,
-            this.X8Mode,
-            this.menuItem13,
-            this.menuItem14});
-            this.ResItems.Text = "Resolution";
-            // 
-            // XHalfHalfHalfMode
-            // 
-            this.XHalfHalfHalfMode.Index = 0;
-            this.XHalfHalfHalfMode.Text = "0.125x";
-            this.XHalfHalfHalfMode.Click += new System.EventHandler(this.XHalfHalfHalfMode_Click);
-            // 
-            // XHalfHalfMode
-            // 
-            this.XHalfHalfMode.Index = 1;
-            this.XHalfHalfMode.Text = "0.25x";
-            this.XHalfHalfMode.Click += new System.EventHandler(this.XHalfHalfMode_Click);
-            // 
-            // XHalfMode
-            // 
-            this.XHalfMode.Index = 2;
-            this.XHalfMode.Text = "0.5x";
-            this.XHalfMode.Click += new System.EventHandler(this.XHalfMode_Click);
-            // 
-            // XLessQuarterMode
-            // 
-            this.XLessQuarterMode.Index = 3;
-            this.XLessQuarterMode.Text = "0.75x";
-            this.XLessQuarterMode.Click += new System.EventHandler(this.XLessQuarterMode_Click);
-            // 
-            // NativeMode
-            // 
-            this.NativeMode.Index = 4;
-            this.NativeMode.Text = "1x (Native)";
-            this.NativeMode.Click += new System.EventHandler(this.NativeMode_Click);
-            // 
-            // XQuarterMode
-            // 
-            this.XQuarterMode.Index = 5;
-            this.XQuarterMode.Text = "1.5x";
-            this.XQuarterMode.Click += new System.EventHandler(this.XQuarterMode_Click);
-            // 
-            // X2Mode
-            // 
-            this.X2Mode.Index = 6;
-            this.X2Mode.Text = "2x";
-            this.X2Mode.Click += new System.EventHandler(this.X2Mode_Click);
-            // 
-            // X4Mode
-            // 
-            this.X4Mode.Index = 7;
-            this.X4Mode.Text = "4x";
-            this.X4Mode.Click += new System.EventHandler(this.X4Mode_Click);
-            // 
-            // X8Mode
-            // 
-            this.X8Mode.Index = 8;
-            this.X8Mode.Text = "8x";
-            this.X8Mode.Click += new System.EventHandler(this.X8Mode_Click);
-            // 
-            // menuItem13
-            // 
-            this.menuItem13.Index = 9;
-            this.menuItem13.Text = "-";
-            // 
-            // menuItem14
-            // 
-            this.menuItem14.Enabled = false;
-            this.menuItem14.Index = 10;
-            this.menuItem14.Text = "Native is 1920x1080";
+            this.ResItems.Text = "Change output resolution";
+            this.ResItems.Click += new System.EventHandler(this.ResItems_Click);
             // 
             // menuItem8
             // 
@@ -302,7 +188,7 @@
             this.HideMilliseconds,
             this.menuItem10,
             this.NoTrimMillisecs});
-            this.menuItem8.Text = "Milliseconds";
+            this.menuItem8.Text = "Milliseconds in timestamp";
             // 
             // HideMilliseconds
             // 
@@ -386,14 +272,49 @@
             this.ImportBackground.FileName = "ImportBackground";
             this.ImportBackground.Filter = "Image files (*.jpg, *.png, *.bmp)|*.jpg;*.png;*.bmp";
             // 
+            // StatusStrip
+            // 
+            this.StatusStrip.GripMargin = new System.Windows.Forms.Padding(0);
+            this.StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DoNotUse,
+            this.CurrentStatus,
+            this.CurrentMIDILoaded});
+            this.StatusStrip.Location = new System.Drawing.Point(0, 503);
+            this.StatusStrip.Name = "StatusStrip";
+            this.StatusStrip.ShowItemToolTips = true;
+            this.StatusStrip.Size = new System.Drawing.Size(877, 22);
+            this.StatusStrip.SizingGrip = false;
+            this.StatusStrip.TabIndex = 8;
+            this.StatusStrip.Text = "statusStrip1";
+            // 
+            // DoNotUse
+            // 
+            this.DoNotUse.Name = "DoNotUse";
+            this.DoNotUse.Size = new System.Drawing.Size(42, 17);
+            this.DoNotUse.Text = "Status:";
+            // 
+            // CurrentStatus
+            // 
+            this.CurrentStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.CurrentStatus.Name = "CurrentStatus";
+            this.CurrentStatus.Size = new System.Drawing.Size(727, 17);
+            this.CurrentStatus.Spring = true;
+            this.CurrentStatus.Text = "Idle";
+            this.CurrentStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // CurrentMIDILoaded
+            // 
+            this.CurrentMIDILoaded.Name = "CurrentMIDILoaded";
+            this.CurrentMIDILoaded.Size = new System.Drawing.Size(93, 17);
+            this.CurrentMIDILoaded.Text = "No MIDI loaded.";
+            this.CurrentMIDILoaded.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // MainWin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(877, 519);
-            this.Controls.Add(this.CurrentStatus);
-            this.Controls.Add(this.DoNotUse);
-            this.Controls.Add(this.CurrentMIDILoaded);
+            this.ClientSize = new System.Drawing.Size(877, 525);
+            this.Controls.Add(this.StatusStrip);
             this.Controls.Add(this.PreviewBox);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -403,6 +324,8 @@
             this.Text = "Keppy\'s Counter Generator";
             this.Load += new System.EventHandler(this.MainWin_Load);
             ((System.ComponentModel.ISupportInitialize)(this.PreviewBox)).EndInit();
+            this.StatusStrip.ResumeLayout(false);
+            this.StatusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -414,9 +337,6 @@
         private System.Windows.Forms.ColorDialog BackgroundColor;
         private System.Windows.Forms.ColorDialog FontColor;
         private System.Windows.Forms.FontDialog FontTypeface;
-        private System.Windows.Forms.Label CurrentStatus;
-        private System.Windows.Forms.Label DoNotUse;
-        private System.Windows.Forms.Label CurrentMIDILoaded;
         private System.Windows.Forms.Timer LivePreview;
         private System.Windows.Forms.PictureBox PreviewBox;
         private System.Windows.Forms.MainMenu MenuBar;
@@ -436,21 +356,10 @@
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem CCT;
         private System.Windows.Forms.MenuItem ResItems;
-        private System.Windows.Forms.MenuItem NativeMode;
-        private System.Windows.Forms.MenuItem X2Mode;
-        private System.Windows.Forms.MenuItem X4Mode;
-        private System.Windows.Forms.MenuItem X8Mode;
-        private System.Windows.Forms.MenuItem menuItem13;
-        private System.Windows.Forms.MenuItem menuItem14;
         private System.Windows.Forms.MenuItem menuItem7;
         private System.Windows.Forms.MenuItem NoTrimMillisecs;
         private System.Windows.Forms.ToolTip MIDIName;
         private System.ComponentModel.BackgroundWorker GarbageCollector;
-        private System.Windows.Forms.MenuItem XHalfHalfHalfMode;
-        private System.Windows.Forms.MenuItem XHalfHalfMode;
-        private System.Windows.Forms.MenuItem XHalfMode;
-        private System.Windows.Forms.MenuItem XLessQuarterMode;
-        private System.Windows.Forms.MenuItem XQuarterMode;
         private System.Windows.Forms.MenuItem UseAllThreads;
         private System.Windows.Forms.MenuItem menuItem8;
         private System.Windows.Forms.MenuItem HideMilliseconds;
@@ -458,6 +367,10 @@
         private System.Windows.Forms.SaveFileDialog SaveMovieTo;
         private System.Windows.Forms.MenuItem ChangeBackgroundImg;
         private System.Windows.Forms.OpenFileDialog ImportBackground;
+        private System.Windows.Forms.StatusStrip StatusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel DoNotUse;
+        private System.Windows.Forms.ToolStripStatusLabel CurrentStatus;
+        private System.Windows.Forms.ToolStripStatusLabel CurrentMIDILoaded;
     }
 }
 

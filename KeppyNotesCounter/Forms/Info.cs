@@ -28,7 +28,7 @@ namespace KeppyNotesCounter
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
             InfoApp.Text = String.Format("Keppy's Notes Counter {0}.{1}.{2}{3}\nCopyright(C) KaleidonKep99 2017\nAll rights reserved.",
-                 fvi.FileMajorPart, fvi.FileMinorPart, fvi.FileBuildPart, Properties.Settings.Default.IsUnstableRelease ? "a" : "");
+                 fvi.FileMajorPart, fvi.FileMinorPart, fvi.FileBuildPart, Properties.Settings.Default.UnstableRelease);
         }
     }
 }

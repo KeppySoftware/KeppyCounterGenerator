@@ -49,18 +49,6 @@ namespace KeppyNotesCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public float ResMulti {
-            get {
-                return ((float)(this["ResMulti"]));
-            }
-            set {
-                this["ResMulti"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool NoTrimMilliseconds {
             get {
@@ -100,28 +88,34 @@ namespace KeppyNotesCounter.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool IsUnstableRelease {
+        [global::System.Configuration.DefaultSettingValueAttribute("b")]
+        public string UnstableRelease {
             get {
-                return ((bool)(this["IsUnstableRelease"]));
+                return ((string)(this["UnstableRelease"]));
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1920")]
-        public int WRes {
+        public decimal WRes {
             get {
-                return ((int)(this["WRes"]));
+                return ((decimal)(this["WRes"]));
+            }
+            set {
+                this["WRes"] = value;
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1080")]
-        public int HRes {
+        public decimal HRes {
             get {
-                return ((int)(this["HRes"]));
+                return ((decimal)(this["HRes"]));
+            }
+            set {
+                this["HRes"] = value;
             }
         }
         

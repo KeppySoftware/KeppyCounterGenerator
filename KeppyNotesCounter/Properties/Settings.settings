@@ -8,9 +8,6 @@
     <Setting Name="CounterFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Microsoft Sans Serif, 12pt</Value>
     </Setting>
-    <Setting Name="ResMulti" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
     <Setting Name="NoTrimMilliseconds" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -26,13 +23,13 @@
     <Setting Name="TemplatesCounterIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="IsUnstableRelease" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">True</Value>
+    <Setting Name="UnstableRelease" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">b</Value>
     </Setting>
-    <Setting Name="WRes" Type="System.Int32" Scope="Application">
+    <Setting Name="WRes" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">1920</Value>
     </Setting>
-    <Setting Name="HRes" Type="System.Int32" Scope="Application">
+    <Setting Name="HRes" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">1080</Value>
     </Setting>
     <Setting Name="UseAllThreads" Type="System.Boolean" Scope="User">

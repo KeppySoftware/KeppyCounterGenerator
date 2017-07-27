@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 namespace KeppyNotesCounter
@@ -14,15 +12,30 @@ namespace KeppyNotesCounter
         [STAThread]
         static void Main()
         {
-            if (Properties.Settings.Default.UpgradeRequired)
+            if (CheckQuickTime())
             {
-                Properties.Settings.Default.Upgrade();
-                Properties.Settings.Default.UpgradeRequired = false;
-                Properties.Settings.Default.Save();
+                if (Properties.Settings.Default.UpgradeRequired)
+                {
+                    Properties.Settings.Default.Upgrade();
+                    Properties.Settings.Default.UpgradeRequired = false;
+                    Properties.Settings.Default.Save();
+                }
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new MainWin());
             }
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainWin());
+            else
+            {
+                MessageBox.Show("QuickTime is required for this tool to work.\nAborting.\n\nPress OK to close the program.", "Keppy's Notes Counter - Error", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.ExitThread();
+            }
+        }
+
+        static bool CheckQuickTime()
+        {
+            if (Directory.Exists(String.Format("{0}\\QuickTime\\", Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)))) return true;
+            else return false;
         }
     }
 }
