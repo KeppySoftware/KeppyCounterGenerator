@@ -6,11 +6,12 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Midi;
 
-namespace KeppyNotesCounter
+namespace KeppyCounterGenerator
 {
     public partial class MainWin : Form
     {
@@ -132,6 +133,7 @@ namespace KeppyNotesCounter
             CheckPos.RunWorkerAsync();
             GarbageCollector.RunWorkerAsync();
 
+            DebugInfo.Checked = Properties.Settings.Default.DebugInfo;
             NoTrimMillisecs.Checked = Properties.Settings.Default.NoTrimMilliseconds;
             HideMilliseconds.Checked = Properties.Settings.Default.RemoveMilliseconds;
 
@@ -186,7 +188,7 @@ namespace KeppyNotesCounter
             }   
         }
 
-        private void StartConversion(string str)
+        private bool StartConversion(string str)
         {
             try
             {
@@ -194,19 +196,32 @@ namespace KeppyNotesCounter
                 psi.WindowStyle = ProcessWindowStyle.Hidden;
                 psi.RedirectStandardInput = true;
                 psi.UseShellExecute = false;
-                psi.CreateNoWindow = true;
+                psi.CreateNoWindow = !Properties.Settings.Default.DebugInfo;
                 psi.FileName = "ffmpeg.exe";
                 psi.WorkingDirectory = Directory.GetCurrentDirectory();
-                psi.Arguments = String.Format("-y -vsync 2 {0} -r {1} -i - -vcodec qtrle \"{2}\"",
+                psi.Arguments = String.Format("-y -vsync 2 {0} -r {1} -i - -vcodec {2} \"{3}\"",
                     Properties.Settings.Default.UseAllThreads ? String.Format("-threads {0}", Environment.ProcessorCount) : "", // Use all threads or not?
                     60, // Framerate
+                    Properties.Settings.Default.CodecOutput[Properties.Settings.Default.CodecSelection], // Codec
                     Data.MovieOutput); // File output
                 FFMPEGProcess.FFMPEG = Process.Start(psi);
+                return true;
             }
-            catch (Exception err)
+            catch
             {
                 Settings.Interrupt = true;
-                MessageBox.Show(err.ToString());
+                Bass.BASS_StreamFree(Data.StreamHandle);
+                Bass.BASS_Free();
+
+                Thread thread = new Thread(() => Clipboard.SetText("http://ffmpeg.zeranoe.com/builds/"));
+                thread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
+                thread.Start();
+                thread.Join(); //Wait for the thread to end
+
+                MessageBox.Show(
+                    String.Format("FFMpeg is missing.\n\nPlease download it from {0}, move it in the generator's root folder, then try again.\n\nThe link for the compiled libraries has been copied to the clipboard.",
+                    "http://ffmpeg.zeranoe.com/builds/"), "Error while starting the conversion", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
         }
 
@@ -331,7 +346,7 @@ namespace KeppyNotesCounter
                 Data.HowManyZeroesNotes = String.Concat(Enumerable.Repeat("0", Data.TotalNotes.ToString().Length));
 
                 // Initialize conversion
-                StartConversion(Data.MIDIToLoad);
+                if (!StartConversion(Data.MIDIToLoad)) return;
                 FPSUpdate();
 
                 for (int a = 0; a <= 300; a++)
@@ -380,6 +395,8 @@ namespace KeppyNotesCounter
 
                 Bass.BASS_StreamFree(Data.StreamHandle);
                 Bass.BASS_Free();
+
+                Settings.Interrupt = false;
             }
             catch (Exception ex)
             {
@@ -498,6 +515,14 @@ namespace KeppyNotesCounter
             Settings.Interrupt = false;
             if (File.Exists(Data.MIDIToLoad))
             {
+                if (IntPtr.Size == 4)
+                {
+                    FileInfo MIDISizeCheck = new System.IO.FileInfo(Data.MIDIToLoad);
+                    if (MIDISizeCheck.Length >= 1073741824) {
+                        MessageBox.Show("The MIDI is too big.\n\nConsider using the 64-bit release.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
                 SaveMovieTo.InitialDirectory = Properties.Settings.Default.LastExportFolder;
                 SaveMovieTo.FileName = String.Format("{0}.mov", Path.GetFileNameWithoutExtension(Data.MIDIToLoad));
                 if (SaveMovieTo.ShowDialog() == DialogResult.OK)
@@ -505,7 +530,7 @@ namespace KeppyNotesCounter
                     Data.MovieOutput = SaveMovieTo.FileName;
                     Properties.Settings.Default.LastExportFolder = Path.GetDirectoryName(SaveMovieTo.FileName);
                     Properties.Settings.Default.Save();
-                    FrameConverter.RunWorkerAsync();
+                    try { FrameConverter.RunWorkerAsync(); } catch { MessageBox.Show("The generator is busy.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
                 }
             }
             else
@@ -722,6 +747,21 @@ namespace KeppyNotesCounter
             {
                 UseAllThreads.Checked = false;
                 Properties.Settings.Default.UseAllThreads = false;
+            }
+            Properties.Settings.Default.Save();
+        }
+
+        private void DebugInfo_Click(object sender, EventArgs e)
+        {
+            if (DebugInfo.Checked != true)
+            {
+                DebugInfo.Checked = true;
+                Properties.Settings.Default.DebugInfo = true;
+            }
+            else
+            {
+                DebugInfo.Checked = false;
+                Properties.Settings.Default.DebugInfo = false;
             }
             Properties.Settings.Default.Save();
         }

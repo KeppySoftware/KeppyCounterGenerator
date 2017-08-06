@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace KeppyNotesCounter
+namespace KeppyCounterGenerator
 {
     public partial class Info : Form
     {

@@ -1,4 +1,4 @@
-﻿namespace KeppyNotesCounter
+﻿namespace KeppyCounterGenerator
 {
     partial class MainWin
     {
@@ -69,6 +69,9 @@
             this.DoNotUse = new System.Windows.Forms.ToolStripStatusLabel();
             this.CurrentStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.CurrentMIDILoaded = new System.Windows.Forms.ToolStripStatusLabel();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.menuItem9 = new System.Windows.Forms.MenuItem();
+            this.DebugInfo = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.PreviewBox)).BeginInit();
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -164,9 +167,10 @@
             // 
             this.menuItem6.Index = 1;
             this.menuItem6.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem3,
+            this.menuItem9,
             this.ResItems,
             this.menuItem8,
-            this.UseAllThreads,
             this.menuItem7,
             this.ChangeFontTypeface,
             this.ChangeBackgroundColor,
@@ -177,13 +181,13 @@
             // 
             // ResItems
             // 
-            this.ResItems.Index = 0;
+            this.ResItems.Index = 2;
             this.ResItems.Text = "Change output resolution";
             this.ResItems.Click += new System.EventHandler(this.ResItems_Click);
             // 
             // menuItem8
             // 
-            this.menuItem8.Index = 1;
+            this.menuItem8.Index = 3;
             this.menuItem8.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.HideMilliseconds,
             this.menuItem10,
@@ -209,41 +213,41 @@
             // 
             // UseAllThreads
             // 
-            this.UseAllThreads.Index = 2;
+            this.UseAllThreads.Index = 0;
             this.UseAllThreads.Text = "Allow FFMpeg to use all cores/threads";
             this.UseAllThreads.Click += new System.EventHandler(this.UseAllThreads_Click);
             // 
             // menuItem7
             // 
-            this.menuItem7.Index = 3;
+            this.menuItem7.Index = 4;
             this.menuItem7.Text = "-";
             // 
             // ChangeFontTypeface
             // 
-            this.ChangeFontTypeface.Index = 4;
+            this.ChangeFontTypeface.Index = 5;
             this.ChangeFontTypeface.Text = "Change font (Final output)";
             this.ChangeFontTypeface.Click += new System.EventHandler(this.ChangeFontTypeface_Click);
             // 
             // ChangeBackgroundColor
             // 
-            this.ChangeBackgroundColor.Index = 5;
+            this.ChangeBackgroundColor.Index = 6;
             this.ChangeBackgroundColor.Text = "Change background color (Preview)";
             this.ChangeBackgroundColor.Click += new System.EventHandler(this.ChangeBackgroundColor_Click);
             // 
             // ChangeBackgroundImg
             // 
-            this.ChangeBackgroundImg.Index = 6;
+            this.ChangeBackgroundImg.Index = 7;
             this.ChangeBackgroundImg.Text = "Change background image (Preview)";
             this.ChangeBackgroundImg.Click += new System.EventHandler(this.ChangeBackgroundImg_Click);
             // 
             // menuItem2
             // 
-            this.menuItem2.Index = 7;
+            this.menuItem2.Index = 8;
             this.menuItem2.Text = "-";
             // 
             // CCT
             // 
-            this.CCT.Index = 8;
+            this.CCT.Index = 9;
             this.CCT.Text = "Change counter template";
             this.CCT.Click += new System.EventHandler(this.CCT_Click);
             // 
@@ -309,6 +313,25 @@
             this.CurrentMIDILoaded.Text = "No MIDI loaded.";
             this.CurrentMIDILoaded.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 0;
+            this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.UseAllThreads,
+            this.DebugInfo});
+            this.menuItem3.Text = "Advanced";
+            // 
+            // menuItem9
+            // 
+            this.menuItem9.Index = 1;
+            this.menuItem9.Text = "-";
+            // 
+            // DebugInfo
+            // 
+            this.DebugInfo.Index = 1;
+            this.DebugInfo.Text = "Show debug info from FFMpeg";
+            this.DebugInfo.Click += new System.EventHandler(this.DebugInfo_Click);
+            // 
             // MainWin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -371,6 +394,9 @@
         private System.Windows.Forms.ToolStripStatusLabel DoNotUse;
         private System.Windows.Forms.ToolStripStatusLabel CurrentStatus;
         private System.Windows.Forms.ToolStripStatusLabel CurrentMIDILoaded;
+        private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.MenuItem DebugInfo;
+        private System.Windows.Forms.MenuItem menuItem9;
     }
 }
 

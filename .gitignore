@@ -50,5 +50,6 @@ Temporary Items
 
 packages/
 KeppyNotesCounter/obj/
-KeppyNotesCounter/bin/
-KeppyNotesCounter/bin/x64/Release/KeppyNotesCounter.exe
+KeppyNotesCounter/bin/x64/
+KeppyNotesCounter/bin/x86/
+KeppyNotesCounter/bin/ffmpeg.exe

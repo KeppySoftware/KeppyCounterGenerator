@@ -1,4 +1,4 @@
-﻿namespace KeppyNotesCounter
+﻿namespace KeppyCounterGenerator
 {
     partial class Info
     {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KeppyNotesCounter.Properties {
+namespace KeppyCounterGenerator.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -303,6 +303,41 @@ namespace KeppyNotesCounter.Properties {
             }
             set {
                 this["LastBackgroundFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring>png</string>\r\n  <string>qrtle</string>\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection CodecOutput {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["CodecOutput"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int CodecSelection {
+            get {
+                return ((int)(this["CodecSelection"]));
+            }
+            set {
+                this["CodecSelection"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DebugInfo {
+            get {
+                return ((bool)(this["DebugInfo"]));
+            }
+            set {
+                this["DebugInfo"] = value;
             }
         }
     }

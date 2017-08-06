@@ -1,4 +1,4 @@
-﻿namespace KeppyNotesCounter
+﻿namespace KeppyCounterGenerator
 {
     partial class OutputRes
     {
@@ -29,18 +29,20 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.ARPanel = new System.Windows.Forms.Panel();
-            this.ARCurrent = new System.Windows.Forms.Label();
             this.HeightVal = new System.Windows.Forms.NumericUpDown();
             this.WidthVal = new System.Windows.Forms.NumericUpDown();
             this.HeightLab = new System.Windows.Forms.Label();
             this.WidthLab = new System.Windows.Forms.Label();
+            this.ARPanel = new System.Windows.Forms.Panel();
+            this.ARCurrent = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.ConfirmBtn = new System.Windows.Forms.Button();
             this.CancelBtn = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.CommonRes = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.UseCodec = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HeightVal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WidthVal)).BeginInit();
@@ -59,28 +61,6 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Resolution settings";
-            // 
-            // ARPanel
-            // 
-            this.ARPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ARPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ARPanel.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.ARPanel.Location = new System.Drawing.Point(188, 16);
-            this.ARPanel.Name = "ARPanel";
-            this.ARPanel.Size = new System.Drawing.Size(128, 128);
-            this.ARPanel.TabIndex = 4;
-            // 
-            // ARCurrent
-            // 
-            this.ARCurrent.BackColor = System.Drawing.Color.Transparent;
-            this.ARCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ARCurrent.ForeColor = System.Drawing.Color.Black;
-            this.ARCurrent.Location = new System.Drawing.Point(6, 38);
-            this.ARCurrent.Name = "ARCurrent";
-            this.ARCurrent.Size = new System.Drawing.Size(176, 43);
-            this.ARCurrent.TabIndex = 0;
-            this.ARCurrent.Text = "None";
-            this.ARCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // HeightVal
             // 
@@ -146,6 +126,28 @@
             this.WidthLab.TabIndex = 0;
             this.WidthLab.Text = "Width:";
             // 
+            // ARPanel
+            // 
+            this.ARPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ARPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ARPanel.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.ARPanel.Location = new System.Drawing.Point(188, 16);
+            this.ARPanel.Name = "ARPanel";
+            this.ARPanel.Size = new System.Drawing.Size(128, 128);
+            this.ARPanel.TabIndex = 4;
+            // 
+            // ARCurrent
+            // 
+            this.ARCurrent.BackColor = System.Drawing.Color.Transparent;
+            this.ARCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ARCurrent.ForeColor = System.Drawing.Color.Black;
+            this.ARCurrent.Location = new System.Drawing.Point(6, 38);
+            this.ARCurrent.Name = "ARCurrent";
+            this.ARCurrent.Size = new System.Drawing.Size(176, 43);
+            this.ARCurrent.TabIndex = 0;
+            this.ARCurrent.Text = "None";
+            this.ARCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // label1
             // 
             this.label1.Location = new System.Drawing.Point(12, 14);
@@ -169,7 +171,7 @@
             // CancelBtn
             // 
             this.CancelBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelBtn.Location = new System.Drawing.Point(182, 304);
+            this.CancelBtn.Location = new System.Drawing.Point(187, 304);
             this.CancelBtn.Name = "CancelBtn";
             this.CancelBtn.Size = new System.Drawing.Size(75, 23);
             this.CancelBtn.TabIndex = 3;
@@ -189,15 +191,6 @@
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Aspect ratio preview / Common resolutions";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 104);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Presets:";
             // 
             // CommonRes
             // 
@@ -221,11 +214,44 @@
             this.CommonRes.TabIndex = 6;
             this.CommonRes.SelectedIndexChanged += new System.EventHandler(this.CommonRes_SelectedIndexChanged);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(11, 104);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(45, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Presets:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(10, 309);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(75, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Output codec:";
+            // 
+            // UseCodec
+            // 
+            this.UseCodec.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.UseCodec.FormattingEnabled = true;
+            this.UseCodec.Items.AddRange(new object[] {
+            "PNG video",
+            "QT Animation"});
+            this.UseCodec.Location = new System.Drawing.Point(85, 305);
+            this.UseCodec.Name = "UseCodec";
+            this.UseCodec.Size = new System.Drawing.Size(95, 21);
+            this.UseCodec.TabIndex = 6;
+            this.UseCodec.SelectedIndexChanged += new System.EventHandler(this.UseCodec_SelectedIndexChanged);
+            // 
             // OutputRes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(348, 339);
+            this.Controls.Add(this.UseCodec);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.CancelBtn);
             this.Controls.Add(this.ConfirmBtn);
@@ -246,6 +272,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -264,5 +291,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ComboBox CommonRes;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox UseCodec;
     }
 }

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 
-namespace KeppyNotesCounter
+namespace KeppyCounterGenerator
 {
     static class Program
     {
@@ -12,27 +12,26 @@ namespace KeppyNotesCounter
         [STAThread]
         static void Main()
         {
-            if (CheckQuickTime())
+            if (Properties.Settings.Default.CodecSelection == 1 && !CheckQuickTime())
             {
-                if (Properties.Settings.Default.UpgradeRequired)
-                {
-                    Properties.Settings.Default.Upgrade();
-                    Properties.Settings.Default.UpgradeRequired = false;
-                    Properties.Settings.Default.Save();
-                }
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new MainWin());
-            }
-            else
-            {
-                MessageBox.Show("QuickTime is required for this tool to work.\nAborting.\n\nPress OK to close the program.", "Keppy's Notes Counter - Error", 
+                Properties.Settings.Default.CodecSelection = 0;
+                Properties.Settings.Default.Save();
+                MessageBox.Show("QuickTime is not installed.\nDefault output codec is now PNG video.\n\nPress OK to continue.", "Keppy's Notes Counter - Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.ExitThread();
             }
+
+            if (Properties.Settings.Default.UpgradeRequired)
+            {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.UpgradeRequired = false;
+                Properties.Settings.Default.Save();
+            }
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new MainWin());
         }
 
-        static bool CheckQuickTime()
+        public static bool CheckQuickTime()
         {
             if (Directory.Exists(String.Format("{0}\\QuickTime\\", Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)))) return true;
             else return false;

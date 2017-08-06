@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace KeppyNotesCounter
+namespace KeppyCounterGenerator
 {
     public partial class OutputRes : Form
     {
@@ -19,6 +19,7 @@ namespace KeppyNotesCounter
             WidthVal.Value = Properties.Settings.Default.WRes;
             HeightVal.Value = Properties.Settings.Default.HRes;
             CommonRes.SelectedIndex = 0;
+            UseCodec.SelectedIndex = Properties.Settings.Default.CodecSelection;
             CalculateAspectRatio();
         }
 
@@ -96,6 +97,18 @@ namespace KeppyNotesCounter
                 WidthVal.Value = PresetWidth[CommonRes.SelectedIndex - 1];
                 HeightVal.Value = PresetHeight[CommonRes.SelectedIndex - 1];
             }
+        }
+
+        private void UseCodec_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (UseCodec.SelectedIndex == 1 && !Program.CheckQuickTime())
+            {
+                UseCodec.SelectedIndex = 0;
+                MessageBox.Show("QuickTime is not installed.\nDefault output codec is now PNG video.\n\nPress OK to continue.", "Keppy's Notes Counter - Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            Properties.Settings.Default.CodecSelection = UseCodec.SelectedIndex;
+            Properties.Settings.Default.Save();
         }
     }
 }
