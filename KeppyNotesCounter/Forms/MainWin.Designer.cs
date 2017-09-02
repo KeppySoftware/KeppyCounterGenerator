@@ -46,12 +46,15 @@
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.UseAllThreads = new System.Windows.Forms.MenuItem();
+            this.DebugInfo = new System.Windows.Forms.MenuItem();
+            this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.ResItems = new System.Windows.Forms.MenuItem();
             this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.HideMilliseconds = new System.Windows.Forms.MenuItem();
             this.menuItem10 = new System.Windows.Forms.MenuItem();
             this.NoTrimMillisecs = new System.Windows.Forms.MenuItem();
-            this.UseAllThreads = new System.Windows.Forms.MenuItem();
             this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.ChangeFontTypeface = new System.Windows.Forms.MenuItem();
             this.ChangeBackgroundColor = new System.Windows.Forms.MenuItem();
@@ -69,9 +72,6 @@
             this.DoNotUse = new System.Windows.Forms.ToolStripStatusLabel();
             this.CurrentStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.CurrentMIDILoaded = new System.Windows.Forms.ToolStripStatusLabel();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.menuItem9 = new System.Windows.Forms.MenuItem();
-            this.DebugInfo = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.PreviewBox)).BeginInit();
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -179,6 +179,31 @@
             this.CCT});
             this.menuItem6.Text = "Settings";
             // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 0;
+            this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.UseAllThreads,
+            this.DebugInfo});
+            this.menuItem3.Text = "Advanced";
+            // 
+            // UseAllThreads
+            // 
+            this.UseAllThreads.Index = 0;
+            this.UseAllThreads.Text = "Allow FFMpeg to use all cores/threads";
+            this.UseAllThreads.Click += new System.EventHandler(this.UseAllThreads_Click);
+            // 
+            // DebugInfo
+            // 
+            this.DebugInfo.Index = 1;
+            this.DebugInfo.Text = "Show debug info from FFMpeg";
+            this.DebugInfo.Click += new System.EventHandler(this.DebugInfo_Click);
+            // 
+            // menuItem9
+            // 
+            this.menuItem9.Index = 1;
+            this.menuItem9.Text = "-";
+            // 
             // ResItems
             // 
             this.ResItems.Index = 2;
@@ -210,12 +235,6 @@
             this.NoTrimMillisecs.Index = 2;
             this.NoTrimMillisecs.Text = "Do not trim milliseconds";
             this.NoTrimMillisecs.Click += new System.EventHandler(this.NoTrimMillisecs_Click);
-            // 
-            // UseAllThreads
-            // 
-            this.UseAllThreads.Index = 0;
-            this.UseAllThreads.Text = "Allow FFMpeg to use all cores/threads";
-            this.UseAllThreads.Click += new System.EventHandler(this.UseAllThreads_Click);
             // 
             // menuItem7
             // 
@@ -312,25 +331,6 @@
             this.CurrentMIDILoaded.Size = new System.Drawing.Size(93, 17);
             this.CurrentMIDILoaded.Text = "No MIDI loaded.";
             this.CurrentMIDILoaded.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // menuItem3
-            // 
-            this.menuItem3.Index = 0;
-            this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.UseAllThreads,
-            this.DebugInfo});
-            this.menuItem3.Text = "Advanced";
-            // 
-            // menuItem9
-            // 
-            this.menuItem9.Index = 1;
-            this.menuItem9.Text = "-";
-            // 
-            // DebugInfo
-            // 
-            this.DebugInfo.Index = 1;
-            this.DebugInfo.Text = "Show debug info from FFMpeg";
-            this.DebugInfo.Click += new System.EventHandler(this.DebugInfo_Click);
             // 
             // MainWin
             // 

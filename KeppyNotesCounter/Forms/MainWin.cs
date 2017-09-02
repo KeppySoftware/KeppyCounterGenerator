@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
@@ -188,6 +189,56 @@ namespace KeppyCounterGenerator
             }   
         }
 
+        private bool IsFFMpegPresent()
+        {
+            if (String.IsNullOrEmpty(Properties.Settings.Default.FFMpegLocation)) return false;
+            else
+            {
+                try
+                {
+                    return File.Exists(Properties.Settings.Default.FFMpegLocation);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        private void CheckFFMpegFirst()
+        {
+            if (!IsFFMpegPresent())
+            {
+                OpenFileDialog FFMpegDirectory = new OpenFileDialog();
+
+                RETRY:
+                MessageBox.Show(
+                    String.Format("FFMpeg is missing.\n\nDownload it from {0}, move it in a directory, then click OK to select it.", "http://ffmpeg.zeranoe.com/builds/"),
+                    "Error while starting the conversion", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                FFMpegDirectory.FileName = "FFMpeg.exe";
+                FFMpegDirectory.Filter = "FFMpeg.exe|ffmpeg.exe";
+                FFMpegDirectory.Title = "Select the location of the FFMpeg encoding library";
+                FFMpegDirectory.InitialDirectory = Properties.Settings.Default.LastExportFolder;
+                if (FFMpegDirectory.ShowDialog() == DialogResult.OK)
+                {
+                    if (!File.Exists(FFMpegDirectory.FileName))
+                    {
+                        MessageBox.Show("Invalid executable.\n\nTry again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        goto RETRY;
+                    }
+                    else
+                    {
+                        Properties.Settings.Default.FFMpegLocation = FFMpegDirectory.FileName;
+                        Properties.Settings.Default.LastExportFolder = Path.GetDirectoryName(FFMpegDirectory.FileName);
+                        Properties.Settings.Default.Save();
+                    }
+                }
+
+                FFMpegDirectory.Dispose();
+            }
+        }
+
         private bool StartConversion(string str)
         {
             try
@@ -197,7 +248,7 @@ namespace KeppyCounterGenerator
                 psi.RedirectStandardInput = true;
                 psi.UseShellExecute = false;
                 psi.CreateNoWindow = !Properties.Settings.Default.DebugInfo;
-                psi.FileName = "ffmpeg.exe";
+                psi.FileName = Properties.Settings.Default.FFMpegLocation;
                 psi.WorkingDirectory = Directory.GetCurrentDirectory();
                 psi.Arguments = String.Format("-y -vsync 2 {0} -r {1} -i - -vcodec {2} \"{3}\"",
                     Properties.Settings.Default.UseAllThreads ? String.Format("-threads {0}", Environment.ProcessorCount) : "", // Use all threads or not?
@@ -219,8 +270,8 @@ namespace KeppyCounterGenerator
                 thread.Join(); //Wait for the thread to end
 
                 MessageBox.Show(
-                    String.Format("FFMpeg is missing.\n\nPlease download it from {0}, move it in the generator's root folder, then try again.\n\nThe link for the compiled libraries has been copied to the clipboard.",
-                    "http://ffmpeg.zeranoe.com/builds/"), "Error while starting the conversion", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    String.Format("FFMpeg is missing.\n\nTo configure the Please download it from {0}, and move it to {1}, then try again.\n\nThe link for the compiled libraries has been copied to the clipboard.",
+                    "http://ffmpeg.zeranoe.com/builds/", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)), "Error while starting the conversion", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -523,6 +574,7 @@ namespace KeppyCounterGenerator
                         return;
                     }
                 }
+                CheckFFMpegFirst();
                 SaveMovieTo.InitialDirectory = Properties.Settings.Default.LastExportFolder;
                 SaveMovieTo.FileName = String.Format("{0}.mov", Path.GetFileNameWithoutExtension(Data.MIDIToLoad));
                 if (SaveMovieTo.ShowDialog() == DialogResult.OK)
