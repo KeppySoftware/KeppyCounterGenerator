@@ -46,12 +46,11 @@
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.UseAllThreads = new System.Windows.Forms.MenuItem();
             this.DebugInfo = new System.Windows.Forms.MenuItem();
             this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.ResItems = new System.Windows.Forms.MenuItem();
-            this.menuItem8 = new System.Windows.Forms.MenuItem();
+            this.MillMenu = new System.Windows.Forms.MenuItem();
             this.HideMilliseconds = new System.Windows.Forms.MenuItem();
             this.menuItem10 = new System.Windows.Forms.MenuItem();
             this.NoTrimMillisecs = new System.Windows.Forms.MenuItem();
@@ -59,7 +58,6 @@
             this.ChangeFontTypeface = new System.Windows.Forms.MenuItem();
             this.ChangeBackgroundColor = new System.Windows.Forms.MenuItem();
             this.ChangeBackgroundImg = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.CCT = new System.Windows.Forms.MenuItem();
             this.OpenMIDI = new System.Windows.Forms.OpenFileDialog();
             this.FrameConverter = new System.ComponentModel.BackgroundWorker();
@@ -72,6 +70,9 @@
             this.DoNotUse = new System.Windows.Forms.ToolStripStatusLabel();
             this.CurrentStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.CurrentMIDILoaded = new System.Windows.Forms.ToolStripStatusLabel();
+            this.StillFramesBeginning = new System.Windows.Forms.MenuItem();
+            this.AdvancedMenu = new System.Windows.Forms.MenuItem();
+            this.StillFramesEnd = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.PreviewBox)).BeginInit();
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -92,7 +93,7 @@
             // LivePreview
             // 
             this.LivePreview.Enabled = true;
-            this.LivePreview.Interval = 500;
+            this.LivePreview.Interval = 10;
             this.LivePreview.Tick += new System.EventHandler(this.LivePreview_Tick);
             // 
             // PreviewBox
@@ -167,35 +168,26 @@
             // 
             this.menuItem6.Index = 1;
             this.menuItem6.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem3,
+            this.AdvancedMenu,
             this.menuItem9,
             this.ResItems,
-            this.menuItem8,
+            this.MillMenu,
             this.menuItem7,
             this.ChangeFontTypeface,
             this.ChangeBackgroundColor,
             this.ChangeBackgroundImg,
-            this.menuItem2,
             this.CCT});
             this.menuItem6.Text = "Settings";
             // 
-            // menuItem3
-            // 
-            this.menuItem3.Index = 0;
-            this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.UseAllThreads,
-            this.DebugInfo});
-            this.menuItem3.Text = "Advanced";
-            // 
             // UseAllThreads
             // 
-            this.UseAllThreads.Index = 0;
+            this.UseAllThreads.Index = 1;
             this.UseAllThreads.Text = "Allow FFMpeg to use all cores/threads";
             this.UseAllThreads.Click += new System.EventHandler(this.UseAllThreads_Click);
             // 
             // DebugInfo
             // 
-            this.DebugInfo.Index = 1;
+            this.DebugInfo.Index = 0;
             this.DebugInfo.Text = "Show debug info from FFMpeg";
             this.DebugInfo.Click += new System.EventHandler(this.DebugInfo_Click);
             // 
@@ -210,14 +202,14 @@
             this.ResItems.Text = "Change output resolution";
             this.ResItems.Click += new System.EventHandler(this.ResItems_Click);
             // 
-            // menuItem8
+            // MillMenu
             // 
-            this.menuItem8.Index = 3;
-            this.menuItem8.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MillMenu.Index = 3;
+            this.MillMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.HideMilliseconds,
             this.menuItem10,
             this.NoTrimMillisecs});
-            this.menuItem8.Text = "Milliseconds in timestamp";
+            this.MillMenu.Text = "Milliseconds in timestamp";
             // 
             // HideMilliseconds
             // 
@@ -259,14 +251,9 @@
             this.ChangeBackgroundImg.Text = "Change background image (Preview)";
             this.ChangeBackgroundImg.Click += new System.EventHandler(this.ChangeBackgroundImg_Click);
             // 
-            // menuItem2
-            // 
-            this.menuItem2.Index = 8;
-            this.menuItem2.Text = "-";
-            // 
             // CCT
             // 
-            this.CCT.Index = 9;
+            this.CCT.Index = 8;
             this.CCT.Text = "Change counter template";
             this.CCT.Click += new System.EventHandler(this.CCT_Click);
             // 
@@ -332,6 +319,28 @@
             this.CurrentMIDILoaded.Text = "No MIDI loaded.";
             this.CurrentMIDILoaded.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // StillFramesBeginning
+            // 
+            this.StillFramesBeginning.Index = 2;
+            this.StillFramesBeginning.Text = "Add 5 seconds of still frames at the beginning";
+            this.StillFramesBeginning.Click += new System.EventHandler(this.StillFramesBeginning_Click);
+            // 
+            // AdvancedMenu
+            // 
+            this.AdvancedMenu.Index = 0;
+            this.AdvancedMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.DebugInfo,
+            this.UseAllThreads,
+            this.StillFramesBeginning,
+            this.StillFramesEnd});
+            this.AdvancedMenu.Text = "Advanced";
+            // 
+            // StillFramesEnd
+            // 
+            this.StillFramesEnd.Index = 3;
+            this.StillFramesEnd.Text = "Add 5 seconds of still frames at the end";
+            this.StillFramesEnd.Click += new System.EventHandler(this.StillFramesEnd_Click);
+            // 
             // MainWin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -376,7 +385,6 @@
         private System.Windows.Forms.OpenFileDialog OpenMIDI;
         private System.ComponentModel.BackgroundWorker FrameConverter;
         private System.ComponentModel.BackgroundWorker CheckPos;
-        private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem CCT;
         private System.Windows.Forms.MenuItem ResItems;
         private System.Windows.Forms.MenuItem menuItem7;
@@ -384,7 +392,7 @@
         private System.Windows.Forms.ToolTip MIDIName;
         private System.ComponentModel.BackgroundWorker GarbageCollector;
         private System.Windows.Forms.MenuItem UseAllThreads;
-        private System.Windows.Forms.MenuItem menuItem8;
+        private System.Windows.Forms.MenuItem MillMenu;
         private System.Windows.Forms.MenuItem HideMilliseconds;
         private System.Windows.Forms.MenuItem menuItem10;
         private System.Windows.Forms.SaveFileDialog SaveMovieTo;
@@ -394,9 +402,11 @@
         private System.Windows.Forms.ToolStripStatusLabel DoNotUse;
         private System.Windows.Forms.ToolStripStatusLabel CurrentStatus;
         private System.Windows.Forms.ToolStripStatusLabel CurrentMIDILoaded;
-        private System.Windows.Forms.MenuItem menuItem3;
         private System.Windows.Forms.MenuItem DebugInfo;
         private System.Windows.Forms.MenuItem menuItem9;
+        private System.Windows.Forms.MenuItem AdvancedMenu;
+        private System.Windows.Forms.MenuItem StillFramesBeginning;
+        private System.Windows.Forms.MenuItem StillFramesEnd;
     }
 }
 

@@ -18,6 +18,7 @@ namespace KeppyCounterGenerator
         {
             WidthVal.Value = Properties.Settings.Default.WRes;
             HeightVal.Value = Properties.Settings.Default.HRes;
+            FPSVal.Value = Properties.Settings.Default.FPSExport;
             CommonRes.SelectedIndex = 0;
             UseCodec.SelectedIndex = Properties.Settings.Default.CodecSelection;
             CalculateAspectRatio();
@@ -86,7 +87,11 @@ namespace KeppyCounterGenerator
         {
             Properties.Settings.Default.WRes = WidthVal.Value;
             Properties.Settings.Default.HRes = HeightVal.Value;
+            Properties.Settings.Default.FPSExport = (Int32)FPSVal.Value;
+            Properties.Settings.Default.CodecSelection = UseCodec.SelectedIndex;
             Properties.Settings.Default.Save();
+            MainWin.FFMPEGProcess.Hertz = 1.0 / (Double)Properties.Settings.Default.FPSExport;
+
             Close();
         }
 
@@ -107,8 +112,27 @@ namespace KeppyCounterGenerator
                 MessageBox.Show("QuickTime is not installed.\nDefault output codec is now PNG video.\n\nPress OK to continue.", "Keppy's Notes Counter - Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            Properties.Settings.Default.CodecSelection = UseCodec.SelectedIndex;
-            Properties.Settings.Default.Save();
+        }
+
+        private void RtD_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to reset the settings?", "Keppy's Notes Counter - Question", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                WidthVal.Value = 1920;
+                HeightVal.Value = 1080;
+                FPSVal.Value = 60;
+                CommonRes.SelectedIndex = 0;
+                UseCodec.SelectedIndex = 0;
+                CalculateAspectRatio();
+
+                Properties.Settings.Default.WRes = WidthVal.Value;
+                Properties.Settings.Default.HRes = HeightVal.Value;
+                Properties.Settings.Default.FPSExport = (Int32)FPSVal.Value;
+                Properties.Settings.Default.CodecSelection = UseCodec.SelectedIndex;
+                Properties.Settings.Default.Save();
+                MainWin.FFMPEGProcess.Hertz = 1.0 / (Double)Properties.Settings.Default.FPSExport;
+            }
         }
     }
 }

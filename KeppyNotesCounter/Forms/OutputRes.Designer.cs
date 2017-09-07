@@ -43,14 +43,22 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.UseCodec = new System.Windows.Forms.ComboBox();
+            this.FPSVal = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.RtD = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.HeightVal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WidthVal)).BeginInit();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FPSVal)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.UseCodec);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.FPSVal);
+            this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.HeightVal);
             this.groupBox1.Controls.Add(this.WidthVal);
             this.groupBox1.Controls.Add(this.HeightLab);
@@ -60,11 +68,11 @@
             this.groupBox1.Size = new System.Drawing.Size(326, 95);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Resolution settings";
+            this.groupBox1.Text = "Resolution settings / Output codec";
             // 
             // HeightVal
             // 
-            this.HeightVal.Location = new System.Drawing.Point(207, 40);
+            this.HeightVal.Location = new System.Drawing.Point(167, 27);
             this.HeightVal.Maximum = new decimal(new int[] {
             8640,
             0,
@@ -87,7 +95,7 @@
             // 
             // WidthVal
             // 
-            this.WidthVal.Location = new System.Drawing.Point(106, 40);
+            this.WidthVal.Location = new System.Drawing.Point(66, 27);
             this.WidthVal.Maximum = new decimal(new int[] {
             15360,
             0,
@@ -111,7 +119,7 @@
             // HeightLab
             // 
             this.HeightLab.AutoSize = true;
-            this.HeightLab.Location = new System.Drawing.Point(168, 42);
+            this.HeightLab.Location = new System.Drawing.Point(128, 29);
             this.HeightLab.Name = "HeightLab";
             this.HeightLab.Size = new System.Drawing.Size(41, 13);
             this.HeightLab.TabIndex = 1;
@@ -120,7 +128,7 @@
             // WidthLab
             // 
             this.WidthLab.AutoSize = true;
-            this.WidthLab.Location = new System.Drawing.Point(70, 42);
+            this.WidthLab.Location = new System.Drawing.Point(30, 29);
             this.WidthLab.Name = "WidthLab";
             this.WidthLab.Size = new System.Drawing.Size(38, 13);
             this.WidthLab.TabIndex = 0;
@@ -226,7 +234,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 309);
+            this.label3.Location = new System.Drawing.Point(81, 57);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(75, 13);
             this.label3.TabIndex = 5;
@@ -239,19 +247,59 @@
             this.UseCodec.Items.AddRange(new object[] {
             "PNG video",
             "QT Animation"});
-            this.UseCodec.Location = new System.Drawing.Point(85, 305);
+            this.UseCodec.Location = new System.Drawing.Point(156, 53);
             this.UseCodec.Name = "UseCodec";
             this.UseCodec.Size = new System.Drawing.Size(95, 21);
             this.UseCodec.TabIndex = 6;
             this.UseCodec.SelectedIndexChanged += new System.EventHandler(this.UseCodec_SelectedIndexChanged);
+            // 
+            // FPSVal
+            // 
+            this.FPSVal.Location = new System.Drawing.Point(260, 27);
+            this.FPSVal.Maximum = new decimal(new int[] {
+            240,
+            0,
+            0,
+            0});
+            this.FPSVal.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.FPSVal.Name = "FPSVal";
+            this.FPSVal.Size = new System.Drawing.Size(38, 20);
+            this.FPSVal.TabIndex = 5;
+            this.FPSVal.Value = new decimal(new int[] {
+            240,
+            0,
+            0,
+            0});
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(232, 29);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(30, 13);
+            this.label4.TabIndex = 4;
+            this.label4.Text = "FPS:";
+            // 
+            // RtD
+            // 
+            this.RtD.Location = new System.Drawing.Point(11, 304);
+            this.RtD.Name = "RtD";
+            this.RtD.Size = new System.Drawing.Size(102, 23);
+            this.RtD.TabIndex = 5;
+            this.RtD.Text = "Reset to default";
+            this.RtD.UseVisualStyleBackColor = true;
+            this.RtD.Click += new System.EventHandler(this.RtD_Click);
             // 
             // OutputRes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(348, 339);
-            this.Controls.Add(this.UseCodec);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.RtD);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.CancelBtn);
             this.Controls.Add(this.ConfirmBtn);
@@ -271,8 +319,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.WidthVal)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FPSVal)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -293,5 +341,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox UseCodec;
+        private System.Windows.Forms.NumericUpDown FPSVal;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button RtD;
     }
 }

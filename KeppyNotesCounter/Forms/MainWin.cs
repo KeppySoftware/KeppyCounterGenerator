@@ -19,7 +19,7 @@ namespace KeppyCounterGenerator
         public class FFMPEGProcess
         {
             public static Process FFMPEG;
-            public static Double Hertz = 1.0 / 60.0;
+            public static Double Hertz = 1.0 / (Double)Properties.Settings.Default.FPSExport;
             public static Bitmap Preview;
             public static UInt32 Frames = 0;
             public static UInt32 FramesAvg = 0;
@@ -137,6 +137,8 @@ namespace KeppyCounterGenerator
             DebugInfo.Checked = Properties.Settings.Default.DebugInfo;
             NoTrimMillisecs.Checked = Properties.Settings.Default.NoTrimMilliseconds;
             HideMilliseconds.Checked = Properties.Settings.Default.RemoveMilliseconds;
+            StillFramesEnd.Checked = Properties.Settings.Default.StillFramesEnd;
+            StillFramesBeginning.Checked = Properties.Settings.Default.StillFramesBeginning;
 
             if (Properties.Settings.Default.TemplatesCounterIndex == 0)
             {
@@ -234,6 +236,7 @@ namespace KeppyCounterGenerator
                         Properties.Settings.Default.Save();
                     }
                 }
+                else return;
 
                 FFMpegDirectory.Dispose();
             }
@@ -252,7 +255,7 @@ namespace KeppyCounterGenerator
                 psi.WorkingDirectory = Directory.GetCurrentDirectory();
                 psi.Arguments = String.Format("-y -vsync 2 {0} -r {1} -i - -vcodec {2} \"{3}\"",
                     Properties.Settings.Default.UseAllThreads ? String.Format("-threads {0}", Environment.ProcessorCount) : "", // Use all threads or not?
-                    60, // Framerate
+                    Properties.Settings.Default.FPSExport, // Framerate
                     Properties.Settings.Default.CodecOutput[Properties.Settings.Default.CodecSelection], // Codec
                     Data.MovieOutput); // File output
                 FFMPEGProcess.FFMPEG = Process.Start(psi);
@@ -400,14 +403,17 @@ namespace KeppyCounterGenerator
                 if (!StartConversion(Data.MIDIToLoad)) return;
                 FPSUpdate();
 
-                for (int a = 0; a <= 300; a++)
+                if (Properties.Settings.Default.StillFramesBeginning)
                 {
-                    // 5 seconds of nothing
-                    if (Settings.Interrupt == true) break;
-                    Data.AverageNotesPerSecond = "0";
-                    PushFrame(false);
-                    FFMPEGProcess.Frames++;
-                    FPSUpdate();
+                    for (int a = 0; a <= (Properties.Settings.Default.FPSExport * 5); a++)
+                    {
+                        // 5 seconds of nothing
+                        if (Settings.Interrupt == true) break;
+                        Data.AverageNotesPerSecond = "0";
+                        PushFrame(false);
+                        FFMPEGProcess.Frames++;
+                        FPSUpdate();
+                    }
                 }
 
                 while (Bass.BASS_ChannelIsActive(Data.StreamHandle) == BASSActive.BASS_ACTIVE_PLAYING)
@@ -428,14 +434,17 @@ namespace KeppyCounterGenerator
                 Buffer = new Byte[ChunkLength];
                 Bass.BASS_ChannelGetData(Data.StreamHandle, Buffer, ChunkLength);
 
-                for (int a = 0; a <= 300; a++)
+                if (Properties.Settings.Default.StillFramesEnd)
                 {
-                    // 5 seconds of nothing
-                    if (Settings.Interrupt == true) break;
-                    Data.AverageNotesPerSecond = "0";
-                    PushFrame(false);
-                    FFMPEGProcess.Frames++;
-                    FPSUpdate();
+                    for (int a = 0; a <= (Properties.Settings.Default.FPSExport * 5); a++)
+                    {
+                        // 5 seconds of nothing
+                        if (Settings.Interrupt == true) break;
+                        Data.AverageNotesPerSecond = "0";
+                        PushFrame(false);
+                        FFMPEGProcess.Frames++;
+                        FPSUpdate();
+                    }
                 }
 
                 for (int i = 0; i < Data.PlayedNotesChan.Length; i++) Data.PlayedNotesChan[i] = 0;
@@ -609,12 +618,12 @@ namespace KeppyCounterGenerator
                 SelectMIDIDialog.Enabled = false;
                 StartConvThread.Enabled = false;
                 ChangeFontTypeface.Enabled = false;
-                NoTrimMillisecs.Enabled = false;
-                HideMilliseconds.Enabled = false;
+                MillMenu.Enabled = false;
+                AdvancedMenu.Enabled = false;
                 CCT.Enabled = false;
                 ResItems.Enabled = false;
 
-                CurrentStatus.Text = String.Format("{0} ({1} frames done, {2}FPS)", Data.PercentageProgress, FFMPEGProcess.Frames, Framerate._fps);
+                CurrentStatus.Text = String.Format("{0} ({1} frames done, {2} frame(s) rendered every one second)", Data.PercentageProgress, FFMPEGProcess.Frames, Framerate._fps);
 
                 if (PreviewBox.Image != null) PreviewBox.Image.Dispose();
                 try
@@ -622,21 +631,20 @@ namespace KeppyCounterGenerator
                     PreviewBox.Image = FFMPEGProcess.Preview.Clone(new Rectangle(0, 0, FFMPEGProcess.Preview.Width, FFMPEGProcess.Preview.Height), System.Drawing.Imaging.PixelFormat.DontCare);
                 }
                 catch { }
-
-                System.Threading.Thread.Sleep(1);
             }
             else
             {
                 SelectMIDIDialog.Enabled = true;
                 StartConvThread.Enabled = true;
                 ChangeFontTypeface.Enabled = true;
-                NoTrimMillisecs.Enabled = true;
-                HideMilliseconds.Enabled = true;
+                MillMenu.Enabled = true;
+                AdvancedMenu.Enabled = true;
                 CCT.Enabled = true;
                 ResItems.Enabled = true;
 
                 CurrentStatus.Text = "Idle";
             }
+            System.Threading.Thread.Sleep(1);
         }
 
         private void ChangeFontTypeface_Click(object sender, EventArgs e)
@@ -814,6 +822,36 @@ namespace KeppyCounterGenerator
             {
                 DebugInfo.Checked = false;
                 Properties.Settings.Default.DebugInfo = false;
+            }
+            Properties.Settings.Default.Save();
+        }
+
+        private void StillFramesBeginning_Click(object sender, EventArgs e)
+        {
+            if (StillFramesBeginning.Checked != true)
+            {
+                StillFramesBeginning.Checked = true;
+                Properties.Settings.Default.StillFramesBeginning = true;
+            }
+            else
+            {
+                StillFramesBeginning.Checked = false;
+                Properties.Settings.Default.StillFramesBeginning = false;
+            }
+            Properties.Settings.Default.Save();
+        }
+
+        private void StillFramesEnd_Click(object sender, EventArgs e)
+        {
+            if (StillFramesEnd.Checked != true)
+            {
+                StillFramesEnd.Checked = true;
+                Properties.Settings.Default.StillFramesEnd = true;
+            }
+            else
+            {
+                StillFramesEnd.Checked = false;
+                Properties.Settings.Default.StillFramesEnd = false;
             }
             Properties.Settings.Default.Save();
         }

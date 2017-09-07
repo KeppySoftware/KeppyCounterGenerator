@@ -88,7 +88,7 @@ namespace KeppyCounterGenerator.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("b")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string UnstableRelease {
             get {
                 return ((string)(this["UnstableRelease"]));
@@ -310,7 +310,7 @@ namespace KeppyCounterGenerator.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
             "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
-            "tring>png</string>\r\n  <string>qrtle</string>\r\n</ArrayOfString>")]
+            "tring>png</string>\r\n  <string>qtrle</string>\r\n</ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection CodecOutput {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["CodecOutput"]));
@@ -350,6 +350,42 @@ namespace KeppyCounterGenerator.Properties {
             }
             set {
                 this["FFMpegLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int FPSExport {
+            get {
+                return ((int)(this["FPSExport"]));
+            }
+            set {
+                this["FPSExport"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool StillFramesBeginning {
+            get {
+                return ((bool)(this["StillFramesBeginning"]));
+            }
+            set {
+                this["StillFramesBeginning"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool StillFramesEnd {
+            get {
+                return ((bool)(this["StillFramesEnd"]));
+            }
+            set {
+                this["StillFramesEnd"] = value;
             }
         }
     }
