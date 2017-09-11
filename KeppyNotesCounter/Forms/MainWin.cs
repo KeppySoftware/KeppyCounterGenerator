@@ -21,8 +21,8 @@ namespace KeppyCounterGenerator
             public static Process FFMPEG;
             public static Double Hertz = 1.0 / (Double)Properties.Settings.Default.FPSExport;
             public static Bitmap Preview;
-            public static UInt32 Frames = 0;
-            public static UInt32 FramesAvg = 0;
+            public static UInt64 Frames = 0;
+            public static UInt64 FramesAvg = 0;
         }
 
         public class Data
@@ -46,21 +46,21 @@ namespace KeppyCounterGenerator
             public static TimeSpan TotalTime = TimeSpan.Zero;
             public static String HowManyZeroesNotes = "";
             public static String HowManyZeroesBars = "";
-            public static Int32 Tempo = 0;
-            public static Int64 TotalBars = 0;
-            public static Int64 Bar = 0;
-            public static Int64 TotalNotes = 0;
-            public static Int64 TotalTicks = 0;
-            public static Int64 Tick = 0;
-            public static Int64[] PlayedNotesChan = new Int64[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            public static Int64 PlayedNotesAvg = 0;
+            public static UInt32 Tempo = 0;
+            public static UInt64 TotalBars = 0;
+            public static UInt64 Bar = 0;
+            public static UInt64 TotalNotes = 0;
+            public static UInt64 TotalTicks = 0;
+            public static UInt64 Tick = 0;
+            public static UInt64[] PlayedNotesChan = new UInt64[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            public static UInt64 PlayedNotesAvg = 0;
         }
 
         public class Framerate
         {
             public static DateTime _lastTime; // marks the beginning the measurement began
-            public static int _framesRendered; // an increasing count
-            public static int _fps;
+            public static UInt64 _framesRendered; // an increasing count
+            public static UInt64 _fps;
         }
 
         public class Settings
@@ -79,7 +79,7 @@ namespace KeppyCounterGenerator
             try
             {
                 String Beat = Regex.Match(Data.Mark.text, "^[^ ]+").Value;
-                Int64 PlayedNotes = 0;
+                UInt64 PlayedNotes = 0;
 
                 for (int i = 0; i < Data.PlayedNotesChan.Length; i++) PlayedNotes += Data.PlayedNotesChan[i];
 
@@ -396,7 +396,7 @@ namespace KeppyCounterGenerator
                 Bass.BASS_ChannelSetSync(Data.StreamHandle, BASSSync.BASS_SYNC_MIDI_TIMESIG, (long)BASSMIDIMarker.BASS_MIDI_MARK_TIMESIG, Data.TimeSigSync, IntPtr.Zero);
 
                 // Initialize note count
-                Data.TotalNotes = BassMidi.BASS_MIDI_StreamGetEvents(Data.StreamHandle, -1, (BASSMIDIEvent)0x20000, null);
+                Data.TotalNotes = Convert.ToUInt32(BassMidi.BASS_MIDI_StreamGetEvents(Data.StreamHandle, -1, (BASSMIDIEvent)0x20000, null));
                 Data.HowManyZeroesNotes = String.Concat(Enumerable.Repeat("0", Data.TotalNotes.ToString().Length));
 
                 // Initialize conversion
@@ -409,6 +409,7 @@ namespace KeppyCounterGenerator
                     {
                         // 5 seconds of nothing
                         if (Settings.Interrupt == true) break;
+                        CheckPosition();
                         Data.AverageNotesPerSecond = "0";
                         PushFrame(false);
                         FFMPEGProcess.Frames++;
@@ -421,6 +422,7 @@ namespace KeppyCounterGenerator
                     if (Settings.Interrupt == true) break;
                     Buffer = new Byte[ChunkLength];
                     Bass.BASS_ChannelGetData(Data.StreamHandle, Buffer, ChunkLength);
+                    CheckPosition();
                     if (FFMPEGProcess.Frames % 60 == 0)
                     {
                         Data.AverageNotesPerSecond = Data.PlayedNotesAvg.ToString();
@@ -440,6 +442,7 @@ namespace KeppyCounterGenerator
                     {
                         // 5 seconds of nothing
                         if (Settings.Interrupt == true) break;
+                        CheckPosition();
                         Data.AverageNotesPerSecond = "0";
                         PushFrame(false);
                         FFMPEGProcess.Frames++;
@@ -495,38 +498,43 @@ namespace KeppyCounterGenerator
             }
         }
 
+        Single RAWTotal;
+        Single RAWConverted;
+        private void CheckPosition()
+        {
+            Int64 MIDILengthRAW = Bass.BASS_ChannelGetLength(Data.StreamHandle);
+            Int64 MIDICurrentPosRAW = Bass.BASS_ChannelGetPosition(Data.StreamHandle);
+            RAWTotal = ((float)MIDILengthRAW) / 1048576f;
+            RAWConverted = ((float)MIDICurrentPosRAW) / 1048576f;
+            Double LenRAWToDouble = Bass.BASS_ChannelBytes2Seconds(Data.StreamHandle, MIDILengthRAW);
+            Double CurRAWToDouble = Bass.BASS_ChannelBytes2Seconds(Data.StreamHandle, MIDICurrentPosRAW);
+            Data.TotalTime = TimeSpan.FromSeconds(LenRAWToDouble);
+            Data.CurrentTime = TimeSpan.FromSeconds(CurRAWToDouble);
+            Bass.BASS_ChannelGetAttribute(Data.StreamHandle, BASSAttribute.BASS_ATTRIB_MIDI_PPQN, ref Data.PPQN);
+            Data.TotalTicks = Convert.ToUInt32(Bass.BASS_ChannelGetLength(Data.StreamHandle, BASSMode.BASS_POS_MIDI_TICK));
+            Data.Tick = Convert.ToUInt32(Bass.BASS_ChannelGetPosition(Data.StreamHandle, BASSMode.BASS_POS_MIDI_TICK));
+            Int32 Tempo = 60000000 / BassMidi.BASS_MIDI_StreamGetEvent(Data.StreamHandle, 0, BASSMIDIEvent.MIDI_EVENT_TEMPO);
+            Data.Tempo = Convert.ToUInt32(Tempo.LimitIntegerToRange(0, 999));
+
+            try
+            {
+                Data.Bar = Convert.ToUInt32(((Int64)(Data.Tick / (Data.PPQN / (8 / 4) * 4))).LimitLongToRange(0, 9223372036854775807));
+                Data.TotalBars = Convert.ToUInt32(((Int64)(Data.TotalTicks / (Data.PPQN / (8 / 4) * 4))).LimitLongToRange(0, 9223372036854775807));
+                Data.HowManyZeroesBars = String.Concat(Enumerable.Repeat("0", Data.TotalBars.ToString().Length));
+            }
+            catch
+            {
+                Data.Bar = 0;
+                Data.TotalBars = 0;
+            }
+        }
+
         private void CheckPos_DoWork(object sender, DoWorkEventArgs e)
         {
             while (true)
             {
                 try
                 {
-                    Int64 MIDILengthRAW = Bass.BASS_ChannelGetLength(Data.StreamHandle);
-                    Int64 MIDICurrentPosRAW = Bass.BASS_ChannelGetPosition(Data.StreamHandle);
-                    Single RAWTotal = ((float)MIDILengthRAW) / 1048576f;
-                    Single RAWConverted = ((float)MIDICurrentPosRAW) / 1048576f;
-                    Double LenRAWToDouble = Bass.BASS_ChannelBytes2Seconds(Data.StreamHandle, MIDILengthRAW);
-                    Double CurRAWToDouble = Bass.BASS_ChannelBytes2Seconds(Data.StreamHandle, MIDICurrentPosRAW);
-                    Data.TotalTime = TimeSpan.FromSeconds(LenRAWToDouble);
-                    Data.CurrentTime = TimeSpan.FromSeconds(CurRAWToDouble);
-                    Bass.BASS_ChannelGetAttribute(Data.StreamHandle, BASSAttribute.BASS_ATTRIB_MIDI_PPQN, ref Data.PPQN);
-                    Data.TotalTicks = Bass.BASS_ChannelGetLength(Data.StreamHandle, BASSMode.BASS_POS_MIDI_TICK);
-                    Data.Tick = Bass.BASS_ChannelGetPosition(Data.StreamHandle, BASSMode.BASS_POS_MIDI_TICK);
-                    Int32 Tempo = 60000000 / BassMidi.BASS_MIDI_StreamGetEvent(Data.StreamHandle, 0, BASSMIDIEvent.MIDI_EVENT_TEMPO);
-                    Data.Tempo = Tempo.LimitIntegerToRange(0, 999);
-
-                    try
-                    {
-                        Data.Bar = ((Int64)(Data.Tick / (Data.PPQN / (8 / 4) * 4))).LimitLongToRange(0, 9223372036854775807);
-                        Data.TotalBars = ((Int64)(Data.TotalTicks / (Data.PPQN / (8 / 4) * 4))).LimitLongToRange(0, 9223372036854775807);
-                        Data.HowManyZeroesBars = String.Concat(Enumerable.Repeat("0", Data.TotalBars.ToString().Length));
-                    }
-                    catch
-                    {
-                        Data.Bar = 0;
-                        Data.TotalBars = 0;
-                    }
-
                     float percentage = RAWConverted / RAWTotal;
                     float percentagefinal;
                     if (percentage * 100 < 0)
@@ -611,17 +619,25 @@ namespace KeppyCounterGenerator
             return (byte[])converter.ConvertTo(img, typeof(byte[]));
         }
 
+        bool alreadyidle = false;
         private void LivePreview_Tick(object sender, EventArgs e)
         {
             if (Bass.BASS_ChannelIsActive(Data.StreamHandle) == BASSActive.BASS_ACTIVE_PLAYING)
             {
-                SelectMIDIDialog.Enabled = false;
-                StartConvThread.Enabled = false;
-                ChangeFontTypeface.Enabled = false;
-                MillMenu.Enabled = false;
-                AdvancedMenu.Enabled = false;
-                CCT.Enabled = false;
-                ResItems.Enabled = false;
+                if (alreadyidle)
+                {
+                    SelectMIDIDialog.Enabled = false;
+                    StartConvThread.Enabled = false;
+                    ChangeFontTypeface.Enabled = false;
+                    MillMenu.Enabled = false;
+                    AdvancedMenu.Enabled = false;
+                    CCT.Enabled = false;
+                    ResItems.Enabled = false;
+
+                    CurrentStatus.Text = "Idle";
+
+                    alreadyidle = false;
+                }
 
                 CurrentStatus.Text = String.Format("{0} ({1} frames done, {2} frame(s) rendered every one second)", Data.PercentageProgress, FFMPEGProcess.Frames, Framerate._fps);
 
@@ -634,15 +650,20 @@ namespace KeppyCounterGenerator
             }
             else
             {
-                SelectMIDIDialog.Enabled = true;
-                StartConvThread.Enabled = true;
-                ChangeFontTypeface.Enabled = true;
-                MillMenu.Enabled = true;
-                AdvancedMenu.Enabled = true;
-                CCT.Enabled = true;
-                ResItems.Enabled = true;
+                if (!alreadyidle)
+                {
+                    SelectMIDIDialog.Enabled = true;
+                    StartConvThread.Enabled = true;
+                    ChangeFontTypeface.Enabled = true;
+                    MillMenu.Enabled = true;
+                    AdvancedMenu.Enabled = true;
+                    CCT.Enabled = true;
+                    ResItems.Enabled = true;
 
-                CurrentStatus.Text = "Idle";
+                    CurrentStatus.Text = "Idle";
+
+                    alreadyidle = true;
+                }
             }
             System.Threading.Thread.Sleep(1);
         }

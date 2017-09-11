@@ -46,8 +46,11 @@
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
-            this.UseAllThreads = new System.Windows.Forms.MenuItem();
+            this.AdvancedMenu = new System.Windows.Forms.MenuItem();
             this.DebugInfo = new System.Windows.Forms.MenuItem();
+            this.UseAllThreads = new System.Windows.Forms.MenuItem();
+            this.StillFramesBeginning = new System.Windows.Forms.MenuItem();
+            this.StillFramesEnd = new System.Windows.Forms.MenuItem();
             this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.ResItems = new System.Windows.Forms.MenuItem();
             this.MillMenu = new System.Windows.Forms.MenuItem();
@@ -70,9 +73,6 @@
             this.DoNotUse = new System.Windows.Forms.ToolStripStatusLabel();
             this.CurrentStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.CurrentMIDILoaded = new System.Windows.Forms.ToolStripStatusLabel();
-            this.StillFramesBeginning = new System.Windows.Forms.MenuItem();
-            this.AdvancedMenu = new System.Windows.Forms.MenuItem();
-            this.StillFramesEnd = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.PreviewBox)).BeginInit();
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -179,17 +179,39 @@
             this.CCT});
             this.menuItem6.Text = "Settings";
             // 
-            // UseAllThreads
+            // AdvancedMenu
             // 
-            this.UseAllThreads.Index = 1;
-            this.UseAllThreads.Text = "Allow FFMpeg to use all cores/threads";
-            this.UseAllThreads.Click += new System.EventHandler(this.UseAllThreads_Click);
+            this.AdvancedMenu.Index = 0;
+            this.AdvancedMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.DebugInfo,
+            this.UseAllThreads,
+            this.StillFramesBeginning,
+            this.StillFramesEnd});
+            this.AdvancedMenu.Text = "Advanced";
             // 
             // DebugInfo
             // 
             this.DebugInfo.Index = 0;
             this.DebugInfo.Text = "Show debug info from FFMpeg";
             this.DebugInfo.Click += new System.EventHandler(this.DebugInfo_Click);
+            // 
+            // UseAllThreads
+            // 
+            this.UseAllThreads.Index = 1;
+            this.UseAllThreads.Text = "Allow FFMpeg to use all cores/threads";
+            this.UseAllThreads.Click += new System.EventHandler(this.UseAllThreads_Click);
+            // 
+            // StillFramesBeginning
+            // 
+            this.StillFramesBeginning.Index = 2;
+            this.StillFramesBeginning.Text = "Add 5 seconds of still frames at the beginning";
+            this.StillFramesBeginning.Click += new System.EventHandler(this.StillFramesBeginning_Click);
+            // 
+            // StillFramesEnd
+            // 
+            this.StillFramesEnd.Index = 3;
+            this.StillFramesEnd.Text = "Add 5 seconds of still frames at the end";
+            this.StillFramesEnd.Click += new System.EventHandler(this.StillFramesEnd_Click);
             // 
             // menuItem9
             // 
@@ -318,28 +340,6 @@
             this.CurrentMIDILoaded.Size = new System.Drawing.Size(93, 17);
             this.CurrentMIDILoaded.Text = "No MIDI loaded.";
             this.CurrentMIDILoaded.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // StillFramesBeginning
-            // 
-            this.StillFramesBeginning.Index = 2;
-            this.StillFramesBeginning.Text = "Add 5 seconds of still frames at the beginning";
-            this.StillFramesBeginning.Click += new System.EventHandler(this.StillFramesBeginning_Click);
-            // 
-            // AdvancedMenu
-            // 
-            this.AdvancedMenu.Index = 0;
-            this.AdvancedMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.DebugInfo,
-            this.UseAllThreads,
-            this.StillFramesBeginning,
-            this.StillFramesEnd});
-            this.AdvancedMenu.Text = "Advanced";
-            // 
-            // StillFramesEnd
-            // 
-            this.StillFramesEnd.Index = 3;
-            this.StillFramesEnd.Text = "Add 5 seconds of still frames at the end";
-            this.StillFramesEnd.Click += new System.EventHandler(this.StillFramesEnd_Click);
             // 
             // MainWin
             // 
