@@ -37,6 +37,7 @@ namespace KeppyCounterGenerator
             public static String TextTemplateTL = "";
             public static String TextTemplateTC = "";
             public static String TextTemplateTR = "";
+            public static String NotesPerSecond = "0";
             public static String AverageNotesPerSecond = "0";
             public static SYNCPROC NoteSync;
             public static SYNCPROC TimeSigSync;
@@ -53,6 +54,7 @@ namespace KeppyCounterGenerator
             public static UInt64 TotalTicks = 0;
             public static UInt64 Tick = 0;
             public static UInt64[] PlayedNotesChan = new UInt64[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            public static UInt64 PlayedNotesFrame = 0;
             public static UInt64 PlayedNotesAvg = 0;
         }
 
@@ -95,6 +97,7 @@ namespace KeppyCounterGenerator
                     Data.TotalTicks,
                     ((Data.Bar / 2) + 1).ToString(Data.HowManyZeroesBars),
                     ((Data.TotalBars / 2) + 1).ToString(Data.HowManyZeroesBars),
+                    Data.NotesPerSecond,
                     Data.AverageNotesPerSecond
                     );
 
@@ -168,7 +171,7 @@ namespace KeppyCounterGenerator
             if ((data & 0xff00) != 0)
             {
                 Data.PlayedNotesChan[midichan]++;
-                Data.PlayedNotesAvg++;
+                Data.PlayedNotesFrame++;
             }
         }
 
@@ -410,7 +413,7 @@ namespace KeppyCounterGenerator
                         // 5 seconds of nothing
                         if (Settings.Interrupt == true) break;
                         CheckPosition();
-                        Data.AverageNotesPerSecond = "0";
+                        Data.NotesPerSecond = "0";
                         PushFrame(false);
                         FFMPEGProcess.Frames++;
                         FPSUpdate();
@@ -422,11 +425,13 @@ namespace KeppyCounterGenerator
                     if (Settings.Interrupt == true) break;
                     Buffer = new Byte[ChunkLength];
                     Bass.BASS_ChannelGetData(Data.StreamHandle, Buffer, ChunkLength);
-                    CheckPosition();
+                    CheckPosition(); 
                     if (FFMPEGProcess.Frames % 60 == 0)
                     {
+                        Data.PlayedNotesAvg += (Data.PlayedNotesFrame - Data.PlayedNotesAvg) / FFMPEGProcess.Frames;
+                        Data.NotesPerSecond = Data.PlayedNotesFrame.ToString();
                         Data.AverageNotesPerSecond = Data.PlayedNotesAvg.ToString();
-                        Data.PlayedNotesAvg = 0;
+                        Data.PlayedNotesFrame = 0;
                     }
                     PushFrame(false);
                     FFMPEGProcess.Frames++;
@@ -443,7 +448,7 @@ namespace KeppyCounterGenerator
                         // 5 seconds of nothing
                         if (Settings.Interrupt == true) break;
                         CheckPosition();
-                        Data.AverageNotesPerSecond = "0";
+                        Data.NotesPerSecond = "0";
                         PushFrame(false);
                         FFMPEGProcess.Frames++;
                         FPSUpdate();
@@ -453,6 +458,7 @@ namespace KeppyCounterGenerator
                 for (int i = 0; i < Data.PlayedNotesChan.Length; i++) Data.PlayedNotesChan[i] = 0;
 
                 Data.Mark = new BASS_MIDI_MARK();
+                Data.PlayedNotesAvg = 0;
                 FFMPEGProcess.Frames = 0;
                 FFMPEGProcess.FFMPEG.StandardInput.Close();
 
