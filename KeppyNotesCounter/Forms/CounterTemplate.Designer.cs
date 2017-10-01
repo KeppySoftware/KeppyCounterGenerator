@@ -116,8 +116,8 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(275, 82);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Current/Total bars: {9}/{10}\r\nAverage notes per second: {11}\r\n\r\n\r\n\r\n[[CVn]]: Play" +
-    "ed notes on channel (n = Channel number)";
+            this.label3.Text = "Current/Total bars: {9}/{10}\r\nNotes per second: {11}\r\nAverage notes per second: {" +
+    "12}\r\n\r\n\r\n[[CVn]]: Played notes on channel (n = Channel number)";
             // 
             // groupBox1
             // 
