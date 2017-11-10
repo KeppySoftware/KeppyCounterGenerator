@@ -428,10 +428,14 @@ namespace KeppyCounterGenerator
                     CheckPosition(); 
                     if (FFMPEGProcess.Frames % 60 == 0)
                     {
-                        Data.PlayedNotesAvg += (Data.PlayedNotesFrame - Data.PlayedNotesAvg) / FFMPEGProcess.Frames;
-                        Data.NotesPerSecond = Data.PlayedNotesFrame.ToString();
-                        Data.AverageNotesPerSecond = Data.PlayedNotesAvg.ToString();
-                        Data.PlayedNotesFrame = 0;
+                        try
+                        {
+                            Data.PlayedNotesAvg += (Data.PlayedNotesFrame - Data.PlayedNotesAvg) / FFMPEGProcess.Frames;
+                            Data.NotesPerSecond = Data.PlayedNotesFrame.ToString();
+                            Data.AverageNotesPerSecond = Data.PlayedNotesAvg.ToString();
+                            Data.PlayedNotesFrame = 0;
+                        }
+                        catch { Data.PlayedNotesAvg = 0; Data.NotesPerSecond = "0"; Data.AverageNotesPerSecond = "0"; Data.PlayedNotesFrame = 0; }
                     }
                     PushFrame(false);
                     FFMPEGProcess.Frames++;
