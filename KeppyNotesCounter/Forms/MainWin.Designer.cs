@@ -73,6 +73,7 @@
             this.DoNotUse = new System.Windows.Forms.ToolStripStatusLabel();
             this.CurrentStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.CurrentMIDILoaded = new System.Windows.Forms.ToolStripStatusLabel();
+            this.RemoveAdditionalZeroes = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.PreviewBox)).BeginInit();
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -170,6 +171,7 @@
             this.menuItem6.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.AdvancedMenu,
             this.menuItem9,
+            this.RemoveAdditionalZeroes,
             this.ResItems,
             this.MillMenu,
             this.menuItem7,
@@ -220,13 +222,13 @@
             // 
             // ResItems
             // 
-            this.ResItems.Index = 2;
+            this.ResItems.Index = 3;
             this.ResItems.Text = "Change output resolution";
             this.ResItems.Click += new System.EventHandler(this.ResItems_Click);
             // 
             // MillMenu
             // 
-            this.MillMenu.Index = 3;
+            this.MillMenu.Index = 4;
             this.MillMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.HideMilliseconds,
             this.menuItem10,
@@ -252,30 +254,30 @@
             // 
             // menuItem7
             // 
-            this.menuItem7.Index = 4;
+            this.menuItem7.Index = 5;
             this.menuItem7.Text = "-";
             // 
             // ChangeFontTypeface
             // 
-            this.ChangeFontTypeface.Index = 5;
+            this.ChangeFontTypeface.Index = 6;
             this.ChangeFontTypeface.Text = "Change font (Final output)";
             this.ChangeFontTypeface.Click += new System.EventHandler(this.ChangeFontTypeface_Click);
             // 
             // ChangeBackgroundColor
             // 
-            this.ChangeBackgroundColor.Index = 6;
+            this.ChangeBackgroundColor.Index = 7;
             this.ChangeBackgroundColor.Text = "Change background color (Preview)";
             this.ChangeBackgroundColor.Click += new System.EventHandler(this.ChangeBackgroundColor_Click);
             // 
             // ChangeBackgroundImg
             // 
-            this.ChangeBackgroundImg.Index = 7;
+            this.ChangeBackgroundImg.Index = 8;
             this.ChangeBackgroundImg.Text = "Change background image (Preview)";
             this.ChangeBackgroundImg.Click += new System.EventHandler(this.ChangeBackgroundImg_Click);
             // 
             // CCT
             // 
-            this.CCT.Index = 8;
+            this.CCT.Index = 9;
             this.CCT.Text = "Change counter template";
             this.CCT.Click += new System.EventHandler(this.CCT_Click);
             // 
@@ -341,6 +343,12 @@
             this.CurrentMIDILoaded.Text = "No MIDI loaded.";
             this.CurrentMIDILoaded.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // RemoveAdditionalZeroes
+            // 
+            this.RemoveAdditionalZeroes.Index = 2;
+            this.RemoveAdditionalZeroes.Text = "Remove additional zeroes";
+            this.RemoveAdditionalZeroes.Click += new System.EventHandler(this.RemoveAdditionalZeroes_Click);
+            // 
             // MainWin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -355,6 +363,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Keppy\'s Counter Generator";
             this.Load += new System.EventHandler(this.MainWin_Load);
+            this.Resize += new System.EventHandler(this.MainWin_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.PreviewBox)).EndInit();
             this.StatusStrip.ResumeLayout(false);
             this.StatusStrip.PerformLayout();
@@ -407,6 +416,7 @@
         private System.Windows.Forms.MenuItem AdvancedMenu;
         private System.Windows.Forms.MenuItem StillFramesBeginning;
         private System.Windows.Forms.MenuItem StillFramesEnd;
+        private System.Windows.Forms.MenuItem RemoveAdditionalZeroes;
     }
 }
 

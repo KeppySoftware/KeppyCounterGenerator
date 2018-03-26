@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -34,9 +36,13 @@ namespace KeppyCounterGenerator
             public static String TextTemplateBL = "";
             public static String TextTemplateBC = "";
             public static String TextTemplateBR = "";
+            public static String TextTemplateML = "";
+            public static String TextTemplateMC = "";
+            public static String TextTemplateMR = "";
             public static String TextTemplateTL = "";
             public static String TextTemplateTC = "";
             public static String TextTemplateTR = "";
+            public static float OsuemSize = Properties.Settings.Default.CounterFont.Size;
             public static String NotesPerSecond = "0";
             public static String AverageNotesPerSecond = "0";
             public static SYNCPROC NoteSync;
@@ -55,7 +61,7 @@ namespace KeppyCounterGenerator
             public static UInt64 Tick = 0;
             public static UInt64[] PlayedNotesChan = new UInt64[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             public static UInt64 PlayedNotesFrame = 0;
-            public static UInt64 PlayedNotesAvg = 0;
+            public static List<Double> PlayedNotesAvg = new List<Double>();
         }
 
         public class Framerate
@@ -89,14 +95,14 @@ namespace KeppyCounterGenerator
                     ReturnOutputText(Data.CurrentTime),                                 // Current time
                     ReturnOutputText(Data.TotalTime),
                     Data.Tempo.ToString("000"),
-                    PlayedNotes.ToString(Data.HowManyZeroesNotes),
+                    PlayedNotes.ToString(Properties.Settings.Default.RemoveAdditionalZeroes ? null : Data.HowManyZeroesNotes),
                     Data.TotalNotes,
                     String.IsNullOrEmpty(Beat) ? "0/0" : Beat,
                     Data.PPQN,
                     Data.Tick,
                     Data.TotalTicks,
-                    ((Data.Bar / 2) + 1).ToString(Data.HowManyZeroesBars),
-                    ((Data.TotalBars / 2) + 1).ToString(Data.HowManyZeroesBars),
+                    ((Data.Bar / 2) + 1).ToString(Properties.Settings.Default.RemoveAdditionalZeroes ? null : Data.HowManyZeroesBars),
+                    ((Data.TotalBars / 2) + 1).ToString(Properties.Settings.Default.RemoveAdditionalZeroes ? null : Data.HowManyZeroesBars),
                     Data.NotesPerSecond,
                     Data.AverageNotesPerSecond
                     );
@@ -142,12 +148,16 @@ namespace KeppyCounterGenerator
             HideMilliseconds.Checked = Properties.Settings.Default.RemoveMilliseconds;
             StillFramesEnd.Checked = Properties.Settings.Default.StillFramesEnd;
             StillFramesBeginning.Checked = Properties.Settings.Default.StillFramesBeginning;
+            RemoveAdditionalZeroes.Checked = Properties.Settings.Default.RemoveAdditionalZeroes;
 
             if (Properties.Settings.Default.TemplatesCounterIndex == 0)
             {
                 Data.TextTemplateBL = Properties.Settings.Default.CustomCounterTemplateBL;
                 Data.TextTemplateBC = Properties.Settings.Default.CustomCounterTemplateBC;
                 Data.TextTemplateBR = Properties.Settings.Default.CustomCounterTemplateBR;
+                Data.TextTemplateML = Properties.Settings.Default.CustomCounterTemplateML;
+                Data.TextTemplateMC = Properties.Settings.Default.CustomCounterTemplateMC;
+                Data.TextTemplateMR = Properties.Settings.Default.CustomCounterTemplateMR;
                 Data.TextTemplateTL = Properties.Settings.Default.CustomCounterTemplateTL;
                 Data.TextTemplateTC = Properties.Settings.Default.CustomCounterTemplateTC;
                 Data.TextTemplateTR = Properties.Settings.Default.CustomCounterTemplateTR;
@@ -157,6 +167,9 @@ namespace KeppyCounterGenerator
                 Data.TextTemplateBL = Properties.Settings.Default.TemplatesCounterBL[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
                 Data.TextTemplateBC = Properties.Settings.Default.TemplatesCounterBC[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
                 Data.TextTemplateBR = Properties.Settings.Default.TemplatesCounterBR[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateML = Properties.Settings.Default.TemplatesCounterML[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateMC = Properties.Settings.Default.TemplatesCounterMC[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateMR = Properties.Settings.Default.TemplatesCounterMR[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
                 Data.TextTemplateTL = Properties.Settings.Default.TemplatesCounterTL[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
                 Data.TextTemplateTC = Properties.Settings.Default.TemplatesCounterTC[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
                 Data.TextTemplateTR = Properties.Settings.Default.TemplatesCounterTR[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
@@ -172,6 +185,8 @@ namespace KeppyCounterGenerator
             {
                 Data.PlayedNotesChan[midichan]++;
                 Data.PlayedNotesFrame++;
+                if (Data.OsuemSize <= Properties.Settings.Default.CounterFont.Size + (Properties.Settings.Default.CounterFont.Size / 8))
+                    Data.OsuemSize = Properties.Settings.Default.CounterFont.Size + (Properties.Settings.Default.CounterFont.Size / 8) + (Properties.Settings.Default.CounterFont.Size / 20);
             }
         }
 
@@ -283,15 +298,17 @@ namespace KeppyCounterGenerator
         }
 
 
-        public void AddTextToFrame(string text, Brush textcolor, RectangleF rectf, StringAlignment X, StringAlignment Y, Graphics g)
+        public void AddTextToFrame(string text, Boolean Osu, Brush textcolor, RectangleF rectf, StringAlignment X, StringAlignment Y, Graphics g)
         {
+            Font Ses = new Font(Properties.Settings.Default.CounterFont.FontFamily, Osu ? Data.OsuemSize : Properties.Settings.Default.CounterFont.Size, FontStyle.Regular);
+
             StringFormat format = new StringFormat()
             {
                 Alignment = X,
                 LineAlignment = Y,
             };
 
-            g.DrawString(text, Properties.Settings.Default.CounterFont, textcolor, rectf, format);
+            g.DrawString(text, Ses, textcolor, rectf, format);
         }
 
         public void AddWatermarkToFrame(RectangleF rectf, Graphics g)
@@ -315,54 +332,69 @@ namespace KeppyCounterGenerator
 
         public void PushFrame(bool isexample)
         {
-            Bitmap bmp = new Bitmap(
-                (Int32)(Properties.Settings.Default.WRes),
-                (Int32)(Properties.Settings.Default.HRes)
-                );
-
-            RectangleF rectf = new RectangleF(0, 0, bmp.Width, bmp.Height);
-
-            Brush background = new SolidBrush(Color.Transparent);
-            Brush textcolor = new SolidBrush(Color.White);
-
-            Graphics g = Graphics.FromImage(bmp);
-
-            g.FillRectangle(background, rectf);
-            g.SmoothingMode = SmoothingMode.HighQuality;
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-
-            AddTextToFrame(ReturnText(Data.TextTemplateBL), textcolor, rectf, StringAlignment.Near, StringAlignment.Far, g);
-            AddTextToFrame(ReturnText(Data.TextTemplateBC), textcolor, rectf, StringAlignment.Center, StringAlignment.Far, g);
-            AddTextToFrame(ReturnText(Data.TextTemplateBR), textcolor, rectf, StringAlignment.Far, StringAlignment.Far, g);
-            AddTextToFrame(ReturnText(Data.TextTemplateTL), textcolor, rectf, StringAlignment.Near, StringAlignment.Near, g);
-            AddTextToFrame(ReturnText(Data.TextTemplateTC), textcolor, rectf, StringAlignment.Center, StringAlignment.Near, g);
-            AddTextToFrame(ReturnText(Data.TextTemplateTR), textcolor, rectf, StringAlignment.Far, StringAlignment.Near, g);
-
-            if (isexample == true)
+            try
             {
-                AddWatermarkToFrame(rectf, g);
+                Bitmap bmp = new Bitmap(
+                    (Int32)(Properties.Settings.Default.WRes),
+                    (Int32)(Properties.Settings.Default.HRes)
+                    );
+
+                RectangleF rectf = new RectangleF(0, 0, bmp.Width, bmp.Height);
+
+                Brush background = new SolidBrush(Color.Transparent);
+                Brush textcolor = new SolidBrush(Color.White);
+
+                Graphics g = Graphics.FromImage(bmp);
+
+                g.FillRectangle(background, rectf);
+                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+
+                AddTextToFrame(ReturnText(Data.TextTemplateBL), Properties.Settings.Default.OsuModeBL, textcolor, rectf, StringAlignment.Near, StringAlignment.Far, g);
+                AddTextToFrame(ReturnText(Data.TextTemplateBC), Properties.Settings.Default.OsuModeBC, textcolor, rectf, StringAlignment.Center, StringAlignment.Far, g);
+                AddTextToFrame(ReturnText(Data.TextTemplateBR), Properties.Settings.Default.OsuModeBR, textcolor, rectf, StringAlignment.Far, StringAlignment.Far, g);
+                AddTextToFrame(ReturnText(Data.TextTemplateML), Properties.Settings.Default.OsuModeML, textcolor, rectf, StringAlignment.Near, StringAlignment.Center, g);
+                AddTextToFrame(ReturnText(Data.TextTemplateMC), Properties.Settings.Default.OsuModeMC, textcolor, rectf, StringAlignment.Center, StringAlignment.Center, g);
+                AddTextToFrame(ReturnText(Data.TextTemplateMR), Properties.Settings.Default.OsuModeMR, textcolor, rectf, StringAlignment.Far, StringAlignment.Center, g);
+                AddTextToFrame(ReturnText(Data.TextTemplateTL), Properties.Settings.Default.OsuModeTL, textcolor, rectf, StringAlignment.Near, StringAlignment.Near, g);
+                AddTextToFrame(ReturnText(Data.TextTemplateTC), Properties.Settings.Default.OsuModeTC, textcolor, rectf, StringAlignment.Center, StringAlignment.Near, g);
+                AddTextToFrame(ReturnText(Data.TextTemplateTR), Properties.Settings.Default.OsuModeTR, textcolor, rectf, StringAlignment.Far, StringAlignment.Near, g);
+
+                if (isexample == true)
+                {
+                    AddWatermarkToFrame(rectf, g);
+                }
+
+                // Flush all graphics changes to the bitmap
+                g.Flush();
+
+                if (isexample == true)
+                {
+                    PreviewBox.Image = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), System.Drawing.Imaging.PixelFormat.DontCare);
+                }
+                else
+                {
+                    FFMPEGProcess.Preview = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), System.Drawing.Imaging.PixelFormat.DontCare);
+                    Byte[] Bitmap = GetBytesOfImage(bmp);
+                    FFMPEGProcess.FFMPEG.StandardInput.BaseStream.Write(Bitmap, 0, Bitmap.Length);
+                }
+
+                bmp.Dispose();
+                background.Dispose();
+                textcolor.Dispose();
+                g.Dispose();
             }
-
-            // Flush all graphics changes to the bitmap
-            g.Flush();
-
-            if (isexample == true)
+            catch (Exception ex)
             {
-                PreviewBox.Image = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), System.Drawing.Imaging.PixelFormat.DontCare);
-            }
-            else
-            {
-                FFMPEGProcess.Preview = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), System.Drawing.Imaging.PixelFormat.DontCare);
-                Byte[] Bitmap = GetBytesOfImage(bmp);
-                FFMPEGProcess.FFMPEG.StandardInput.BaseStream.Write(Bitmap, 0, Bitmap.Length);
-            }
+                Settings.Interrupt = true;
+                Bass.BASS_StreamFree(Data.StreamHandle);
+                Bass.BASS_Free();
 
-            bmp.Dispose();
-            background.Dispose();
-            textcolor.Dispose();
-            g.Dispose();
+                MessageBox.Show(
+                    String.Format(ex.ToString(), Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)), "Error while converting the MIDI", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void FrameConverter_DoWork(object sender, DoWorkEventArgs e)
@@ -373,6 +405,7 @@ namespace KeppyCounterGenerator
                 Bass.BASS_Init(0, 44100, BASSInit.BASS_DEVICE_NOSPEAKER, IntPtr.Zero);
                 Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_MIDI_VOICES, 0);
                 Data.StreamHandle = BassMidi.BASS_MIDI_StreamCreateFile(Data.MIDIToLoad, 0L, 0L, BASSFlag.BASS_MIDI_NOCROP | BASSFlag.BASS_STREAM_DECODE | BASSFlag.BASS_MIDI_DECAYEND, 0);
+                Data.PlayedNotesAvg = new List<Double>();
 
                 // Check if the MIDI file is valid
                 BASSError Error = Bass.BASS_ErrorGetCode();
@@ -384,6 +417,8 @@ namespace KeppyCounterGenerator
                     Settings.Interrupt = true;
                     return;
                 }
+
+                Data.OsuemSize = Properties.Settings.Default.CounterFont.Size;
 
                 Int64 StreamLength = Bass.BASS_ChannelGetLength(Data.StreamHandle);
                 Int32 ChunkLength = Convert.ToInt32(Bass.BASS_ChannelSeconds2Bytes(Data.StreamHandle, FFMPEGProcess.Hertz));
@@ -422,21 +457,26 @@ namespace KeppyCounterGenerator
 
                 while (Bass.BASS_ChannelIsActive(Data.StreamHandle) == BASSActive.BASS_ACTIVE_PLAYING)
                 {
+                    if (Data.OsuemSize > Properties.Settings.Default.CounterFont.Size)
+                    {
+                        Data.OsuemSize -= (Properties.Settings.Default.CounterFont.Size / 24);
+                        if (Data.OsuemSize < Properties.Settings.Default.CounterFont.Size) Data.OsuemSize = Properties.Settings.Default.CounterFont.Size;
+                    }
+                    else Data.OsuemSize = Properties.Settings.Default.CounterFont.Size;
+
                     if (Settings.Interrupt == true) break;
                     Buffer = new Byte[ChunkLength];
                     Bass.BASS_ChannelGetData(Data.StreamHandle, Buffer, ChunkLength);
-                    CheckPosition(); 
-                    if (FFMPEGProcess.Frames % 60 == 0)
+                    CheckPosition();
+
+                    if (FFMPEGProcess.Frames % (ulong)Properties.Settings.Default.FPSExport == 0)
                     {
-                        try
-                        {
-                            Data.PlayedNotesAvg += (Data.PlayedNotesFrame - Data.PlayedNotesAvg) / FFMPEGProcess.Frames;
-                            Data.NotesPerSecond = Data.PlayedNotesFrame.ToString();
-                            Data.AverageNotesPerSecond = Data.PlayedNotesAvg.ToString();
-                            Data.PlayedNotesFrame = 0;
-                        }
-                        catch { Data.PlayedNotesAvg = 0; Data.NotesPerSecond = "0"; Data.AverageNotesPerSecond = "0"; Data.PlayedNotesFrame = 0; }
+                        Data.NotesPerSecond = Data.PlayedNotesFrame.ToString();
+                        Data.PlayedNotesAvg.Add(Data.PlayedNotesFrame);
+                        Data.AverageNotesPerSecond = Data.PlayedNotesAvg.Average().ToString("0.0");
+                        Data.PlayedNotesFrame = 0;
                     }
+
                     PushFrame(false);
                     FFMPEGProcess.Frames++;
                     FPSUpdate();
@@ -449,6 +489,13 @@ namespace KeppyCounterGenerator
                 {
                     for (int a = 0; a <= (Properties.Settings.Default.FPSExport * 5); a++)
                     {
+                        if (Data.OsuemSize > Properties.Settings.Default.CounterFont.Size)
+                        {
+                            Data.OsuemSize -= (Properties.Settings.Default.CounterFont.Size / 24);
+                            if (Data.OsuemSize < Properties.Settings.Default.CounterFont.Size) Data.OsuemSize = Properties.Settings.Default.CounterFont.Size;
+                        }
+                        else Data.OsuemSize = Properties.Settings.Default.CounterFont.Size;
+
                         // 5 seconds of nothing
                         if (Settings.Interrupt == true) break;
                         CheckPosition();
@@ -462,7 +509,6 @@ namespace KeppyCounterGenerator
                 for (int i = 0; i < Data.PlayedNotesChan.Length; i++) Data.PlayedNotesChan[i] = 0;
 
                 Data.Mark = new BASS_MIDI_MARK();
-                Data.PlayedNotesAvg = 0;
                 FFMPEGProcess.Frames = 0;
                 FFMPEGProcess.FFMPEG.StandardInput.Close();
 
@@ -632,50 +678,56 @@ namespace KeppyCounterGenerator
         bool alreadyidle = false;
         private void LivePreview_Tick(object sender, EventArgs e)
         {
-            if (Bass.BASS_ChannelIsActive(Data.StreamHandle) == BASSActive.BASS_ACTIVE_PLAYING)
+            try
             {
-                if (alreadyidle)
+                if (Bass.BASS_ChannelIsActive(Data.StreamHandle) == BASSActive.BASS_ACTIVE_PLAYING)
                 {
-                    SelectMIDIDialog.Enabled = false;
-                    StartConvThread.Enabled = false;
-                    ChangeFontTypeface.Enabled = false;
-                    MillMenu.Enabled = false;
-                    AdvancedMenu.Enabled = false;
-                    CCT.Enabled = false;
-                    ResItems.Enabled = false;
+                    if (alreadyidle)
+                    {
+                        SelectMIDIDialog.Enabled = false;
+                        StartConvThread.Enabled = false;
+                        ChangeFontTypeface.Enabled = false;
+                        MillMenu.Enabled = false;
+                        AdvancedMenu.Enabled = false;
+                        CCT.Enabled = false;
+                        ResItems.Enabled = false;
 
-                    CurrentStatus.Text = "Idle";
+                        CurrentStatus.Text = "Idle";
 
-                    alreadyidle = false;
+                        alreadyidle = false;
+                    }
+
+                    CurrentStatus.Text = String.Format("{0} ({1} frames done, {2} frame(s) rendered every one second)", Data.PercentageProgress, FFMPEGProcess.Frames, Framerate._fps);
+
+                    if (PreviewBox.Image != null) PreviewBox.Image.Dispose();
+                    try
+                    {
+                        PreviewBox.Image = FFMPEGProcess.Preview.Clone(new Rectangle(0, 0, FFMPEGProcess.Preview.Width, FFMPEGProcess.Preview.Height), System.Drawing.Imaging.PixelFormat.DontCare);
+                    }
+                    catch { }
                 }
-
-                CurrentStatus.Text = String.Format("{0} ({1} frames done, {2} frame(s) rendered every one second)", Data.PercentageProgress, FFMPEGProcess.Frames, Framerate._fps);
-
-                if (PreviewBox.Image != null) PreviewBox.Image.Dispose();
-                try
+                else
                 {
-                    PreviewBox.Image = FFMPEGProcess.Preview.Clone(new Rectangle(0, 0, FFMPEGProcess.Preview.Width, FFMPEGProcess.Preview.Height), System.Drawing.Imaging.PixelFormat.DontCare);
+                    if (!alreadyidle)
+                    {
+                        SelectMIDIDialog.Enabled = true;
+                        StartConvThread.Enabled = true;
+                        ChangeFontTypeface.Enabled = true;
+                        MillMenu.Enabled = true;
+                        AdvancedMenu.Enabled = true;
+                        CCT.Enabled = true;
+                        ResItems.Enabled = true;
+
+                        CurrentStatus.Text = "Idle";
+
+                        alreadyidle = true;
+                    }
                 }
-                catch { }
             }
-            else
+            catch (Exception ex)
             {
-                if (!alreadyidle)
-                {
-                    SelectMIDIDialog.Enabled = true;
-                    StartConvThread.Enabled = true;
-                    ChangeFontTypeface.Enabled = true;
-                    MillMenu.Enabled = true;
-                    AdvancedMenu.Enabled = true;
-                    CCT.Enabled = true;
-                    ResItems.Enabled = true;
-
-                    CurrentStatus.Text = "Idle";
-
-                    alreadyidle = true;
-                }
+                MessageBox.Show(ex.ToString());
             }
-            System.Threading.Thread.Sleep(1);
         }
 
         private void ChangeFontTypeface_Click(object sender, EventArgs e)
@@ -690,6 +742,7 @@ namespace KeppyCounterGenerator
                     {
                         Properties.Settings.Default.CounterFont = FontTypeface.Font;
                         Properties.Settings.Default.Save();
+                        Data.OsuemSize = Properties.Settings.Default.CounterFont.Size;
                         PushFrame(true);
                     }
                     catch
@@ -762,6 +815,9 @@ namespace KeppyCounterGenerator
                 Data.TextTemplateBL = Properties.Settings.Default.CustomCounterTemplateBL;
                 Data.TextTemplateBC = Properties.Settings.Default.CustomCounterTemplateBC;
                 Data.TextTemplateBR = Properties.Settings.Default.CustomCounterTemplateBR;
+                Data.TextTemplateML = Properties.Settings.Default.CustomCounterTemplateML;
+                Data.TextTemplateMC = Properties.Settings.Default.CustomCounterTemplateMC;
+                Data.TextTemplateMR = Properties.Settings.Default.CustomCounterTemplateMR;
                 Data.TextTemplateTL = Properties.Settings.Default.CustomCounterTemplateTL;
                 Data.TextTemplateTC = Properties.Settings.Default.CustomCounterTemplateTC;
                 Data.TextTemplateTR = Properties.Settings.Default.CustomCounterTemplateTR;
@@ -771,6 +827,9 @@ namespace KeppyCounterGenerator
                 Data.TextTemplateBL = Properties.Settings.Default.TemplatesCounterBL[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
                 Data.TextTemplateBC = Properties.Settings.Default.TemplatesCounterBC[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
                 Data.TextTemplateBR = Properties.Settings.Default.TemplatesCounterBR[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateML = Properties.Settings.Default.TemplatesCounterML[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateMC = Properties.Settings.Default.TemplatesCounterMC[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
+                Data.TextTemplateMR = Properties.Settings.Default.TemplatesCounterMR[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
                 Data.TextTemplateTL = Properties.Settings.Default.TemplatesCounterTL[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
                 Data.TextTemplateTC = Properties.Settings.Default.TemplatesCounterTC[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
                 Data.TextTemplateTR = Properties.Settings.Default.TemplatesCounterTR[Properties.Settings.Default.TemplatesCounterIndex - 1].Replace("\\n", "\n");
@@ -885,6 +944,27 @@ namespace KeppyCounterGenerator
                 Properties.Settings.Default.StillFramesEnd = false;
             }
             Properties.Settings.Default.Save();
+        }
+
+        private void RemoveAdditionalZeroes_Click(object sender, EventArgs e)
+        {
+            if (RemoveAdditionalZeroes.Checked != true)
+            {
+                RemoveAdditionalZeroes.Checked = true;
+                Properties.Settings.Default.RemoveAdditionalZeroes = true;
+            }
+            else
+            {
+                RemoveAdditionalZeroes.Checked = false;
+                Properties.Settings.Default.RemoveAdditionalZeroes = false;
+            }
+            Properties.Settings.Default.Save();
+            PushFrame(true);
+        }
+
+        private void MainWin_Resize(object sender, EventArgs e)
+        {
+            if (Bass.BASS_ChannelIsActive(Data.StreamHandle) != BASSActive.BASS_ACTIVE_PLAYING) PushFrame(true);
         }
 
         private void GarbageCollector_DoWork(object sender, DoWorkEventArgs e)

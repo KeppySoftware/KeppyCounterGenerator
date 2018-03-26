@@ -12,7 +12,7 @@ namespace KeppyCounterGenerator.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.3.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -386,6 +386,204 @@ namespace KeppyCounterGenerator.Properties {
             }
             set {
                 this["StillFramesEnd"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring />\r\n  <string />\r\n  <string />\r\n  <string />\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection TemplatesCounterMR {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["TemplatesCounterMR"]));
+            }
+            set {
+                this["TemplatesCounterMR"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring />\r\n  <string />\r\n  <string />\r\n  <string />\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection TemplatesCounterMC {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["TemplatesCounterMC"]));
+            }
+            set {
+                this["TemplatesCounterMC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring />\r\n  <string />\r\n  <string />\r\n  <string />\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection TemplatesCounterML {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["TemplatesCounterML"]));
+            }
+            set {
+                this["TemplatesCounterML"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CustomCounterTemplateMR {
+            get {
+                return ((string)(this["CustomCounterTemplateMR"]));
+            }
+            set {
+                this["CustomCounterTemplateMR"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CustomCounterTemplateML {
+            get {
+                return ((string)(this["CustomCounterTemplateML"]));
+            }
+            set {
+                this["CustomCounterTemplateML"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CustomCounterTemplateMC {
+            get {
+                return ((string)(this["CustomCounterTemplateMC"]));
+            }
+            set {
+                this["CustomCounterTemplateMC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OsuModeTL {
+            get {
+                return ((bool)(this["OsuModeTL"]));
+            }
+            set {
+                this["OsuModeTL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OsuModeTC {
+            get {
+                return ((bool)(this["OsuModeTC"]));
+            }
+            set {
+                this["OsuModeTC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OsuModeTR {
+            get {
+                return ((bool)(this["OsuModeTR"]));
+            }
+            set {
+                this["OsuModeTR"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OsuModeML {
+            get {
+                return ((bool)(this["OsuModeML"]));
+            }
+            set {
+                this["OsuModeML"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OsuModeMC {
+            get {
+                return ((bool)(this["OsuModeMC"]));
+            }
+            set {
+                this["OsuModeMC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OsuModeMR {
+            get {
+                return ((bool)(this["OsuModeMR"]));
+            }
+            set {
+                this["OsuModeMR"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OsuModeBL {
+            get {
+                return ((bool)(this["OsuModeBL"]));
+            }
+            set {
+                this["OsuModeBL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OsuModeBC {
+            get {
+                return ((bool)(this["OsuModeBC"]));
+            }
+            set {
+                this["OsuModeBC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OsuModeBR {
+            get {
+                return ((bool)(this["OsuModeBR"]));
+            }
+            set {
+                this["OsuModeBR"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RemoveAdditionalZeroes {
+            get {
+                return ((bool)(this["RemoveAdditionalZeroes"]));
+            }
+            set {
+                this["RemoveAdditionalZeroes"] = value;
             }
         }
     }
